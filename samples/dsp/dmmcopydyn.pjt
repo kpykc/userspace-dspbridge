@@ -1,0 +1,53 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\work\bdsp_4.24\ti\dspbridge\dsp\samples\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="dmmcopyCreate.c"
+Source="dmmcopyDelete.c"
+Source="dmmcopydyn.tcf"
+Source="dmmcopyExecute.c"
+Source="dmmcopydyncfg.cmd"
+
+[Generated Files]
+Source="dmmcopydyncfg.s62"
+Source="dmmcopydyncfg_c.c"
+
+["Debug" Settings]
+FinalBuildCmd=$(DSPBRIDGE_TOOLS)\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Debug\dmmcopydyn.out -o=$(Proj_dir)\Debug\dmmcopydyn.dll64P
+
+["Release" Settings]
+FinalBuildCmd=$(DSPBRIDGE_TOOLS)\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Release\dmmcopydyn.out -o=$(Proj_dir)\Release\dmmcopydyn.dll64P
+
+["Compiler" Settings: "Debug"]
+Options=-g -fr"$(Proj_dir)\Debug" -i"$(DSPBRIDGE_EXPORTS)\include" -i"$(DSPBRIDGE_TOOLS)" -d"_DBG_" -d"DBC_ASSERTS=1" -d"_DEBUG" -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"$(Proj_dir)\Release" -i"$(DSPBRIDGE_EXPORTS)\include" -i"$(DSPBRIDGE_TOOLS)" -mv6400+
+
+["DspBiosBuilder" Settings: "Debug"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf" -Dconfig.chipType=2430
+
+["DspBiosBuilder" Settings: "Release"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf" -Dconfig.chipType=2430
+
+["Linker" Settings: "Debug"]
+Options=-r -cr -m".\Debug\dmmcopydyn.map" -o".\Debug\dmmcopydyn.out" -w -x
+
+["Linker" Settings: "Release"]
+Options=-r -cr -m".\Release\dmmcopydyn.map" -o".\Release\dmmcopydyn.out" -w -x
+
+["dmmcopydyncfg_c.c" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["dmmcopydyncfg_c.c" Settings: "Release"]
+ExcludeFromBuild=true

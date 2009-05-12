@@ -1,0 +1,32 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectName="dman3"
+ProjectDir="c:\myprojects"
+ProjectType=Library
+CPUFamily=TMS320C64XX
+Tool="Archiver"
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="dman3.c"
+Source="dman3_api.c"
+Source="dman3_init.c"
+Source="rmm.c"
+
+["Archiver" Settings: "Debug"]
+Options=-r -odman3d.a64P
+
+["Archiver" Settings: "Release"]
+Options=-r -odman3.a64P
+
+["Compiler" Settings: "Debug"]
+Options=-g -q -eoo64P -fr"$(Proj_dir)\debug" -i"." -i"$(Proj_dir)/../../../../../fctools/packages/ti/xdais" -i"$(Proj_dir)/../acpy3" -i"$(Proj_dir)/../utils" -i"$(Install_dir)/c6000/xdais/include" -d"_DBG_" -d"DBC_ASSERTS=1" -ml3 -mv6400+ --no_compress --disable:sploop
+
+["Compiler" Settings: "Release"]
+Options=-q -o2 -eoo64P -fr"$(Proj_dir)\release" -i"." -i"$(Proj_dir)/../../../../../fctools/packages/ti/xdais" -i"$(Proj_dir)/../acpy3" -i"$(Proj_dir)/../utils" -i"$(Install_dir)/c6000/xdais/include" -d"DBC_ASSERTS=0" -ml3 -mv6400+ --no_compress --disable:sploop
+

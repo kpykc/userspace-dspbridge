@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/release.dtd -->
+<release name="exports/framework_components_1_10_04,bridge" label="undefined" date="1178819451960" buildCount="9">
+<package name="framework_components_1_10_04"
+    version=""/>
+<imports>
+    <package name="ti.sdo.fc.dskt2"
+        version=""/>
+    <package name="ti.sdo.fc.dman3"
+        version=""/>
+    <package name="ti.sdo.fc.acpy3"
+        version=""/>
+    <package name="ti.sdo.fc.utils"
+        version=""/>
+    <package name="ti.sdo.fc.utils.api"
+        version=""/>
+    <package name="ti.sdo.fc.acpy2"
+        version=""/>
+    <package name="ti.sdo.fc.dman"
+        version=""/>
+    <package name="ti.sdo.fc.dman3.examples"
+        version=""/>
+</imports>
+<references>
+    <package name="xdc"
+        version="1, 1, 0, 0">
+        <file name="IPackage.xdc"/>
+        <file name="IPackage.xs"/>
+        <file name="om2.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.sch"/>
+        <file name="xdc.tci"/>
+    </package>
+    <package name="ti.sdo.fc.dman3"
+        version="1, 0, 1">
+        <file name="package.xs"/>
+        <file name="package/ti.sdo.fc.dman3.sch"/>
+        <file name="ti_sdo_fc_dman3,bld.tar"/>
+        <file name="ti_sdo_fc_dman3,src.tar"/>
+        <file name="ti_sdo_fc_dman3.tar"/>
+    </package>
+    <package name="ti.rtdx"
+        version="">
+        <file name="Settings.xs"/>
+        <file name="package.xs"/>
+        <file name="package/ti.rtdx.sch"/>
+    </package>
+    <package name="xdc.bld"
+        version="1, 0, 0, 0">
+        <file name="BuildEnvironment.xs"/>
+        <file name="Executable.xs"/>
+        <file name="ITarget.xs"/>
+        <file name="Library.xs"/>
+        <file name="PackageContents.xs"/>
+        <file name="Repository.xs"/>
+        <file name="Utils.xs"/>
+        <file name="_gen.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.bld.sch"/>
+    </package>
+    <xdcRoot base="/db/toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/">
+        <file name="include/utils.tci"/>
+    </xdcRoot>
+    <package name="ti.sdo.fc.dman"
+        version="">
+        <file name="package/ti.sdo.fc.dman.sch"/>
+        <file name="ti_sdo_fc_dman,bld.tar"/>
+        <file name="ti_sdo_fc_dman,src.tar"/>
+        <file name="ti_sdo_fc_dman.tar"/>
+    </package>
+    <package name="ti.sdo.fc.dman3.examples"
+        version="">
+        <file name="package.xs"/>
+        <file name="package/ti.sdo.fc.dman3.examples.sch"/>
+        <file name="ti_sdo_fc_dman3_examples.tar"/>
+    </package>
+    <package name="ti.sdo.fc.utils.api"
+        version="">
+        <file name="package.xs"/>
+        <file name="package/ti.sdo.fc.utils.api.sch"/>
+        <file name="ti_sdo_fc_utils_api.tar"/>
+    </package>
+    <package name="ti.sdo.fc.utils"
+        version="1, 0, 0">
+        <file name="package/ti.sdo.fc.utils.sch"/>
+        <file name="ti_sdo_fc_utils.tar"/>
+    </package>
+    <package name="ti.sdo.fc.dskt2"
+        version="1, 0, 1">
+        <file name="package.xs"/>
+        <file name="package/ti.sdo.fc.dskt2.sch"/>
+        <file name="ti_sdo_fc_dskt2,bld.tar"/>
+        <file name="ti_sdo_fc_dskt2,src.tar"/>
+        <file name="ti_sdo_fc_dskt2.tar"/>
+    </package>
+    <package name="ti.sdo.fc.acpy2"
+        version="">
+        <file name="package/ti.sdo.fc.acpy2.sch"/>
+        <file name="ti_sdo_fc_acpy2,bld.tar"/>
+        <file name="ti_sdo_fc_acpy2,src.tar"/>
+        <file name="ti_sdo_fc_acpy2.tar"/>
+    </package>
+    <package name="ti.psl"
+        version="5, 0, 0, 0">
+        <file name="package.xs"/>
+        <file name="package/ti.psl.sch"/>
+    </package>
+    <package name="ti.targets"
+        version="1, 0, 0, 0">
+        <file name="ITarget.xs"/>
+        <file name="package.xs"/>
+        <file name="package/ti.targets.sch"/>
+    </package>
+    <package name="ti.bios"
+        version="5, 2, 3, 11">
+        <file name="Build.xs"/>
+        <file name="package.xs"/>
+        <file name="package/ti.bios.sch"/>
+    </package>
+    <package name="ti.sdo.fc.acpy3"
+        version="1, 0, 0">
+        <file name="package.xs"/>
+        <file name="package/ti.sdo.fc.acpy3.sch"/>
+        <file name="ti_sdo_fc_acpy3,bld.tar"/>
+        <file name="ti_sdo_fc_acpy3,src.tar"/>
+        <file name="ti_sdo_fc_acpy3.tar"/>
+    </package>
+</references>
+<orphans>
+    <file name="/db/atree/library/trees/fc-b12x/src/config.bld"/>
+</orphans>
+</release>

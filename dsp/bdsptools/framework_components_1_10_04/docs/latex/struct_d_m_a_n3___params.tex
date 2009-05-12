@@ -1,0 +1,219 @@
+\hypertarget{struct_d_m_a_n3___params}{
+\subsection{DMAN3\_\-Params Struct Reference}
+\label{struct_d_m_a_n3___params}\index{DMAN3_Params@{DMAN3\_\-Params}}
+}
+{\tt \#include $<$dman3.h$>$}
+
+
+
+\subsubsection{Detailed Description}
+The module configuration structure for DMAN3 implementation. It is set at design time by the system integrator to ensure optimal sharing of DMA resources for the execution environment. 
+
+
+
+Definition at line 96 of file dman3.h.\subsubsection*{Data Fields}
+\begin{CompactItemize}
+\item 
+Uns $\ast$ \hyperlink{struct_d_m_a_n3___params_766e441c25336fb3a36d56c711cb08e4}{qdma\-Pa\-Ram\-Base}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_58339ef320bf8a83a2b995124965405e}{max\-Pa\-Ram\-Entries}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_cd68bdec25ab7f38188f61bf2fda5ceb}{pa\-Ram\-Base\-Index}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_cde436b501fefb284f4cf43d87dd9e0a}{num\-Pa\-Ram\-Entries}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_c8625cdf0b069aea5d9456be100aef33}{max\-Qdma\-Channels}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_354db3352d61cd71924bdd6c8827f5a5}{num\-Qdma\-Channels}
+\item 
+Uns $\ast$ \hyperlink{struct_d_m_a_n3___params_3ce746095fcc42779b01362ba9fe2359}{qdma\-Channels}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_1866abe117288a1d94b9ac62039b7f46}{tcc\-Allocation\-Mask\-H}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_ce9a03fc79f8cf2727f2753693a66caa}{tcc\-Allocation\-Mask\-L}
+\item 
+Int \hyperlink{struct_d_m_a_n3___params_1acba3008b12df10cad8b80bb5991e55}{heap\-Internal}
+\item 
+Int \hyperlink{struct_d_m_a_n3___params_5e397135231bc45e7e3ac6d4e1ae3166}{heap\-External}
+\item 
+Sm\-Uns \hyperlink{struct_d_m_a_n3___params_d431ed7c6e66d11a1c1cdbf9518494f0}{num\-Tcc\-Group} \mbox{[}DMAN3\_\-MAXGROUPS\mbox{]}
+\item 
+Md\-Uns \hyperlink{struct_d_m_a_n3___params_b722aece79c8c43eadd6b30d3a828a74}{num\-Pa\-Ram\-Group} \mbox{[}DMAN3\_\-MAXGROUPS\mbox{]}
+\item 
+Bool \hyperlink{struct_d_m_a_n3___params_c1550ea0e1f8b5442f88eccc395a491c}{idma3Internal}
+\item 
+\hyperlink{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}{DMAN3\_\-Scratch\-Alloc\-Fxn} \hyperlink{struct_d_m_a_n3___params_5fd92c4be106cf2614490abffdd09b60}{scratch\-Alloc\-Fxn}
+\item 
+\hyperlink{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}{DMAN3\_\-Scratch\-Free\-Fxn} \hyperlink{struct_d_m_a_n3___params_383ff9a30cfc36cb8ab0b0d8a4701fce}{scratch\-Free\-Fxn}
+\item 
+Uns \hyperlink{struct_d_m_a_n3___params_35fa90f301f8b215cb385a78d4fb215d}{null\-Pa\-Ram\-Index}
+\end{CompactItemize}
+
+
+\subsubsection{Field Documentation}
+\hypertarget{struct_d_m_a_n3___params_766e441c25336fb3a36d56c711cb08e4}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!qdmaPaRamBase@{qdmaPaRamBase}}
+\index{qdmaPaRamBase@{qdmaPaRamBase}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[qdmaPaRamBase]{\setlength{\rightskip}{0pt plus 5cm}Uns$\ast$ \hyperlink{struct_d_m_a_n3___params_766e441c25336fb3a36d56c711cb08e4}{DMAN3\_\-Params::qdma\-Pa\-Ram\-Base}}\hfill}
+\label{struct_d_m_a_n3___params_766e441c25336fb3a36d56c711cb08e4}
+
+
+DMAN3\_\-QDMA\_\-PARAM\_\-BASE 
+
+Definition at line 111 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_58339ef320bf8a83a2b995124965405e}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!maxPaRamEntries@{maxPaRamEntries}}
+\index{maxPaRamEntries@{maxPaRamEntries}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[maxPaRamEntries]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_58339ef320bf8a83a2b995124965405e}{DMAN3\_\-Params::max\-Pa\-Ram\-Entries}}\hfill}
+\label{struct_d_m_a_n3___params_58339ef320bf8a83a2b995124965405e}
+
+
+DMAN3\_\-MAX\_\-PARAM\_\-ENTRIES 
+
+Definition at line 112 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_cd68bdec25ab7f38188f61bf2fda5ceb}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!paRamBaseIndex@{paRamBaseIndex}}
+\index{paRamBaseIndex@{paRamBaseIndex}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[paRamBaseIndex]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_cd68bdec25ab7f38188f61bf2fda5ceb}{DMAN3\_\-Params::pa\-Ram\-Base\-Index}}\hfill}
+\label{struct_d_m_a_n3___params_cd68bdec25ab7f38188f61bf2fda5ceb}
+
+
+DMAN3\_\-PARAM\_\-BASE\_\-INDEX 
+
+Definition at line 113 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_cde436b501fefb284f4cf43d87dd9e0a}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!numPaRamEntries@{numPaRamEntries}}
+\index{numPaRamEntries@{numPaRamEntries}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[numPaRamEntries]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_cde436b501fefb284f4cf43d87dd9e0a}{DMAN3\_\-Params::num\-Pa\-Ram\-Entries}}\hfill}
+\label{struct_d_m_a_n3___params_cde436b501fefb284f4cf43d87dd9e0a}
+
+
+DMAN3\_\-NUM\_\-CONTIGUOUS\_\-PARAM\_\-ENTRIES 
+
+Definition at line 114 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_c8625cdf0b069aea5d9456be100aef33}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!maxQdmaChannels@{maxQdmaChannels}}
+\index{maxQdmaChannels@{maxQdmaChannels}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[maxQdmaChannels]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_c8625cdf0b069aea5d9456be100aef33}{DMAN3\_\-Params::max\-Qdma\-Channels}}\hfill}
+\label{struct_d_m_a_n3___params_c8625cdf0b069aea5d9456be100aef33}
+
+
+DMAN3\_\-MAX\_\-QDMA\_\-CHANNELS 
+
+Definition at line 127 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_354db3352d61cd71924bdd6c8827f5a5}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!numQdmaChannels@{numQdmaChannels}}
+\index{numQdmaChannels@{numQdmaChannels}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[numQdmaChannels]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_354db3352d61cd71924bdd6c8827f5a5}{DMAN3\_\-Params::num\-Qdma\-Channels}}\hfill}
+\label{struct_d_m_a_n3___params_354db3352d61cd71924bdd6c8827f5a5}
+
+
+DMAN3\_\-NUM\_\-QDMA\_\-CHANNELS 
+
+Definition at line 128 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_3ce746095fcc42779b01362ba9fe2359}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!qdmaChannels@{qdmaChannels}}
+\index{qdmaChannels@{qdmaChannels}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[qdmaChannels]{\setlength{\rightskip}{0pt plus 5cm}Uns$\ast$ \hyperlink{struct_d_m_a_n3___params_3ce746095fcc42779b01362ba9fe2359}{DMAN3\_\-Params::qdma\-Channels}}\hfill}
+\label{struct_d_m_a_n3___params_3ce746095fcc42779b01362ba9fe2359}
+
+
+DMAN3\_\-QDMA\_\-CHANNELS\mbox{[}\mbox{]} 
+
+Definition at line 129 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_1866abe117288a1d94b9ac62039b7f46}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!tccAllocationMaskH@{tccAllocationMaskH}}
+\index{tccAllocationMaskH@{tccAllocationMaskH}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[tccAllocationMaskH]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_1866abe117288a1d94b9ac62039b7f46}{DMAN3\_\-Params::tcc\-Allocation\-Mask\-H}}\hfill}
+\label{struct_d_m_a_n3___params_1866abe117288a1d94b9ac62039b7f46}
+
+
+DMAN3\_\-TCC\_\-FREEMASK\_\-H 
+
+Definition at line 140 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_ce9a03fc79f8cf2727f2753693a66caa}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!tccAllocationMaskL@{tccAllocationMaskL}}
+\index{tccAllocationMaskL@{tccAllocationMaskL}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[tccAllocationMaskL]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_ce9a03fc79f8cf2727f2753693a66caa}{DMAN3\_\-Params::tcc\-Allocation\-Mask\-L}}\hfill}
+\label{struct_d_m_a_n3___params_ce9a03fc79f8cf2727f2753693a66caa}
+
+
+DMAN3\_\-TCC\_\-FREEMASK\_\-L 
+
+Definition at line 141 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_1acba3008b12df10cad8b80bb5991e55}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!heapInternal@{heapInternal}}
+\index{heapInternal@{heapInternal}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[heapInternal]{\setlength{\rightskip}{0pt plus 5cm}Int \hyperlink{struct_d_m_a_n3___params_1acba3008b12df10cad8b80bb5991e55}{DMAN3\_\-Params::heap\-Internal}}\hfill}
+\label{struct_d_m_a_n3___params_1acba3008b12df10cad8b80bb5991e55}
+
+
+Memory Heap descriptor for dynamic allocation of DMAN3 objects that must be allocated in L1D Internal RAM.
+
+A value of -1 indicates that the heap is NOT DEFINED. If heap\-Internal is not defined then any IDMA3 protocol that requests IDMA3\_\-INTERNAL type 'env' memory will fail 
+
+Definition at line 151 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_5e397135231bc45e7e3ac6d4e1ae3166}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!heapExternal@{heapExternal}}
+\index{heapExternal@{heapExternal}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[heapExternal]{\setlength{\rightskip}{0pt plus 5cm}Int \hyperlink{struct_d_m_a_n3___params_5e397135231bc45e7e3ac6d4e1ae3166}{DMAN3\_\-Params::heap\-External}}\hfill}
+\label{struct_d_m_a_n3___params_5e397135231bc45e7e3ac6d4e1ae3166}
+
+
+Memory Heap ID for dyn allocation of private DMAN3 data structures that can be allocated in external memory
+
+A value of -1 indicates that the heap is NOT DEFINED. If heap\-External is not defined then DMAN3 attempts to use heap\-Internal. As a consequence at least one of them must be defined. 
+
+Definition at line 161 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_d431ed7c6e66d11a1c1cdbf9518494f0}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!numTccGroup@{numTccGroup}}
+\index{numTccGroup@{numTccGroup}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[numTccGroup]{\setlength{\rightskip}{0pt plus 5cm}Sm\-Uns \hyperlink{struct_d_m_a_n3___params_d431ed7c6e66d11a1c1cdbf9518494f0}{DMAN3\_\-Params::num\-Tcc\-Group}\mbox{[}DMAN3\_\-MAXGROUPS\mbox{]}}\hfill}
+\label{struct_d_m_a_n3___params_d431ed7c6e66d11a1c1cdbf9518494f0}
+
+
+DMAN3\_\-NUMTCC\_\-GROUP 
+
+Definition at line 170 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_b722aece79c8c43eadd6b30d3a828a74}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!numPaRamGroup@{numPaRamGroup}}
+\index{numPaRamGroup@{numPaRamGroup}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[numPaRamGroup]{\setlength{\rightskip}{0pt plus 5cm}Md\-Uns \hyperlink{struct_d_m_a_n3___params_b722aece79c8c43eadd6b30d3a828a74}{DMAN3\_\-Params::num\-Pa\-Ram\-Group}\mbox{[}DMAN3\_\-MAXGROUPS\mbox{]}}\hfill}
+\label{struct_d_m_a_n3___params_b722aece79c8c43eadd6b30d3a828a74}
+
+
+DMAN3\_\-NUMPARAM\_\-GROUP 
+
+Definition at line 171 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_c1550ea0e1f8b5442f88eccc395a491c}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!idma3Internal@{idma3Internal}}
+\index{idma3Internal@{idma3Internal}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[idma3Internal]{\setlength{\rightskip}{0pt plus 5cm}Bool \hyperlink{struct_d_m_a_n3___params_c1550ea0e1f8b5442f88eccc395a491c}{DMAN3\_\-Params::idma3Internal}}\hfill}
+\label{struct_d_m_a_n3___params_c1550ea0e1f8b5442f88eccc395a491c}
+
+
+Use the internal memory heap for dynamic allocation of IDMA3 objects.
+
+A value of 0 means that IDMA3 objects will be allocated in the heap specified by DMAN3\_\-PARAMS.heap\-External. If the value of idma3Internal is non-zero, IDMA3 objects will be allocated in the heap specified by DMAN3\_\-PARAMS.heap\-Internal. 
+
+Definition at line 181 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_5fd92c4be106cf2614490abffdd09b60}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!scratchAllocFxn@{scratchAllocFxn}}
+\index{scratchAllocFxn@{scratchAllocFxn}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[scratchAllocFxn]{\setlength{\rightskip}{0pt plus 5cm}\hyperlink{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}{DMAN3\_\-Scratch\-Alloc\-Fxn} \hyperlink{struct_d_m_a_n3___params_5fd92c4be106cf2614490abffdd09b60}{DMAN3\_\-Params::scratch\-Alloc\-Fxn}}\hfill}
+\label{struct_d_m_a_n3___params_5fd92c4be106cf2614490abffdd09b60}
+
+
+Use this function for dynamic allocation of IDMA3 objects 'env' from shared scratch memory. If this is NULL then the 'env' will be allocated from persistent memory. If scratch\-Free\-Fxn != NULL, then this function must not be NULL.
+
+For example, to allocate 'env' in DSKT2 scratch memory, set scratch\-Alloc\-Fxn to DSKT2\_\-alloc\-Scratch. 
+
+Definition at line 192 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_383ff9a30cfc36cb8ab0b0d8a4701fce}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!scratchFreeFxn@{scratchFreeFxn}}
+\index{scratchFreeFxn@{scratchFreeFxn}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[scratchFreeFxn]{\setlength{\rightskip}{0pt plus 5cm}\hyperlink{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}{DMAN3\_\-Scratch\-Free\-Fxn} \hyperlink{struct_d_m_a_n3___params_383ff9a30cfc36cb8ab0b0d8a4701fce}{DMAN3\_\-Params::scratch\-Free\-Fxn}}\hfill}
+\label{struct_d_m_a_n3___params_383ff9a30cfc36cb8ab0b0d8a4701fce}
+
+
+Use this function for freeing IDMA3 objects 'env' from shared scratch memory. If this is NULL then the 'env' will be freed from persistent memory. If scratch\-Alloc\-Fxn != NULL, then this function must not be NULL. For example, if 'env' is to be allocated in DSKT2 scratch memory, set scratch\-Free\-Fxn to DSKT2\_\-free\-Scratch. 
+
+Definition at line 202 of file dman3.h.\hypertarget{struct_d_m_a_n3___params_35fa90f301f8b215cb385a78d4fb215d}{
+\index{DMAN3_Params@{DMAN3\_\-Params}!nullPaRamIndex@{nullPaRamIndex}}
+\index{nullPaRamIndex@{nullPaRamIndex}!DMAN3_Params@{DMAN3\_\-Params}}
+\paragraph[nullPaRamIndex]{\setlength{\rightskip}{0pt plus 5cm}Uns \hyperlink{struct_d_m_a_n3___params_35fa90f301f8b215cb385a78d4fb215d}{DMAN3\_\-Params::null\-Pa\-Ram\-Index}}\hfill}
+\label{struct_d_m_a_n3___params_35fa90f301f8b215cb385a78d4fb215d}
+
+
+Index of a reserved Pa\-Ram entry that will not be used for any DMA transfers. This Pa\-Ram will be used to set QCHMAP register to, when there is no activity on the corresponding QDMA channel. 
+
+Definition at line 209 of file dman3.h.
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+\hyperlink{dman3_8h}{dman3.h}\end{CompactItemize}

@@ -1,0 +1,66 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\work\ddspbase\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="ddspbase.tcf"
+Source="dmmcopyCreate.c"
+Source="dmmcopyDelete.c"
+Source="dmmcopyExecute.c"
+Source="iscale.c"
+Source="main.c"
+Source="pingCreate.c"
+Source="pingdata.c"
+Source="pingDelete.c"
+Source="pingExecute.c"
+Source="pinglib.c"
+Source="scale_ti.c"
+Source="scale_ti_vtab.c"
+Source="ssktcrea.c"
+Source="ssktdele.c"
+Source="ssktexec.c"
+Source="strmcopyCreate.c"
+Source="strmcopyDelete.c"
+Source="strmcopyExecute.c"
+Source="zcmsgCreate.c"
+Source="zcmsgDelete.c"
+Source="zcmsgExecute.c"
+Source="ddspbasecfg.cmd"
+
+[Generated Files]
+Source="ddspbasecfg.s62"
+Source="ddspbasecfg_c.c"
+
+["Debug" Settings]
+FinalBuildCmd=$(DSPBRIDGE_TOOLS)\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Debug\ddspbase.out -o=$(Proj_dir)\Debug\ddspbase.dof64P
+
+["Release" Settings]
+FinalBuildCmd=$(DSPBRIDGE_TOOLS)\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Release\ddspbase.out -o=$(Proj_dir)\Release\ddspbase.dof64P
+
+["Compiler" Settings: "Debug"]
+Options=-g -fr"$(Proj_dir)\Debug" -i"$(DSPBRIDGE_EXPORTS)\include" -i"$(DSPBRIDGE_TOOLS)" -d"_DBG_" -d"DBC_ASSERTS=1" -d"_DEBUG" -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"$(Proj_dir)\Release" -i"$(DSPBRIDGE_EXPORTS)\include" -i"$(DSPBRIDGE_TOOLS)" -mv6400+
+
+["DspBiosBuilder" Settings: "Debug"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf" -Dconfig.chipType=2430
+
+["DspBiosBuilder" Settings: "Release"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf" -Dconfig.chipType=2430
+
+["Linker" Settings: "Debug"]
+Options=-c -m".\Debug\ddspbase.map" -o".\Debug\ddspbase.out" -w -x -i"$(DSPBRIDGE_EXPORTS)\lib"
+
+["Linker" Settings: "Release"]
+Options=-c -m".\Release\ddspbase.map" -o".\Release\ddspbase.out" -w -x -i"$(DSPBRIDGE_EXPORTS)\lib"
+

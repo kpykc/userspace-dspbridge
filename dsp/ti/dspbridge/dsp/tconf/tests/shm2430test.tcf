@@ -1,0 +1,26 @@
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = "2430";
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+bridge.enableInst = true;
+
+//bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+
+//print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP2430SHM.SHAREDMEMSIZE));
+bridge.TIOMAP2430SHM.SETMAXBUFSIZE = true;
+bridge.TIOMAP2430SHM.MAXBUFSIZE = 0x1000;
+//bridge.TIOMAP2430SHM.SETMAXBUFSIZE = false;
+
+// This will not get updated until the finalize() function gets called.
+print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP2430SHM.SHAREDMEMSIZE));
+
+print("MAXMESSAGES: " + bridge.TIOMAP2430SHM.MAXMESSAGES);
+
+prog.gen("shm2430test");
+
+print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP2430SHM.SHAREDMEMSIZE));
+print("MAXBUFSIZE: " + utils.toHex(bridge.TIOMAP2430SHM.MAXBUFSIZE));

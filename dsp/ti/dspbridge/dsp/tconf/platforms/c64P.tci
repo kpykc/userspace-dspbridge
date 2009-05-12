@@ -1,0 +1,179 @@
+
+function setupBRIDGE (platform, dll) 
+{
+    utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+    
+    // Load "BRIDGE" module first and set up properties
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/bridge.tci");
+
+    // Set onfiguration parameters in the BRIDGE module now, since they
+    // may be needed by other modules.
+    dspbridge.module("BRIDGE").C64P = true;
+    
+    // Comment the below line to test FC outside the bridge.
+    if ( fcComponent == true ) {
+    dspbridge.module("BRIDGE").fcInsideBridge = true;
+    }
+    
+    //    dspbridge.module("BRIDGE").TIOMAP24XX = true;
+    dspbridge.module("BRIDGE").TINODEHEAP = true;
+
+    if (platform == "2430") {
+        dspbridge.module("BRIDGE").TIOMAP2430 = true;
+    }
+    else if (platform == "3430") {
+        dspbridge.module("BRIDGE").TIOMAP3430 = true;
+    }
+
+    // this flag can be used in various modules to check if building
+    // a dynamic node
+    if (dll) {
+        dspbridge.module("BRIDGE").BRIDGELIB = true;
+    }
+
+    // load all other Bridge modules
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/dcdr.tci");
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/node.tci");
+
+    if (!dll) {
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/shm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/dynm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/proc.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/dsm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/qos.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/util.tci");
+    }
+
+    utils.getProgObjs(prog, bridge);
+	
+    // If this is a dynamic node, nothing more to setup
+    if (dll) {
+        return;
+    }
+
+    // include dynamic loading
+    bridge.BRIDGE.dynamicLoad = true;
+
+    // This is the internal memory region size from 0x00000000 (actually 176KB)
+    bridge.PROC.instance("PROC_default").ulInternalMemSize = 0x11000000;
+
+    prog.module("GBL").C64PLUSCONFIGURE = true;
+    prog.module("GBL").C64PLUSL1PCFG = "32k";
+    prog.module("GBL").C64PLUSL1DCFG = "16k";
+    prog.module("GBL").C64PLUSL2CFG = "64k";
+    prog.module("GBL").C64PLUSMAR0to31 = 0x0;
+    prog.module("GBL").C64PLUSMAR32to63 = 0xffffffff;
+    prog.module("GBL").C64PLUSMAR64to95 = 0xffffffff;
+    prog.module("GBL").C64PLUSMAR96to127 = 0xffffffff;
+
+    /* Take advantage of fix to BCACHE w/b provided by BIOS 5.21.02 */
+    prog.module("GBL").GEMTRUECOMPEN = true;
+    prog.module("GBL").BCACHEREADADDR0 = 0x11000000;
+
+    if (platform == "3430") {
+    // Adjust internal memory objects to account for cache.
+    var mem;
+ 
+    mem = prog.module("MEM").instance("L1PSRAM");
+    mem.len = mem.len - parseInt(prog.module("GBL").C64PLUSL1PCFG) * 0x400;
+    if (mem.len == 0)  mem.destroy();
+ 
+    mem = prog.module("MEM").instance("L1DSRAM");
+    mem.len = mem.len - parseInt(prog.module("GBL").C64PLUSL1DCFG) * 0x400;
+    if (mem.len == 0) mem.destroy();
+ 
+    mem = prog.module("MEM").instance("IRAM");
+    mem.len = mem.len - parseInt(prog.module("GBL").C64PLUSL2CFG) * 0x400;
+    if (mem.len == 0) mem.destroy();
+    }
+
+    var EXTMEM = prog.module("MEM").instance("EXTMEM");
+
+    // Add L1DSRAM
+    // already exists in new BIOS platforms
+    var L1DSRAM = prog.module("MEM").instance("L1DSRAM");
+    L1DSRAM.base = 0x10f04000;
+    L1DSRAM.len = 0x10000;
+    L1DSRAM.createHeap = true;
+    L1DSRAM.heapSize = L1DSRAM.len;
+    L1DSRAM.enableHeapLabel = true;
+    L1DSRAM.heapLabel = prog.extern("L1DSRAM_HEAP");
+    L1DSRAM.space = "data";
+
+    // Adds the FC with the bridge if value is true
+    if (dspbridge.module("BRIDGE").fcInsideBridge) {
+        bridgeutils.addFcConfig();
+    }
+
+    // add instance TSK.TSK_dispatcher
+    TSK_dispatcher = prog.module("TSK").create("TSK_dispatcher");
+    TSK_dispatcher.fxn = prog.extern("RMS_rpc");
+    TSK_dispatcher.stackMemSeg = prog.get("EXTMEM");
+    
+    //add instance TSK.TERMINATE_TSK
+    TERMINATE_TSK = bios.TSK.create("TERMINATE_TSK");
+    TERMINATE_TSK.fxn = prog.extern("RMS_terminateTask");
+    TERMINATE_TSK.stackMemSeg = prog.get("EXTMEM");
+    TERMINATE_TSK.priority = 15;
+
+    if (0) {
+        // add instance DBP.dbpipe
+        dbpipe = prog.module("DBP").create("dbpipe");
+    }
+
+    // add instance of LOG for debug
+    var bridge_log = prog.module("LOG").create("bridge");
+    bridge_log.bufLen = 128;
+    bridge_log.logType = "circular";
+    bridge_log.bufSeg = EXTMEM;
+
+    if (0) {
+        prog.module("TIOMAP2430SHM").useISR = 1;
+    }
+
+    prog.module("GBL").ENABLEINST = 0;
+    prog.module("HST").HOSTLINKTYPE = "NONE";
+    prog.module("RTDX").ENABLERTDX = 0;
+
+    // ENABLE PWRM to turn off BIOS deep sleep (Bridge has its own), then
+    // disable it. (Cannot write to PWRM fields unless PWRM.ENABLE = true.
+    //prog.module("PWRM").ENABLE = true;
+    //prog.module("PWRM").IDLEDOMAINS = false;
+    //prog.module("PWRM").ENABLESLEEP = false;
+    //prog.module("PWRM").SLEEPUNTILRESTART = false;
+    //prog.module("PWRM").ENABLE = false;
+
+    prog.module("GBL").CHIPTYPE = "other";
+    prog.module("GBL").ENABLEALLTRC = 0;
+    //prog.module("GBL").MODIFYCLKMD = 0;
+
+//     if (platform == "2430") {
+        prog.module("CLK").TIMER5BASE = 0x11800000;
+        prog.module("CLK").TIMER6BASE = 0x11801000;
+//     } else if (platform == "3430") {
+//         prog.module("CLK").TIMER5BASE = 0x49038000;
+//         prog.module("CLK").TIMER6BASE = 0x4903A000;
+//     }
+    /*
+     * Set the input CLK to 32 khz for the low resolution timer
+     * this is the default setting done by MPU Bridge
+     */
+    prog.module("CLK").INPUTCLK = 0.032;
+    
+    if (platform == "3430") {
+        //prog.module("HWI").instance("HWI_INT5").fxn = prog.extern("BPWR_isr");
+        //prog.module("HWI").instance("HWI_INT5").interruptSelectNumber = 57;
+        //prog.module("HWI").instance("HWI_INT5").useDispatcher = true;
+    }
+	
+    prog.module("HWI").instance("HWI_INT13").fxn = prog.extern("SHM_isr");
+    prog.module("HWI").instance("HWI_INT13").interruptSelectNumber = 55;
+    prog.module("HWI").instance("HWI_INT13").useDispatcher = true;
+
+    /* plug our USR abort and error functions */
+    prog.module("SYS").ABORTFXN = prog.extern("USR_doAbort");
+    prog.module("SYS").ERRORFXN = prog.extern("USR_logError");
+    prog.module("SYS").PUTCFXN  = prog.extern("USR_doPutc");
+    prog.module("SYS").TRACESEG = prog.get("BRIDGE_TRACE");
+    prog.module("SYS").TRACESIZE = 0x1000;
+}

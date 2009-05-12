@@ -1,0 +1,122 @@
+<?xml version='1.0'?>
+<package name='ti.dspbridge.dsp.doffbuild' release='' xmlns='xdc/spec'>
+    <imports name='xdc.bld'/>
+    <module name='Doff' hostonly='1'>
+        <autodoc tag='summary'>
+            <comment line='9' text='++A+Bridge+utility+capsule+for+generating+DOFF+files%2C+both+static+and+dynamic.+'/>
+        </autodoc>
+        <autodoc tag='details'>
+            <comment line='11' text='++This+capsule+provides+utility+services+for+building+DOFF+files+suitable+'/>
+            <comment line='12' text='++for+the+dynamic+loader.++There+is+support+for+static%2C+dynamic%2C+split-phase%2C+'/>
+            <comment line='13' text='++and+dependant+libraries.+'/>
+        </autodoc>
+        <struct name='ConfigurationParams' line='18'>
+            <field name='chipType' line='19' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='nodeName' line='20' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='target' line='21' type='T%21xdc.bld.ITarget%3AModule%21%24' code='o'>
+            </field>
+            <field name='tcfName' line='22' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='tcfImportPath' line='23' type='K%21String%21%24%5BK%21%21%5D' code='As'>
+            </field>
+            <field name='chartName' line='24' type='K%21String%21%24' code='s'>
+            </field>
+        </struct>
+        <struct name='Configuration' line='29'>
+            <field name='nodeName' line='30' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='target' line='31' type='T%21xdc.bld.ITarget%3AModule%21%24' code='o'>
+            </field>
+            <field name='generatedFiles' line='32' type='K%21String%21%24%5BK%21%21%5D' code='As'>
+            </field>
+        </struct>
+        <struct name='DllParams' line='36'>
+            <field name='dllName' line='37' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='dllType' line='38' type='K%21String%21%24' code='s'>
+            </field>
+            <field name='configuration' line='39' type='T%21ti.dspbridge.dsp.doffbuild.Doff%3AConfiguration%21%24' code='S'>
+            </field>
+            <field name='ignoreDefaultLinkCmdFile' line='40' type='K%21Bool%21%24' code='b'>
+            </field>
+            <field name='additionalLinkCmdFiles' line='41' type='K%21String%21%24%5BK%21%21%5D' code='As'>
+            </field>
+            <field name='buildParams' line='42' type='T%21xdc.bld.Executable%3AAttrs%21%24' code='S'>
+            </field>
+            <field name='skipXdcConfigStep' line='43' type='K%21Bool%21%24' code='b'>
+            </field>
+        </struct>
+        <fxn name='addTarget' line='53' hostonly='1' type='K%21Void%21%24' code='v'>
+            <autodoc tag='summary'>
+                <comment line='49' text='++Used+to+add+a+new+target+type+to+the+list+of+%22known%22+DOFF+targets.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='target'>
+                <comment line='51' text='++++++++++The+new+target+to+recognize.+'/>
+            </autodoc>
+            <arg name='target' line='53' hostonly='1' type='T%21xdc.bld.ITarget%3AModule%21%24' code='o' init=''>
+            </arg>
+        </fxn>
+        <fxn name='complete' line='60' hostonly='1' type='K%21Void%21%24' code='v'>
+            <autodoc tag='summary'>
+                <comment line='58' text='++Must+be+called+when+BOM+configuration+of+DOFF+files+is+complete.+'/>
+            </autodoc>
+        </fxn>
+        <fxn name='addExecutable' line='78' hostonly='1' type='T%21xdc.bld.Executable%3AInstance%21%24' code='o'>
+            <autodoc tag='summary'>
+                <comment line='65' text='++Add+a+DOFF+executable.+'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='67' text='++This+utility+fuction+should+be+used+instead+of+Pkg.addExecutable+to+'/>
+                <comment line='68' text='++add+a+DOFF+executable+to+the+BOM.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='exeName'>
+                <comment line='70' text='+++++++++The+Executable+name.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='target'>
+                <comment line='72' text='++++++++++The+Target.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='platform'>
+                <comment line='74' text='++++++++The+Platform.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='buildParams'>
+                <comment line='76' text='+++++An+array+of+build+parameters.+'/>
+            </autodoc>
+            <arg name='programName' line='79' hostonly='1' type='K%21String%21%24' code='s' init=''>
+            </arg>
+            <arg name='target' line='80' hostonly='1' type='T%21xdc.bld.ITarget%3AModule%21%24' code='o' init=''>
+            </arg>
+            <arg name='platform' line='81' hostonly='1' type='K%21String%21%24' code='s' init=''>
+            </arg>
+            <arg name='buildParams' line='82' hostonly='1' type='T%21xdc.bld.Executable%3AAttrs%21%24' code='S' init=''>
+            </arg>
+        </fxn>
+        <fxn name='addConfiguration' line='86' hostonly='1' type='K%21Any%21%24' code='a'>
+            <arg name='configParams' line='86' hostonly='1' type='T%21ti.dspbridge.dsp.doffbuild.Doff%3AConfigurationParams%21%24' code='S' init=''>
+            </arg>
+        </fxn>
+        <fxn name='addDll' line='102' hostonly='1' type='T%21xdc.bld.Executable%3AInstance%21%24' code='o'>
+            <autodoc tag='summary'>
+                <comment line='90' text='++Add+a+dynamically+loadable+Node+dll+to+the+BOM.++fixme+--+autodoc+'/>
+            </autodoc>
+            <autodoc tag='param' arg='target'>
+                <comment line='92' text='++++++++++The+Target.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='dllName'>
+                <comment line='94' text='+++++++++The+Library+base+name.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='chartFileName'>
+                <comment line='96' text='+++The+Chart+file+name.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='buildParams'>
+                <comment line='98' text='+++++An+array+of+build+parameters.+'/>
+            </autodoc>
+            <autodoc tag='param' arg='cfgScript'>
+                <comment line='100' text='+++++++The+configuration+script.+'/>
+            </autodoc>
+            <arg name='dllParams' line='102' hostonly='1' type='T%21ti.dspbridge.dsp.doffbuild.Doff%3ADllParams%21%24' code='S' init=''>
+            </arg>
+        </fxn>
+    </module>
+</package>

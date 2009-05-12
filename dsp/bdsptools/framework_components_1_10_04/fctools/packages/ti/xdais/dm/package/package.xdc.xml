@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<package name='ti.xdais.dm' release='1, 0, 1, 0' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='7' text='++xDAIS-DM+algorithm+standard'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='9' text='++This+package+provides+the+interface+specifications+for+the+xDAIS-DM'/>
+        <comment line='10' text='++%28Digital+Media%29+algorithm+standard.'/>
+    </autodoc>
+</package>

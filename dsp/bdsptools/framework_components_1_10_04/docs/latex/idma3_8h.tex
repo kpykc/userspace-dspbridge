@@ -1,0 +1,74 @@
+\hypertarget{idma3_8h}{
+\subsection{idma3.h File Reference}
+\label{idma3_8h}\index{idma3.h@{idma3.h}}
+}
+
+
+\subsubsection{Detailed Description}
+IDMA3 Interface Definitions (C64P) - Allows algorithms to request and receive handles representing private logical DMA resources. 
+
+
+
+Definition in file \hyperlink{idma3_8h-source}{idma3.h}.
+
+{\tt \#include $<$ialg.h$>$}\par
+
+
+Include dependency graph for idma3.h:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=79pt]{idma3_8h__incl}
+\end{center}
+\end{figure}
+
+
+This graph shows which files directly or indirectly include this file:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=86pt]{idma3_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{struct_i_d_m_a3___mem_rec}{IDMA3\_\-Mem\-Rec}
+\begin{CompactList}\small\item\em Record containing attributes of the IDMA3 Channel environment memory when (optionally) the IDMA3 Channel is requested with a non-NULL \hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Obj}. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec}
+\begin{CompactList}\small\item\em DMA Channel Descriptor to logical DMA channels. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns}
+\begin{CompactList}\small\item\em These fxns are used to query/grant the DMA resources requested by the algorithm at initialization time, and to change these resources at runtime. All these fxns are implemented by the algorithm, and called by the client of the algorithm. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Obj}
+\begin{CompactList}\small\item\em These functions are used to determine memory requirements for and initialize the IDMA3 protocol's environment that will be allocated by the DMA manager. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Obj}
+\begin{CompactList}\small\item\em \hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Obj} holds the private state associated with each logical DMA channel. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define \hyperlink{group___d_s_p_i_d_m_a3_g85de540d61ac83857803528f25f44e4b}{IDMA3\_\-PROTOCOL\_\-NULL}~((\hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Handle})NULL)
+\begin{CompactList}\small\item\em NULL protocol definition. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef \hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Obj} $\ast$ \hyperlink{group___d_s_p_i_d_m_a3_g8960c528f0708a559bcaab34a865e1a5}{IDMA3\_\-Handle}
+\begin{CompactList}\small\item\em Handle to \char`\"{}logical\char`\"{} DMA channel. \item\end{CompactList}\item 
+typedef \hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Obj} $\ast$ \hyperlink{group___d_s_p_i_d_m_a3_gdd329735609d8384c3625554c0f2c58d}{IDMA3\_\-Protocol\-Handle}
+\begin{CompactList}\small\item\em Handle to IDMA3 protocol object. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum \hyperlink{group___d_s_p_i_d_m_a3_gbe0577eecc288b36121382daa765093a}{IDMA3\_\-Mem\-Type} \{ \par
+\hyperlink{group___d_s_p_i_d_m_a3_ggbe0577eecc288b36121382daa765093a120151b2c6d2d5bcb2d59466b0d13287}{IDMA3\_\-INTERNAL}, 
+\par
+\hyperlink{group___d_s_p_i_d_m_a3_ggbe0577eecc288b36121382daa765093a9e757f072f4782774d8cd4b647563c54}{IDMA3\_\-EXTERNAL}
+ \}
+\begin{CompactList}\small\item\em Memory space descriptors for \hyperlink{struct_i_d_m_a3___mem_rec}{IDMA3\_\-Mem\-Rec}. \item\end{CompactList}\item 
+enum \hyperlink{group___d_s_p_i_d_m_a3_gfa41dccd2cc8f94915fffdda2c8b4a59}{IDMA3\_\-Priority} \{ \par
+\hyperlink{group___d_s_p_i_d_m_a3_ggfa41dccd2cc8f94915fffdda2c8b4a5990abf287e878aedcfbc17d19266f207c}{IDMA3\_\-PRIORITY\_\-URGENT}, 
+\par
+\hyperlink{group___d_s_p_i_d_m_a3_ggfa41dccd2cc8f94915fffdda2c8b4a592bd88e579d019a160876842f0c92f325}{IDMA3\_\-PRIORITY\_\-HIGH}, 
+\par
+\hyperlink{group___d_s_p_i_d_m_a3_ggfa41dccd2cc8f94915fffdda2c8b4a594f3bbe300c3ce513644f31991b6788ca}{IDMA3\_\-PRIORITY\_\-MEDIUM}, 
+\par
+\hyperlink{group___d_s_p_i_d_m_a3_ggfa41dccd2cc8f94915fffdda2c8b4a598560a79ce3c83622bed84ecb31b57aff}{IDMA3\_\-PRIORITY\_\-LOW}
+ \}
+\begin{CompactList}\small\item\em IDMA3 Priority Levels. \item\end{CompactList}\end{CompactItemize}

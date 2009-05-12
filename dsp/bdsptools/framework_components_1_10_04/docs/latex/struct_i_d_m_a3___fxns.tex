@@ -1,0 +1,81 @@
+\hypertarget{struct_i_d_m_a3___fxns}{
+\subsection{IDMA3\_\-Fxns Struct Reference}
+\label{struct_i_d_m_a3___fxns}\index{IDMA3_Fxns@{IDMA3\_\-Fxns}}
+}
+{\tt \#include $<$idma3.h$>$}
+
+
+
+\subsubsection{Detailed Description}
+These fxns are used to query/grant the DMA resources requested by the algorithm at initialization time, and to change these resources at runtime. All these fxns are implemented by the algorithm, and called by the client of the algorithm. 
+
+
+
+Definition at line 162 of file idma3.h.\subsubsection*{Data Fields}
+\begin{CompactItemize}
+\item 
+Void $\ast$ \hyperlink{struct_i_d_m_a3___fxns_4ee5aca6d6f29e0e09c83eaae2a44aec}{implementation\-Id}
+\begin{CompactList}\small\item\em Unique pointer that identifies the module implementing this interface. \item\end{CompactList}\item 
+Void($\ast$ \hyperlink{struct_i_d_m_a3___fxns_1b05e503408ceb2849174d520932aa08}{dma\-Change\-Channels} )(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)
+\begin{CompactList}\small\item\em Apps call this whenever the logical channels are moved at runtime. \item\end{CompactList}\item 
+Uns($\ast$ \hyperlink{struct_i_d_m_a3___fxns_2f893a5ce598a401aecf9e79a5d973d2}{dma\-Get\-Channel\-Cnt} )(Void)
+\begin{CompactList}\small\item\em Apps call this to query algorithm about the maximum number of logical dma channel requested. \item\end{CompactList}\item 
+Uns($\ast$ \hyperlink{struct_i_d_m_a3___fxns_91d2edc4e5202ab46028a272cf8f7ad6}{dma\-Get\-Channels} )(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)
+\begin{CompactList}\small\item\em Apps call this to query algorithm about its dma channel requests at init time, or to get the current channel holdings. \item\end{CompactList}\item 
+Int($\ast$ \hyperlink{struct_i_d_m_a3___fxns_080578d0edab90882b4fe8124c74eea2}{dma\-Init} )(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)
+\begin{CompactList}\small\item\em Apps call this to grant dma handle(s) to the algorithm at initialization. Algorithm initializes the instance object. \item\end{CompactList}\end{CompactItemize}
+
+
+\subsubsection{Field Documentation}
+\hypertarget{struct_i_d_m_a3___fxns_4ee5aca6d6f29e0e09c83eaae2a44aec}{
+\index{IDMA3_Fxns@{IDMA3\_\-Fxns}!implementationId@{implementationId}}
+\index{implementationId@{implementationId}!IDMA3_Fxns@{IDMA3\_\-Fxns}}
+\paragraph[implementationId]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ \hyperlink{struct_i_d_m_a3___fxns_4ee5aca6d6f29e0e09c83eaae2a44aec}{IDMA3\_\-Fxns::implementation\-Id}}\hfill}
+\label{struct_i_d_m_a3___fxns_4ee5aca6d6f29e0e09c83eaae2a44aec}
+
+
+Unique pointer that identifies the module implementing this interface. 
+
+
+
+Definition at line 168 of file idma3.h.\hypertarget{struct_i_d_m_a3___fxns_1b05e503408ceb2849174d520932aa08}{
+\index{IDMA3_Fxns@{IDMA3\_\-Fxns}!dmaChangeChannels@{dmaChangeChannels}}
+\index{dmaChangeChannels@{dmaChangeChannels}!IDMA3_Fxns@{IDMA3\_\-Fxns}}
+\paragraph[dmaChangeChannels]{\setlength{\rightskip}{0pt plus 5cm}Void($\ast$ \hyperlink{struct_i_d_m_a3___fxns_1b05e503408ceb2849174d520932aa08}{IDMA3\_\-Fxns::dma\-Change\-Channels})(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)}\hfill}
+\label{struct_i_d_m_a3___fxns_1b05e503408ceb2849174d520932aa08}
+
+
+Apps call this whenever the logical channels are moved at runtime. 
+
+\hypertarget{struct_i_d_m_a3___fxns_2f893a5ce598a401aecf9e79a5d973d2}{
+\index{IDMA3_Fxns@{IDMA3\_\-Fxns}!dmaGetChannelCnt@{dmaGetChannelCnt}}
+\index{dmaGetChannelCnt@{dmaGetChannelCnt}!IDMA3_Fxns@{IDMA3\_\-Fxns}}
+\paragraph[dmaGetChannelCnt]{\setlength{\rightskip}{0pt plus 5cm}Uns($\ast$ \hyperlink{struct_i_d_m_a3___fxns_2f893a5ce598a401aecf9e79a5d973d2}{IDMA3\_\-Fxns::dma\-Get\-Channel\-Cnt})(Void)}\hfill}
+\label{struct_i_d_m_a3___fxns_2f893a5ce598a401aecf9e79a5d973d2}
+
+
+Apps call this to query algorithm about the maximum number of logical dma channel requested. 
+
+\hypertarget{struct_i_d_m_a3___fxns_91d2edc4e5202ab46028a272cf8f7ad6}{
+\index{IDMA3_Fxns@{IDMA3\_\-Fxns}!dmaGetChannels@{dmaGetChannels}}
+\index{dmaGetChannels@{dmaGetChannels}!IDMA3_Fxns@{IDMA3\_\-Fxns}}
+\paragraph[dmaGetChannels]{\setlength{\rightskip}{0pt plus 5cm}Uns($\ast$ \hyperlink{struct_i_d_m_a3___fxns_91d2edc4e5202ab46028a272cf8f7ad6}{IDMA3\_\-Fxns::dma\-Get\-Channels})(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)}\hfill}
+\label{struct_i_d_m_a3___fxns_91d2edc4e5202ab46028a272cf8f7ad6}
+
+
+Apps call this to query algorithm about its dma channel requests at init time, or to get the current channel holdings. 
+
+\hypertarget{struct_i_d_m_a3___fxns_080578d0edab90882b4fe8124c74eea2}{
+\index{IDMA3_Fxns@{IDMA3\_\-Fxns}!dmaInit@{dmaInit}}
+\index{dmaInit@{dmaInit}!IDMA3_Fxns@{IDMA3\_\-Fxns}}
+\paragraph[dmaInit]{\setlength{\rightskip}{0pt plus 5cm}Int($\ast$ \hyperlink{struct_i_d_m_a3___fxns_080578d0edab90882b4fe8124c74eea2}{IDMA3\_\-Fxns::dma\-Init})(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} handle, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec)}\hfill}
+\label{struct_i_d_m_a3___fxns_080578d0edab90882b4fe8124c74eea2}
+
+
+Apps call this to grant dma handle(s) to the algorithm at initialization. Algorithm initializes the instance object. 
+
+
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+\hyperlink{idma3_8h}{idma3.h}\end{CompactItemize}

@@ -1,0 +1,103 @@
+Description:
+===========
+Instructions for building DSP Bridge sample applications.
+
+Tool Dependencies:
+=================
+- TI CodeGen Tool (6.0.5)
+- TI DSP BIOS (BIOS 5.32.01.05)
+- TI RTSC Tool (Included in BIOS package)
+- TI Framework Components (1.10.03)
+
+Build Environment:
+=================
+DSP Bridge requires the presence of a depot folder. The purpose of this repository is to contain all the dependencies required to build DSP Bridge. Over the time it is possible to have several versions of CGT, DSP BIOS, and FC installed on the system, the use of depot simplifies the management of all the different installed versions. It is also simple to switch to a different version of a dependency.
+
+Ex. export DEPOT=/<BIOS_install_directory> 
+
+Note: on Linux/Unix system, it is possible to use symbolic links. As a consequence DSP BIOS and CGT may be installed anywhere on the system, and the depot may only contain symbolic links. Also there is no defined default for the depot on Linux/Unix.  
+
+Build Procedure:
+===============
+1. gmake -f gmakefile .clean
+2. gmake -f gmakefile .samples
+
+Build a dynamic node DLL in CCS:
+=============================== 
+In order to build a stand alone dynamic node DLL. Since the DLL contains one DSP Bridge node (it may contain more than one), a TCF script is needed that only declares the node attributes. DSP BIOS and DSP Bridge configuration is not done in dynamic node TCF scripts, it is done in the base image instead. 
+
+The following steps need to be followed when building a dynamic node DLL: 
+- Make sure DSP BIOS is installed, and that CCS Component Manager is setup properly 
+- Make sure DSP Bridge is installed 
+- The stand alone DLL is an relocatable non-executable, as such create a new CCS project file of type "exectuable", not "library" 
+- Add all the source files to the project files (C, ASM, CMD, as well as the TCF script) 
+- In the "Compiler" Settings section, add all the include paths as mentioned above. Repeat for "debug" and "release" variants. 
+- In the "DspBiosBuilder" settings section, add the TCONF import path as mentioned above. Repeat for "debug" and "release" variants. 
+- Add the generated linker command file in the list of project files. 
+- For DLLs, TCONF will not generate the file foocfg_c.c, however CCS will add it to the list of "generated source files". As a consequence it is required to exclude the file from the build. This is a CCS feature, that can be set in the "file specific options". 
+- At this point, there is nothing else required by DSP Bridge, you may add any regular PJT configuration requested by your application (e.g. define/undefine macros, set the level of optimization, ... ) 
+
+Remarks: 
+- There may be one or several nodes defined in the TCF script, this does not affect the "build" of the DLL. If there are more than one node, the corresponding source files need to be added to the project file, and the TCF script needs to create these nodes. 
+- On 2430, the compile option -mv6400+ is required. 
+- By convention DLLs DOF files have the extension .dll64P, but this is not required by DSP Bridge. 
+- The project file can be edited manually, or from CCS directly 
+
+Sample CCS Project File for DMMCOPY:
+===================================
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\OMAPSW_MPU\dspbridge\samples\dsp\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="dmmcopyCreate.c"
+Source="dmmcopyDelete.c"
+Source="dmmcopydyn.tcf"
+Source="dmmcopyExecute.c"
+Source="package\cfg\tconfGeneratedFiles\dmmcopydyn_3430_64P\dmmcopydyncfg.cmd"
+
+[Generated Files]
+Source="dmmcopydyncfg.s62"
+Source="dmmcopydyncfg_c.c"
+
+["Debug" Settings]
+FinalBuildCmd=C:\OMAPSW_MPU\dspbridge\dsp\bdsptools\packages\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Debug\dmmcopydyn.out -o=$(Proj_dir)\Debug\dmmcopydyn.dll64P
+
+["Release" Settings]
+FinalBuildCmd=$(DSPBRIDGE_TOOLS)\ti\dspbridge\dsp\doffbuild\bin\dllcreate $(Proj_dir)\Release\dmmcopydyn.out -o=$(Proj_dir)\Release\dmmcopydyn.dll64P
+
+["Compiler" Settings: "Debug"]
+Options=-g -fr"$(Proj_dir)\Debug" -i"C:\OMAPSW_MPU\dspbridge\dsp\bdsptools\packages" -i"C:\OMAPSW_MPU\dspbridge\dsp\ti\dspbridge\dsp\bridge_product\exports\include" -d"_DBG_" -d"DBC_ASSERTS=1" -d"_DEBUG" -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"$(Proj_dir)\Release" -i"$(DSPBRIDGE_EXPORTS)\include" -i"$(DSPBRIDGE_TOOLS)" -mv6400+
+
+["DspBiosBuilder" Settings: "Debug"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf;C:\OMAPSW_MPU\dspbridge\dsp\ti\dspbridge\dsp\tconf;C:\OMAPSW_MPU\dspbridge\dsp" -Dconfig.chipType=2430
+
+["DspBiosBuilder" Settings: "Release"]
+Options=-Dconfig.importPath="$(DSPBRIDGE_DIR);$(DSPBRIDGE_DIR)\ti\dspbridge\dsp\tconf" -Dconfig.chipType=2430
+
+["Linker" Settings: "Debug"]
+Options=-r -cr -m".\Debug\dmmcopydyn.map" -o".\Debug\dmmcopydyn.out" -w -x
+
+["Linker" Settings: "Release"]
+Options=-r -cr -m".\Release\dmmcopydyn.map" -o".\Release\dmmcopydyn.out" -w -x
+
+["dmmcopydyncfg_c.c" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["dmmcopydyncfg_c.c" Settings: "Release"]
+ExcludeFromBuild=true
+
+
+

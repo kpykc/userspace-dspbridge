@@ -1,0 +1,82 @@
+/*
+ *  Copyright 2007 by Texas Instruments Incorporated.
+ *
+ *  All rights reserved. Property of Texas Instruments Incorporated.
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ *
+ */
+
+/*
+ *  ======== template.tci ========
+ */
+function compile (prog, file, obj)
+{
+    var encode = function(s) { return escape(s.replace("``", "`")); }
+    var inp = new java.io.BufferedReader(new java.io.FileReader(file));
+    var body = "";
+    var jflg = 0;
+    var line;
+
+    while (line = inp.readLine()) {
+
+        if (/^\s*\%\%\{/.test(line)) {
+            body += '\n';
+            jflg = 1;
+            continue;
+        }
+
+        if (/^\s*\%\%\}/.test(line)) {
+            body += '\n';
+            jflg = 0;
+            continue;
+        }
+
+        if (jflg) {
+            body += line + '\n';
+            continue;
+        }
+
+        if (/^\s*\|\-\s*\|/.test(line)) {
+            line = line.slice(line.indexOf('|') + 1);
+            line = line.slice(line.indexOf('|') + 1);   // 2nd '|'
+        }
+        else if (/^\s*\%/.test(line)) {
+            body += line.slice(line.indexOf('%') + 1) + '\n';
+            continue;
+        }
+
+        var pat = /`([^`]+`)(.*)/;
+        var mat;
+
+        while (mat = line.match(pat)) {
+            body += "$out.print(unescape('" + encode(line.slice(0, mat.index)) + "')); ";
+            if (mat[1].length > 1) {
+                body += "$out.print('' + eval(unescape('" + encode(mat[1].slice(0, -1) + '\n') + "'))); ";
+            }
+            else {
+                body += "$out.print('`'); ";
+            }
+            line = mat[2];
+        }
+        line = "" + line;
+        body += "$out.print(unescape('" + (line.length > 0 ? encode(line) : line) + "\\n'));\n";
+    }
+
+    var fs = 
+    'fxn = function () { '
+    + 'var $out = {};'
+    + '$out.text = "";'
+    + '$out.print = function (s) { $out.text += s; };'
+    + body
+    + 'return $out.text;'
+    + '};'
+    + 'fxn.apply(obj);'
+
+    return eval(fs);
+}
+
+/*
+ *  @(#) ti.sdo.fc.utils; 1, 0, 0,58; 5-10-2007 10:50:25; /db/atree/library/trees/fc-b12x/src/
+ */
+

@@ -1,0 +1,74 @@
+\hypertarget{struct_i_d_m_a3___protocol_obj}{
+\subsection{IDMA3\_\-Protocol\-Obj Struct Reference}
+\label{struct_i_d_m_a3___protocol_obj}\index{IDMA3_ProtocolObj@{IDMA3\_\-ProtocolObj}}
+}
+{\tt \#include $<$idma3.h$>$}
+
+
+
+\subsubsection{Detailed Description}
+These functions are used to determine memory requirements for and initialize the IDMA3 protocol's environment that will be allocated by the DMA manager. 
+
+\begin{Desc}
+\item[Remarks:]These fxns are implemented by the IDMA3 protocol that is used for a given channel (e.g, ACPY3), and are passed in the \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} structure to request a logical DMA channel. If the IDMA3 protocol does not require any particular one of these functions, it may be set to NULL.
+
+\hyperlink{struct_i_d_m_a3___protocol_obj_8985b385f24d611a7e65f1b6fc867159}{get\-Env\-Mem\-Rec()} - Called by the DMA manager when creating a logical DMA channel, to query the IDMA3 protocol's memory requirements for its environment.
+
+\hyperlink{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}{init\-Handle()} - Called by the DMA manager after allocation the environment, to allow the IDMA3 protocol to do any initialization of its environment.
+
+\hyperlink{struct_i_d_m_a3___protocol_obj_7ce1036a56ee66ca9d0a195c04e40518}{de\-Init\-Handle()} - Called by the DMA manager when a channel is freed, so that the IDMA3 protocol can do any required de-initialization or freeing any memory that may have been allocated in \hyperlink{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}{init\-Handle()}. \end{Desc}
+
+
+
+
+Definition at line 221 of file idma3.h.\subsubsection*{Data Fields}
+\begin{CompactItemize}
+\item 
+String \hyperlink{struct_i_d_m_a3___protocol_obj_e79494308149dd394cf13ceb8ba7c439}{name}
+\item 
+Void($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_8985b385f24d611a7e65f1b6fc867159}{get\-Env\-Mem\-Rec} )(\hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec, \hyperlink{struct_i_d_m_a3___mem_rec}{IDMA3\_\-Mem\-Rec} $\ast$mem\-Rec)
+\item 
+Bool($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}{init\-Handle} )(\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\item 
+Bool($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_7ce1036a56ee66ca9d0a195c04e40518}{de\-Init\-Handle} )(\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\end{CompactItemize}
+
+
+\subsubsection{Field Documentation}
+\hypertarget{struct_i_d_m_a3___protocol_obj_e79494308149dd394cf13ceb8ba7c439}{
+\index{IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}!name@{name}}
+\index{name@{name}!IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}}
+\paragraph[name]{\setlength{\rightskip}{0pt plus 5cm}String \hyperlink{struct_i_d_m_a3___protocol_obj_e79494308149dd394cf13ceb8ba7c439}{IDMA3\_\-Protocol\-Obj::name}}\hfill}
+\label{struct_i_d_m_a3___protocol_obj_e79494308149dd394cf13ceb8ba7c439}
+
+
+Name of the protocol 
+
+Definition at line 226 of file idma3.h.\hypertarget{struct_i_d_m_a3___protocol_obj_8985b385f24d611a7e65f1b6fc867159}{
+\index{IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}!getEnvMemRec@{getEnvMemRec}}
+\index{getEnvMemRec@{getEnvMemRec}!IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}}
+\paragraph[getEnvMemRec]{\setlength{\rightskip}{0pt plus 5cm}Void($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_8985b385f24d611a7e65f1b6fc867159}{IDMA3\_\-Protocol\-Obj::get\-Env\-Mem\-Rec})(\hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} $\ast$chnl\-Rec, \hyperlink{struct_i_d_m_a3___mem_rec}{IDMA3\_\-Mem\-Rec} $\ast$mem\-Rec)}\hfill}
+\label{struct_i_d_m_a3___protocol_obj_8985b385f24d611a7e65f1b6fc867159}
+
+
+Fill in the \hyperlink{struct_i_d_m_a3___mem_rec}{IDMA3\_\-Mem\-Rec} with the memory attributes needed for allocation of the IDMA3 protocol's environment buffer. \hypertarget{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}{
+\index{IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}!initHandle@{initHandle}}
+\index{initHandle@{initHandle}!IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}}
+\paragraph[initHandle]{\setlength{\rightskip}{0pt plus 5cm}Bool($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}{IDMA3\_\-Protocol\-Obj::init\-Handle})(\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)}\hfill}
+\label{struct_i_d_m_a3___protocol_obj_147bfd9a69a93542195adcdea86a6a58}
+
+
+Initialize the env stored in the IDMA3 channel handle. Return TRUE on success, FALSE otherwise. If FALSE is returned channel creation will fail.
+
+When (and if) the framework/resource manager allocates requested internal 'env' memory as 'scratch', the 'env' pointer passed in the IDMA3\_\-Handle points to a persistent, private memory which contains the address of the 'scratch' allocated 'internal' 'env' memory in the first word of the 'persistent' 'env' pointer. If the first word of the env memory is NULL, then no separate 'scratch' memory has been allocated and 'env' memory itself is 'persistent'. \hypertarget{struct_i_d_m_a3___protocol_obj_7ce1036a56ee66ca9d0a195c04e40518}{
+\index{IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}!deInitHandle@{deInitHandle}}
+\index{deInitHandle@{deInitHandle}!IDMA3_ProtocolObj@{IDMA3\_\-Protocol\-Obj}}
+\paragraph[deInitHandle]{\setlength{\rightskip}{0pt plus 5cm}Bool($\ast$ \hyperlink{struct_i_d_m_a3___protocol_obj_7ce1036a56ee66ca9d0a195c04e40518}{IDMA3\_\-Protocol\-Obj::de\-Init\-Handle})(\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)}\hfill}
+\label{struct_i_d_m_a3___protocol_obj_7ce1036a56ee66ca9d0a195c04e40518}
+
+
+De-Initialize the env stored in the IDMA3 channel handle, before it is freed by the DMA manager. 
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+\hyperlink{idma3_8h}{idma3.h}\end{CompactItemize}

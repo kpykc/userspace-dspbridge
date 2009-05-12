@@ -1,0 +1,131 @@
+;
+;  ======== mgs3/acpy2_reservedisrs.s55 ========
+;
+; This file implements various ISR routines for reserved channels
+;
+;
+;------------------------------------------------------------------------------------------
+;  History:
+;     May 29, 2005 by Craig Leeds
+;       Original
+;
+;------------------------------------------------------------------------------------------
+
+
+
+ .if (!$isdefed("DMA_OPT"))
+DMA_OPT .equ 0        ; if not defined
+ .endif
+
+    .if DMA_OPT
+
+;==============================================================================
+;includes
+;------------------------------------------------------------------------------
+
+    .include hwi.h55
+    .include "dma_omap.h55"
+
+;/d============================================================================
+;/d function prototype and global variables
+;/d----------------------------------------------------------------------------
+    .global     __DMA_jobQueue
+
+
+;/d============================================================================
+;/d defines 
+;/d----------------------------------------------------------------------------
+
+    .def __ACPY2_reservedIsrStub
+    .def __ACPY2_reservedIsr0
+    .def __ACPY2_reservedIsr1
+    .def __ACPY2_reservedIsr2
+    .def __ACPY2_reservedIsr3
+    .def __ACPY2_reservedIsr4
+    .def __ACPY2_reservedIsr5
+
+;/d============================================================================
+;/d macros
+;/d----------------------------------------------------------------------------
+
+MACRO_RESERVE_ISR_PROLOG  .macro  ChannelNumber
+*
+* Note: ST0, ST1, and ST2 are automatically save and restored
+* by the Automatic Context Switch mechanism of an ISR.
+*
+    ; ACPY2_queueForReservedIsr = _DMA_jobQueue[chanNum)]
+    PSHBOTH XAR4
+    MOV dbl(*(#(__DMA_jobQueue+(ChannelNumber*2)))), XAR4 ; (Pipe 4 Ok for XAR4 for MOV)
+    MOV XAR4, dbl(*(#ACPY2_queueForReservedIsr))
+    POPBOTH XAR4
+    ||B   ReservedIsrMergedCode
+ 
+   .endm
+   
+ACPY2_queueForReservedIsr    .usect    ".bss:ACPY_internal",2,1
+
+    .sect    ".text:ACPY_internal"
+__ACPY2_reservedIsrStub:
+  .noremark 5672 ; No long MMR write before reti
+  .noremark 5674 ; return should never get stalled
+  .noremark 5675 ; no MMR write to RPTC near this instruction
+    reti
+  .remark 5672
+  .remark 5674
+  .remark 5675
+
+    .sect    ".text:ACPY_internal"
+
+    .align 4
+__ACPY2_reservedIsr0:
+    MACRO_RESERVE_ISR_PROLOG  0
+
+    .align 4
+__ACPY2_reservedIsr1:
+    MACRO_RESERVE_ISR_PROLOG  1
+
+    .align 4
+__ACPY2_reservedIsr2:
+    MACRO_RESERVE_ISR_PROLOG  2
+
+    .align 4
+__ACPY2_reservedIsr3:
+    MACRO_RESERVE_ISR_PROLOG  3
+
+    .align 4
+__ACPY2_reservedIsr4:
+    MACRO_RESERVE_ISR_PROLOG  4
+
+    .align 4
+__ACPY2_reservedIsr5:
+    MACRO_RESERVE_ISR_PROLOG  5
+
+
+
+    .align 4
+ReservedIsrMergedCode:
+
+   HWI_enter C55_AR_DR_SAVE_BY_CALLER_MASK, \
+             C55_ACC_SAVE_BY_CALLER_MASK,   \
+             C55_MISC1_SAVE_BY_CALLER_MASK, \
+             C55_MISC2_SAVE_BY_CALLER_MASK, \
+             C55_MISC3_SAVE_BY_CALLER_MASK, \
+             0xffff, 0xffff
+
+*
+* Call the callback function with its 23-bit argument
+*
+    MOV dbl(*(#ACPY2_queueForReservedIsr)), XAR4 ; (Pipe 0 of 4 for MOV)
+    MOV dbl(*+AR4(#_DMA_QueueObj.cbFxn)), AC1 ; AC1 = &jobQ->cbFxn
+*                                             ; AR4 = &jobQ->cbFxn
+    MOV dbl(*AR4(short(#_DMA_QueueObj.cbArg-_DMA_QueueObj.cbFxn))), XAR0    ; argument for callback function
+    CALL AC1
+
+   HWI_exit  C55_AR_DR_SAVE_BY_CALLER_MASK, \
+             C55_ACC_SAVE_BY_CALLER_MASK,   \
+             C55_MISC1_SAVE_BY_CALLER_MASK, \
+             C55_MISC2_SAVE_BY_CALLER_MASK, \
+             C55_MISC3_SAVE_BY_CALLER_MASK, \
+             0xffff, 0xffff
+
+    .endif ; defined DMA_OPT

@@ -1,0 +1,249 @@
+function setupBIOS (platform) 
+{
+    /*
+     * Setup platform-specific memory map, CLK rate, etc.
+     */
+    var mem_ext = [];
+
+    mem_ext[0] = {
+        comment: "This memory segment is used for External program",
+        name: "EXTMEM",
+        base: 0x180000,
+        len:  0x80000,
+        space: "code/data"
+    };
+
+    mem_ext[1] = {
+        comment: "<add comments here>",
+        name: "PDROM",
+        base: 0xff8000,
+        len:  0x8000,
+        space: "code/data"
+    };
+
+    var device_regs = {
+        st3_55: null
+    };
+
+    var params = {
+        clockRate: 330,
+        catalogName: "ti.catalog.c5500",
+        deviceName: platform,
+        regs: device_regs,
+        mem: mem_ext
+    };
+
+    /*
+     * Customize generic platform with parameters specified above.
+     */
+    utils.loadPlatform("ti.platforms.generic", params);    
+
+    // memory config
+    bios.enableMemoryHeaps(prog);
+    bios.enableTskManager(prog);
+
+
+    if(platform == "1035") 
+    {	
+        var APIBOOT = bios.MEM.create("APIBOOT");
+        APIBOOT.base = 0x00C000;
+        APIBOOT.len = 0x8;
+        APIBOOT.createHeap = false;
+    	APIBOOT.space = "data"; // put this section in PAGE 1 to avoid overlap
+    	
+	var SARAM = bios.MEM.instance("SARAM");
+	SARAM.base = 0x00C008;
+	SARAM.len = 0x13F78;
+	SARAM.createHeap = 1;
+	SARAM.heapSize = 0x0100;
+	SARAM.createHeap = 0;
+  
+	var DARAM = bios.MEM.instance("DARAM");
+	DARAM.base = 0x100;
+	DARAM.len = 0xBF00;
+	DARAM.createHeap = true;
+	DARAM.heapSize = 0x1000;	
+    }
+    else
+    {
+        var APIBOOT = bios.MEM.create("APIBOOT");
+	APIBOOT.base = 0x008000;
+	APIBOOT.len = 0x8;
+	APIBOOT.createHeap = false;
+	APIBOOT.space = "data"; // put this section in PAGE 1 to avoid overlap
+    	
+	var SARAM = bios.MEM.instance("SARAM");
+	SARAM.base = 0x008008;
+	SARAM.len = 0xbef8;
+	SARAM.createHeap = 1;
+	SARAM.heapSize = 0x0100;
+	SARAM.createHeap = 0;
+    
+	var DARAM = bios.MEM.instance("DARAM");
+	DARAM.base = 0x100;
+	DARAM.len = 0x7f00;
+	DARAM.createHeap = true;
+	DARAM.heapSize = 0x1000;
+    }
+ 
+    
+    bios.setMemCodeSections(prog, DARAM);
+    bios.setMemDataNoHeapSections(prog, DARAM);
+    bios.setMemDataHeapSections(prog, DARAM);
+}
+
+function setupBRIDGE (platform, dll) 
+{
+    utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+    
+    // Load BRIDGE module first so other modules can use its properties
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/bridge.tci");
+
+    // Set up BRIDGE properties needed by other modules
+    if ((platform == "1510")||(platform == "v1030")) {
+        dspbridge.module("BRIDGE").TIOMAP1510 = true;
+        dspbridge.module("BRIDGE").TIOMAP1510ZC = true;
+    }
+    else if ( (platform == "24xx") || (platform == "v1035") ) {
+        dspbridge.module("BRIDGE").TIOMAP24XX = true;
+        if( platform == "v1035")
+        {
+            dspbridge.module("BRIDGE").TIOMAPV1035 = true;
+            dspbridge.module("BRIDGE").includeMipcLib = false;
+        }
+    }
+
+    if ( fcComponent == true ) {
+        dspbridge.module("BRIDGE").fcInsideBridge = true;
+    }
+
+    // this flag can be used in various modules to check if building
+    // a dynamic node
+    if (dll) {
+        dspbridge.module("BRIDGE").BRIDGELIB = true;
+    }
+
+    // Load the rest of the Bridge modules
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/dcdr.tci");
+    dspbridge.register("ti/dspbridge/dsp/tconf/modules/node.tci");
+
+    if (!dll) {
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/shm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/dynm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/proc.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/dsm.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/qos.tci");
+        dspbridge.register("ti/dspbridge/dsp/tconf/modules/util.tci");
+    }
+
+    utils.getProgObjs(prog, bridge);
+
+    // If this is a dynamic node, nothing more to setup
+    if (dll) {
+        return;
+    }
+
+    // include dynamic loading
+    bridge.BRIDGE.dynamicLoad = true;
+
+    bridge.TIOMAP1510SHM.EXTDYNSIZE  = 0x8000;
+    bridge.TIOMAP1510SHM.EXTMEMSIZE = 0x10000;
+
+    bios.MEM.SYSSTACKSIZE = 1280;
+
+    bios.MEM.CINITSEG    = prog.get("DARAM");
+    bios.MEM.SYSINITSEG  = prog.get("DARAM");
+    bios.MEM.CONSTSEG    = prog.get("SARAM");
+    bios.MEM.ARGSSEG     = prog.get("DARAM");
+    bios.MEM.STACKSEG    = prog.get("DARAM");
+    bios.MEM.SYSSTACKSEG = prog.get("DARAM");
+    bios.SYS.TRACESEG    = prog.get("DARAM");
+    bios.MEM.BIOSSEG     = prog.get("SARAM");
+    
+    
+    if(platform == "v1035")
+    {
+	/* Premap DYNSRAMMEM segment to DYN_SRAM abstract memory type */
+	bridge.PROC.DYNSRAMSEG = prog.get("DYNSRAMMEM");
+	bridge.PROC.instance("PROC_default").physicalEntry0    = 0x20100000;
+	bridge.PROC.instance("PROC_default").physicalEntry1    = 0x1;
+	bridge.PROC.instance("PROC_default").virtualEntry1     = 0x20000;
+	bridge.PROC.instance("PROC_default").physicalEntry2    = 0x1;
+        bridge.PROC.instance("PROC_default").ulInternalMemSize = 0x28000;
+    }
+    else
+    {
+        /* Premap DYNSRAMMEM segment to DYN_SRAM abstract memory type */
+        bridge.PROC.DYNSRAMSEG = prog.get("DYNSRAMMEM");
+        bridge.PROC.instance("PROC_default").physicalEntry0    = 0x11e00000;
+        bridge.PROC.instance("PROC_default").physicalEntry1    = 0x1;
+        bridge.PROC.instance("PROC_default").virtualEntry1     = 0x14000;
+        bridge.PROC.instance("PROC_default").physicalEntry2    = 0x1;
+    	bridge.PROC.instance("PROC_default").ulInternalMemSize = 0x14000;
+    }
+
+
+    if(platform == "v1035")
+    {
+        bridge.CLK.ENABLEHTIME = 0; 
+    }
+
+    bios.MEM.TEXTSEG = prog.get("EXTMEM");
+    bios.MEM.DATASEG = prog.get("EXTMEM");
+
+    /* Get rid of tconf warning by setting ENABLELOADADDR first */
+    bios.MEM.ENABLELOADADDR = 1;
+    bios.MEM.LOADTEXTSEG = prog.get("SARAM");
+    bios.MEM.ENABLELOADADDR = 0;
+    
+    //    bridge.DMAN.OBJMEMSEG = bios.MEM.BIOSOBJSEG;
+
+    // Adds the FC with the bridge if value is true
+    if (dspbridge.module("BRIDGE").fcInsideBridge) {
+        bridgeutils.addFcConfig();
+    }
+    // add instance TSK.TSK_dispatcher
+    TSK_dispatcher = bios.TSK.create("TSK_dispatcher");
+    TSK_dispatcher.fxn = prog.extern("RMS_rpc");
+    TSK_dispatcher.stackMemSeg = prog.get("DARAM");
+    TSK_dispatcher.sysStackSize = 512;
+
+    // add instance of LOG for debug
+    var bridge_log = bios.LOG.create("bridge");
+    bridge_log.bufLen = 128;
+    bridge_log.logType = "circular";
+    //    bridge_log.bufSeg = EXTMEM;
+
+    bios.GBL.ENABLEINST = 0;
+    bios.HST.HOSTLINKTYPE = "NONE";
+    bios.RTDX.ENABLERTDX = 0;
+
+    // ENABLE PWRM to turn off BIOS deep sleep (Bridge has its own), then
+    // disable it. (Cannot write to PWRM fields unless PWRM.ENABLE = true.
+    bios.PWRM.ENABLE = true;
+    bios.PWRM.IDLEDOMAINS = false;
+    bios.PWRM.ENABLESLEEP = false;
+    bios.PWRM.SLEEPUNTILRESTART = false;
+    bios.PWRM.ENABLE = false;
+    
+    bios.GBL.CHIPTYPE = "other";
+    bios.GBL.MEMORYMODEL = "LARGE";
+    bios.GBL.ENABLEALLTRC = 0;
+    bios.GBL.MODIFYCLKMD = 0;
+    
+    /* Do not change VECT.base for 1035 platform */
+    if(platform != "v1035")
+    {
+    	bios.MEM.instance("VECT").base = 0x013f00;
+    }
+    
+    bios.HWI.instance("HWI_INT18").fxn = prog.extern("DDMA_F_isr0");
+    bios.HWI.STACKMODE = "USE_RETA";
+    
+    /* plug our USR abort and error functions */
+    bios.SYS.ABORTFXN = prog.extern("USR_doAbort");
+    bios.SYS.ERRORFXN = prog.extern("USR_logError");
+    bios.SYS.PUTCFXN  = prog.extern("USR_doPutc");
+    bios.SYS.TRACESEG = prog.get("EXTMEM");
+}
+

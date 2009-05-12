@@ -1,0 +1,67 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== dynbaseLowmem.tcf ========
+ */
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+load(utils.findFile('assert.tci'));  // load assert support
+
+utils.importFile("dynbase.tci");
+
+/* Reduce the size of SARAM to make room for dynamic loading region */
+bridge.SARAM.base = 0x8008;
+bridge.SARAM.len = 0x7ff8;
+
+/* Reduce the size of DARAM to make room for dynamic loading region */
+bridge.DARAM.base = 0x100;
+bridge.DARAM.len = 0x5700;
+bridge.DARAM.heapSize = 0x2800;
+
+/* Create SARAM_DYN for dynamic loading */
+saramdyn = bridge.MEM.create("SARAM_DYN");
+saramdyn.createHeap = 0;
+saramdyn.base = 0x10000;
+saramdyn.len = 0x211;
+saramdyn.space = "code/data";
+saramdyn.dynamicLoading = true;
+
+/* Create DARAM_DYN for dynamic loading */
+daramdyn = bridge.MEM.create("DARAM_DYN");
+daramdyn.createHeap = 0;
+daramdyn.base = 0x5800;
+daramdyn.len = 0x10;
+daramdyn.space = "code/data";
+daramdyn.dynamicLoading = true;
+
+/* Map dynamic loading memory regions to abstract types */
+bridge.PROC.DYNDARAMSEG = daramdyn;
+bridge.PROC.DYNSARAMSEG = saramdyn;
+bridge.PROC.DYNEXTSEG = bridge.DYNEXTMEM;
+
+assert.check();
+
+prog.gen();

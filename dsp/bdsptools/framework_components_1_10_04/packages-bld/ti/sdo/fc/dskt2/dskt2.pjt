@@ -1,0 +1,36 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectName="dskt2"
+ProjectDir="c:\myprojects\"
+ProjectType=Library
+CPUFamily=TMS320C64XX
+Tool="Archiver"
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="dskt2actv.c"
+Source="dskt2crea.c"
+Source="dskt2ctrl.c"
+Source="dskt2dact.c"
+Source="dskt2free.c"
+Source="dskt2_qos.c"
+Source="dskt2_scratch.c"
+
+["Archiver" Settings: "Debug"]
+Options=-r -odskt2d.a64P
+
+["Archiver" Settings: "Release"]
+Options=-r -odskt2.a64P
+
+["Compiler" Settings: "Debug"]
+Options=-g -q -eoo64P -fr"$(Proj_dir)\debug" -i"." -i"$(Proj_dir)/../../../../../fctools/packages/ti/xdais" -i"$(Proj_dir)/../utils" -i"$(Install_dir)/c6000/xdais/include" --no_compress -ml3 -mv6400+ --disable:sploop
+
+["Compiler" Settings: "Release"]
+Options=-o2 -q -eoo64P -fr"$(Proj_dir)\release" -i"." -i"$(Proj_dir)/../../../../../fctools/packages/ti/xdais" -i"$(Proj_dir)/../utils" -i"$(Install_dir)/c6000/xdais/include" --no_compress -ml3 -mv6400+ --disable:sploop
+
+

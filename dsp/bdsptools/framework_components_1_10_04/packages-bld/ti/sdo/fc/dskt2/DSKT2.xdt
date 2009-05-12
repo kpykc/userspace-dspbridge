@@ -1,0 +1,61 @@
+%%{
+/*  
+ *  Copyright 2007
+ *  Texas Instruments Incorporated
+ *
+ *  All rights reserved.  Property of Texas Instruments Incorporated
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ * 
+ */
+%%}
+%%{
+    /*
+     *  ======== DSKT2.xdt ========
+     *  Generate DSKT2 configuration and initialization structures
+     */
+
+    var wbInvFxn = this.cacheWritebackInvalidateFxn;
+    if (wbInvFxn == null) {
+        wbInvFxn = "NULL";
+    }
+%%}
+/* C code contribution from ti/sdo/fc/DSKT2.xdt */
+
+#include <xdc/std.h>
+#include <ti/sdo/fc/dskt2/dskt2.h>
+
+%if (this.cacheWritebackInvalidateFxn != null) {
+extern Void `this.cacheWritebackInvalidateFxn`();
+%}
+
+DSKT2_CacheWBInvFxn DSKT2_cacheWBInvFxn = (DSKT2_CacheWBInvFxn)`wbInvFxn`;
+
+Uns _DSKT2_ALLOW_EXTERNAL_SCRATCH = `this.ALLOW_EXTERNAL_SCRATCH ? 1 : 0`;
+
+#if `this.DARAM_SCRATCH_SIZES.length` > DSKT2_NUM_SCRATCH_GROUPS
+#error too many values in DARAM_SCRATCH_SIZES array, please fix your .cfg
+#endif
+
+#if `this.SARAM_SCRATCH_SIZES.length` > DSKT2_NUM_SCRATCH_GROUPS
+#error too many values in SARAM_SCRATCH_SIZES array, please fix your .cfg
+#endif
+
+Uns _DSKT2_DARAM_SCRATCH_SIZES[ DSKT2_NUM_SCRATCH_GROUPS ] = {
+% for (var i = 0; i < this.DARAM_SCRATCH_SIZES.length; i++) {
+    `this.DARAM_SCRATCH_SIZES[i]``i < this.DARAM_SCRATCH_SIZES.length-1?",":""`
+% }
+};
+
+Uns _DSKT2_SARAM_SCRATCH_SIZES[ DSKT2_NUM_SCRATCH_GROUPS ] = {
+% for (var i = 0; i < this.SARAM_SCRATCH_SIZES.length; i++) {
+    `this.SARAM_SCRATCH_SIZES[i]``i < this.SARAM_SCRATCH_SIZES.length-1?",":""`
+% }
+};
+
+%%{
+/*
+ * @(#) ti.sdo.fc.dskt2; 1, 0, 1,66; 5-10-2007 10:50:08; /db/atree/library/trees/fc-b12x/src/
+ */
+
+%%}

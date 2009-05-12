@@ -1,0 +1,51 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== strmcopy.tci ========
+ *
+ */
+
+// add instance NODE.node0
+strmcopyNode = bridge.NODE.create("strmcopyNode");
+
+strmcopyNode.uuid = "7EEB2C7E_785A_11D4_A650_00C04F0C04F3";
+strmcopyNode.name = "STRMCOPY_TI";
+strmcopyNode.nodeType = "TASKNODE";
+strmcopyNode.priority = 1;
+strmcopyNode.stackSize = 1024;
+strmcopyNode.stackSeg = 0;
+strmcopyNode.messageDepth = 3;
+strmcopyNode.numInputStreams = 1;
+strmcopyNode.numOutputStreams = 1;
+strmcopyNode.timeout = 1000;
+strmcopyNode.createFxn = "STRMCOPY_TI_create";
+strmcopyNode.executeFxn = "STRMCOPY_TI_execute";
+strmcopyNode.deleteFxn = "STRMCOPY_TI_delete";
+
+if (dynamicNode) {
+    strmcopyNode.loadType = "Dynamic";
+    strmcopyNode.splitPhases = splitPhases;
+
+    if (chipType != "2430" && chipType != "3430") {
+            strmcopyNode.createCodeSeg = bridge.DYN_EXTERNAL;
+            strmcopyNode.createDataSeg = bridge.DYN_EXTERNAL;
+            strmcopyNode.executeCodeSeg = bridge.DYN_EXTERNAL;
+            strmcopyNode.executeDataSeg = bridge.DYN_EXTERNAL;
+            strmcopyNode.deleteCodeSeg = bridge.DYN_EXTERNAL;
+            strmcopyNode.deleteDataSeg = bridge.DYN_EXTERNAL;
+    }
+}

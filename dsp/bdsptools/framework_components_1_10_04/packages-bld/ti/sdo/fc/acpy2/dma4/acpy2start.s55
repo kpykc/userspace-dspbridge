@@ -1,0 +1,348 @@
+*
+*
+*  ======== dma4/acpy2start.s55 ========
+*
+
+ .if (!$isdefed("DMA_OPT"))
+DMA_OPT .equ 0		; if not defined
+ .endif
+
+ .if DMA_OPT
+
+    .title "acpy2isr.s55"
+    
+    .model mem=large
+    .c54cm_off
+    .cpl_on
+    .mmregs
+    .arms_on
+    
+* #include <std.h>
+* #include <ti/xdais/acpy2.h>
+* #include <ti/xdais/ialg.h>
+* #include <ti/xdais/idma2.h>
+* #ifndef _RTS_MODE
+* #include <dbc.h>
+* #include <tsk.h>
+* #include <mem.h>
+* #include <c55.h>
+* #else
+* #include <stdlib.h>
+* #include <dbc_rts.h>
+* #endif
+* #include <hwi.h>
+* #include <dma.h>
+* #include <_dma4_omap.h>
+* #include <_dma.h>
+* #include <acpy2_omap_instrumentation.h>
+
+    .include "_dma.h55"
+    .include "dma4_omap.h55"
+
+  .if (!$isdefed("_INSTR_BANDWIDTH"))
+_INSTR_BANDWIDTH .equ 0		; if not defined
+  .endif
+ 
+	.def	_ACPY2_start
+	
+	.ref	__DMA_channel		; (Int [])
+	
+  .if _INSTR_BANDWIDTH
+        .ref        _ACPY2_OMAP_updateChannelStats
+  .endif
+
+* /* DMA4 control registers */
+* static DMA4_Regs *dmaRegs = (DMA4_Regs *)0x7e6000;
+_DMA4_REGS	.set 0x7e6000   ; address of DMA register struct
+
+
+* #pragma CODE_SECTION(ACPY2_start, ".text:ACPY2_start")
+	.sect ".text:ACPY2_start"	; This code should be on-chip
+
+*
+*  ======== ACPY2_start ========
+*  Start a DMA transfer: 
+*     If the jobQueue is not empty. place the job in the jobQueue. 
+*     If the queue is empty, load the device & start the transfer.
+*
+
+* Void ACPY2_start(
+*                  IDMA2_Handle handle, 	// XAR0
+*                  IDMA2_AdrPtr src, 		// AC0 (32-bit pointer)
+*                  IDMA2_AdrPtr dst,		// AC1 (32-bit pointer)
+*                  Uns cnt)			// T0
+*{
+
+	.align 4
+_ACPY2_start:
+
+*  Uns             state;
+*  Uns             pending;
+*  _DMA_Queue      queue;
+*  DMA4_ChnlRegs  *regs;
+*  Uns            *ptr = (Uns *)0x3;  /* Points to ST1 register */
+*  _DMA_Handle     dmaHandle = (_DMA_Handle)handle;
+
+*  state = *ptr & 0x800;           /* extract the interrupt bit */
+*  asm("       BSET ST1_INTM");    /* Disable interrupts */
+
+*  queue = dmaHandle->jobQueue;
+
+	MOV	dbl(*AR0(short(_DMA_Obj.jobQueue))), XAR1	; AR1 = queue
+
+   .noremark 5650 ; BRAF bit ignored
+        BTST #11, mmap(ST1_55), TC1     ; Test INTM bit in ST1 and store the result in TC1
+   .remark 5650 
+
+* Note: for the 2420, setting the INTM bit takes effect immediately.
+* There is no need for any NOP instructions for 6 ticks subsequently.
+
+	BSET	ST1_INTM
+	
+    .noremark 5573	; No BK or BSA updates
+	AMOV	#__DMA_channel, XAR2
+    .remark 5573
+
+*  /* Increment job count on this logical channel. */
+*  dmaHandle->numJobs++;
+
+    .noremark 5571	; don't care about CARRY bit
+  .if (_DMA_Obj.numJobs == 0)
+	ADD	#1, *AR0		; dmaHandle->numJobs++;
+  .else
+	ADD	#1, *AR0(short(_DMA_Obj.numJobs)
+  .endif
+    .remark 5571
+
+*  /*
+*   *  Increment the count of pending transfers issued & not-completed
+*   *  on this physical channel.
+*   */
+*  pending = queue->reqPending;
+*  queue->reqPending++;
+*  if (pending == 0) {
+
+	MOV	*AR1(short(DMA_JobQueue.reqPending)), T1	; Pipe 4 just Ok for AR1 from MOV
+    .noremark 5571	; don't care about CARRY bit
+	ADD	#1,*AR1(short(DMA_JobQueue.reqPending))
+    .remark 5571
+	
+	BCC	PendingRequests, T1 != #0	; Pipe 1 just Ok for AR4 from MOV
+	||ADD	*AR0(short(_DMA_Obj.channel)), AR2	; AR2 = &_DMA_channel[dmaHandle->channel] (Pipe 4 Ok for MPYMK)
+
+*    /* From the job find out the channel to use */
+
+*    /* Update the current handle */
+*    queue->curHandle = dmaHandle;
+*    regs = &(dmaRegs->channelRegs[_DMA_channel[dmaHandle->channel]]);
+
+ .if (DMA_JobQueue.curHandle == 0)
+	MOV	XAR0, dbl(*AR1)	                                ; queue->curHandle = dmaHandle;
+ .else
+	MOV	XAR0, dbl(*AR1(short(DMA_JobQueue.curHandle)))	; queue->curHandle = dmaHandle;
+ .endif
+* Note: AR1 is now available for re-use
+
+    .noremark 5573	; No BK or BSA updates
+	AMOV	#(_DMA4_REGS+DMA4_Regs.channelRegs+DMA4_ChnlRegs.csdp),XAR3
+    .remark 5573	
+
+	MPYMK	*AR2, #DMA4_ChnlRegsSize, AC2	; Pipe 4 Ok for AR2 from ADD
+* Note: AR2 is now available for re-use
+
+	ADD	AC2, AR3	; AR3 = regs = &(dmaRegs->channelRegs[_DMA_channel[dmaHandle->channel]].csdp) (Pipe 4 just Ok for MOV DBL,DBL)
+	||XOR	AC3, AC3	; AC3 = 0
+	MOV	XAR3, XAR2	; AR2 = &regs.csdp
+	||MOV	AC3, AC2	; AC2 = 0
+    .noremark 5573	; No BK or BSA updates
+	AMAR	*AR0(short(_DMA_Obj.csdp)), XAR4	; AR4 = &dmaHandle->csdp
+    .remark 5573	
+	SUB	#(DMA4_ChnlRegs.csdp-(DMA4_ChnlRegs.ccr+1)), AR2	; AR2 = &regs->ccr.Lo (Pipe 4 Ok for AND)
+	||OR	T0, AC3		; AC3 = cnt (AC3.Hi = 0)
+	AMOV	#2+1, T0	; T0 = 3 (so it can skip Hi/Lo/Hi and end up at following Lo
+	||BSET	#DMA4_CCR_ENABLE_SHIFT,AC2 ; AC2 = CCR_ENABLE
+
+*    /* set CSDP w/ port values */
+*    regs->csdp = dmaHandle->csdp; // | CSDP_SRCDSTPKBEN_ENA;  (32-bit)
+*    regs->cen = cnt;			// convert int to unsigned long (24-bit)
+*    regs->cfn = dmaHandle->cfn;	// convert int to unsigned long (16-bit)
+
+	MOV	dbl(*AR4+), dbl(*AR3+)	; regs->csdp = dmaHandle->csdp (Pipe 4 just Ok for AR3 from ADD)
+*				; AR4 = &dmaHandle->ccr
+*				; AR3 = &regs->cen	
+	MOV	AC3, dbl(*(AR3+T0))	; regs->cnt = cnt
+*				; AR3 = &regs->cfn.Lo
+	OR	*AR4+, AC2	; AC2 = dmaHandle->ccr | CCR_ENABLE
+*				; AR4 = &dmaHandle->cfn
+	MOV	*AR4+, *AR3+	; regs->cfn = dmaHandle->cfn
+*				; AR4 = &dmaHandle->csei
+*				; AR3 = &regs->cssa	
+*    /*
+*     *  Make sure the Start_Address for src and dst is aligned on the
+*     *  boundary of data type (elemSize) moved
+*     */
+
+*    /* Set up Src packing and bursting here  Or set up that during init */
+
+*    /* set source (byte) addr lower and upper */
+*    regs->cssa = (LgUns)src;	// From AC0 (32-bit)
+*    /* set destination (byte) addr lower and upper */
+*    regs->cdsa = (LgUns)dst;	// From AC1 (32-bit)
+
+	MOV	AC0, dbl(*AR3+)	; regs->cssa = src
+*				; AR3 = &regs->cdsa	
+	MOV	AC1, dbl(*(AR3+T0))	; regs->cdsa = dst
+*				; AR3 = &regs->csei.Lo
+
+*    regs->csei = dmaHandle->csei;	// convert signed int to unsigned long (16-bit)
+*    regs->csfi = dmaHandle->csfi;	// convert signed int to unsigned long (32-bit)
+*    regs->cdei = dmaHandle->cdei;	// convert signed int to unsigned long (16-bit)
+*    regs->cdfi = dmaHandle->cdfi;	// convert signed int to unsigned long (32-bit)
+
+	MOV	*AR4+, *AR3+	; regs->csei = dmaHandle->csei
+*				; AR4 = &dmaHandle->csfi
+*				; AR3 = &regs->csfi	
+	MOV	*AR4+, AC0	; AC0 = dmaHandle->csfi
+*				; AR4 = &dmaHandle->cdei
+	MOV	AC0, dbl(*(AR3+T0))	; regs->csfi = dmaHandle->csfi
+*				; AR3 = &regs->cdei.Lo
+	MOV	*AR4+, *AR3+	; regs->cdei = dmaHandle->cdei
+*				; AR4 = &dmaHandle->cdfi
+*				; AR3 = &regs->cdfi	
+	MOV	*AR4, AC0	; AC0 = dmaHandle->cdfi
+
+*    /* Clear the old amode before setting new value */
+*    regs->ccr &= ~DMA4_CCR_AMODE_MASK; (25-bit)
+*    regs->ccr |= dmaHandle->ccr; (25-bit)
+*    /* enable this dma chan */
+*    regs->ccr |= DMA4_CCR_ENABLE; (25-bit)
+
+	MOV	#0x0fff, AC1	; AC1 = regs->ccr.Lo & ~DMA4_CCR_AMODE_MASK
+
+	MOV	AC0, dbl(*AR3)	; regs->cdfi = dmaHandle->cdfi (avoid back-to-back writes to regs)
+
+	AND	*AR2-, AC1	; AC1 = regs->ccr.Lo & ~DMA4_CCR_AMODE_MASK
+	OR	AC2, AC1	; AC1 = (regs->ccr.Lo & ~DMA4_CCR_AMODE_MASK) | dmaHandle->ccr
+    .noremark 5573	; No BK or BSA updates
+	MOV	AC1, dbl(*AR2)	; Write regs->ccr (including CCR_ENABLE)
+    .remark 5573
+
+* Note: ccr is the first element of DMA4_ChnlRegs
+* I don't know if there are special rules on writing to it.
+* So for now, make all writes match the method of the C program.
+
+  .if _INSTR_BANDWIDTH
+*    ACPY2_OMAP_updateChannelStats (dmaHandle, cnt); // Case 3
+
+	MOV	AC3, T0	          ; T0 = cnt
+	PSH	mmap(@ST0_L)      ; TC1 is saved and restored
+	CALL	_ACPY2_OMAP_updateChannelStats	; XAR0 = dmaHandle, T0 = cnt
+   .noremark 5601 ; Interrupts are disabled
+	POP	mmap(@ST0_L) 
+   .remark 5601
+  .endif ; if _INSTR_BANDWIDTH
+	
+*
+* If interrupts were originally enabled, re-enable them
+*
+	XCCPART	!TC1
+	 ||BCLR	ST1_INTM
+	RET
+
+*   }
+*   else {
+
+    .align 4
+PendingRequests:
+
+*     /*
+*      * Otherwise put the transfer request into DMA Job Queue.
+*      */
+*     //DMA_put(handle, src, dst, cnt); /* put job on queue */
+
+*     queue->writePtr->cnt = cnt;
+*     queue->writePtr->src = src;	// 32-bit pointer
+*     queue->writePtr->dst = dst;	// 32-bit pointer
+*     queue->writePtr->handle = dmaHandle;
+*     /* update write pointer */
+*     queue->writePtr = queue->writePtr->nextJob;
+
+*
+* If queue->reqPending >= queue->len, then turn ISRs back on and wait
+* until queue->reqPending is less than queue->len before placing
+* this new request on the queue.  Note that the old value of 
+* queue->reqPending is in T1.
+*
+	SUB	*AR1(short(#DMA_JobQueue.len)), T1  ; T1 = queue->reqPending - queue->len
+	MOV	dbl(*AR1(short(DMA_JobQueue.writePtr))), XAR2 ; AR2 = queue->writePtr (Pipe 4 Ok for AR2 for MOV)
+	BCC	QueueOverflowHandling, T1 >= #0
+
+QueueOK:
+	MOV	pair(T0), dbl(*AR2+) 	; queue->writePtr->cnt = cnt, (Pipe 4 Ok for AR2 from MOV)
+*                                       ; queue->writePtr->filler = T1 (irrelevant)
+*					; AR2 = &queue->writePtr->src
+  .noremark 5573 ; CPU_43: No BKxx BSAxx updates within 5 cycles
+	MOV	AC0, dbl(*AR2+) 	; queue->writePtr->src = src;
+*                                       ; AR2 = &queue->writePtr->dst
+	||AADD	#DMA_JobQueue.writePtr, AR1 ; AR1 = &queue->writePtr
+  .remark 5573
+
+	MOV	AC1, dbl(*AR2+) 	; queue->writePtr->dst = dst
+*                                       ; AR2 = &queue->writePtr->handle
+	MOV	XAR0, dbl(*AR2+) 	; queue->writePtr->handle = dmaHandle
+*                                       ; AR2 = &queue->writePtr->nextJob	
+	MOV	dbl(*AR2), dbl(*AR1)	; queue->writePtr = queue->writePtr->nextJob
+
+  .if _INSTR_BANDWIDTH
+*     ACPY2_OMAP_updateChannelStats (dmaHandle, 0);   // Case 4
+	PSH	mmap(@ST0_L)            ; TC1 is saved and restored after CALL
+	MOV	#0, T0			; argument "cnt" set to 0 for ACPY2_OMAP_updateChannelStats()
+	CALL	_ACPY2_OMAP_updateChannelStats	; XAR0 = dmaHandle, T0 = 0
+   .noremark 5601 ; Interrupts are disabled
+	POP	mmap(@ST0_L)             ; restore TC1 which contains INTM
+   .remark 5601
+  .endif ; if _INSTR_BANDWIDTH
+
+*  }
+
+* #ifdef MAKE_HWI_CALL
+*  HWI_restore(state);
+* #else
+*  if (!state) {
+*     /* Enable interrupts */
+*     asm("       BCLR ST1_INTM");
+*  }
+* #endif
+
+* #ifndef _RTS_MODE
+*  //TSK_enable();
+* #endif
+
+*
+* If interrupts were originally enabled, re-enable them
+*
+	XCCPART	!TC1
+	 ||BCLR	ST1_INTM		; if interrupts were originally enabled, re-enable them
+*
+	RET
+*}
+
+
+
+    .sect ".text:ACPY2_start"  ; This code does not have to be on-chip
+    .align 4
+QueueOverflowHandling:
+	BCLR	ST1_INTM          ; Temporarily enable interrupts to allow for the queue to shrink
+	MOV	*AR1(short(DMA_JobQueue.len)), AR3	; AR3 = len
+QueueOverflowLoop:
+	SUB	*AR1(short(DMA_JobQueue.reqPending)), AR3, T1  ; T1 = queue->len - queue->reqPending (new)
+	BCC	QueueOverflowLoop, T1 < #0
+
+	BSET ST1_INTM             ; disable interrupts again until the end of the routine
+	||B  QueueOK              ; Note: This Branch will provide the 6 ticks necessary for 
+*                                 ; interrupts to be truly disabled
+        
+*#endif /* #ifdef DMA_OPT */
+
+ .endif ; if DMA_OPT
+ 	.end

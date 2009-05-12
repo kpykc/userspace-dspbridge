@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.fc.acpy3" version="1, 0, 0">
+    <units>
+        <module name="ACPY3"/>
+    </units>
+    <sources>
+        <srcFile name="acpy3_start.c"/>
+        <srcFile name="acpy3_init.c"/>
+        <srcFile name="acpy3_configure.c"/>
+        <srcFile name="acpy3_start_cpucopy.c"/>
+        <srcFile name="acpy3_setfinal.c"/>
+        <srcFile name="package/package.c"/>
+        <srcFile name="acpy3_waitlinked.c"/>
+        <srcFile name="acpy3_fastsetfinal.c"/>
+        <srcFile name="acpy3.c"/>
+        <srcFile name="acpy3_wait_cpucopy.c"/>
+        <srcFile name="acpy3_wait.c"/>
+        <srcFile name="acpy3_fastconfigure16b.c"/>
+        <srcFile name="acpy3_complete.c"/>
+        <srcFile name="acpy3_qdma.c"/>
+        <srcFile name="acpy3_fastconfigure32b.c"/>
+    </sources>
+    <configurations>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="acpy3cpud.a64P.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_start.o64P.dep" src="acpy3_start.c"/>
+        <srcFile name="package/lib/acpy3cpud/package.o64P.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3.o64P.dep" src="acpy3.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_configure.o64P.dep" src="acpy3_configure.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_qdma.o64P.dep" src="acpy3_qdma.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_fastsetfinal.o64P.dep" src="acpy3_fastsetfinal.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_waitlinked.o64P.dep" src="acpy3_waitlinked.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_complete.o64P.dep" src="acpy3_complete.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_init.o64P.dep" src="acpy3_init.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_wait_cpucopy.o64P.dep" src="acpy3_wait_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_fastconfigure16b.o64P.dep" src="acpy3_fastconfigure16b.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_start_cpucopy.o64P.dep" src="acpy3_start_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_setfinal.o64P.dep" src="acpy3_setfinal.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_fastconfigure32b.o64P.dep" src="acpy3_fastconfigure32b.c"/>
+        <srcFile name="package/lib/acpy3cpud/acpy3_wait.o64P.dep" src="acpy3_wait.c"/>
+        <srcFile name="acpy3d.a64P.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy3d/acpy3_start.o64P.dep" src="acpy3_start.c"/>
+        <srcFile name="package/lib/acpy3d/package.o64P.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3.o64P.dep" src="acpy3.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_configure.o64P.dep" src="acpy3_configure.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_qdma.o64P.dep" src="acpy3_qdma.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_fastsetfinal.o64P.dep" src="acpy3_fastsetfinal.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_waitlinked.o64P.dep" src="acpy3_waitlinked.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_complete.o64P.dep" src="acpy3_complete.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_init.o64P.dep" src="acpy3_init.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_wait_cpucopy.o64P.dep" src="acpy3_wait_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_fastconfigure16b.o64P.dep" src="acpy3_fastconfigure16b.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_start_cpucopy.o64P.dep" src="acpy3_start_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_setfinal.o64P.dep" src="acpy3_setfinal.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_fastconfigure32b.o64P.dep" src="acpy3_fastconfigure32b.c"/>
+        <srcFile name="package/lib/acpy3d/acpy3_wait.o64P.dep" src="acpy3_wait.c"/>
+        <srcFile name="acpy3.a64P.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy3/acpy3_start.o64P.dep" src="acpy3_start.c"/>
+        <srcFile name="package/lib/acpy3/package.o64P.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy3/acpy3.o64P.dep" src="acpy3.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_configure.o64P.dep" src="acpy3_configure.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_qdma.o64P.dep" src="acpy3_qdma.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_fastsetfinal.o64P.dep" src="acpy3_fastsetfinal.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_waitlinked.o64P.dep" src="acpy3_waitlinked.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_complete.o64P.dep" src="acpy3_complete.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_init.o64P.dep" src="acpy3_init.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_wait_cpucopy.o64P.dep" src="acpy3_wait_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_fastconfigure16b.o64P.dep" src="acpy3_fastconfigure16b.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_start_cpucopy.o64P.dep" src="acpy3_start_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_setfinal.o64P.dep" src="acpy3_setfinal.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_fastconfigure32b.o64P.dep" src="acpy3_fastconfigure32b.c"/>
+        <srcFile name="package/lib/acpy3/acpy3_wait.o64P.dep" src="acpy3_wait.c"/>
+        <srcFile name="acpy3cpu.a64P.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_start.o64P.dep" src="acpy3_start.c"/>
+        <srcFile name="package/lib/acpy3cpu/package.o64P.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3.o64P.dep" src="acpy3.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_configure.o64P.dep" src="acpy3_configure.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_qdma.o64P.dep" src="acpy3_qdma.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_fastsetfinal.o64P.dep" src="acpy3_fastsetfinal.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_waitlinked.o64P.dep" src="acpy3_waitlinked.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_complete.o64P.dep" src="acpy3_complete.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_init.o64P.dep" src="acpy3_init.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_wait_cpucopy.o64P.dep" src="acpy3_wait_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_fastconfigure16b.o64P.dep" src="acpy3_fastconfigure16b.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_start_cpucopy.o64P.dep" src="acpy3_start_cpucopy.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_setfinal.o64P.dep" src="acpy3_setfinal.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_fastconfigure32b.o64P.dep" src="acpy3_fastconfigure32b.c"/>
+        <srcFile name="package/lib/acpy3cpu/acpy3_wait.o64P.dep" src="acpy3_wait.c"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy3.tar.dep" src="package/rel/ti_sdo_fc_acpy3.inc"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy3,src.tar.dep" src="package/rel/ti_sdo_fc_acpy3,src.inc"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy3,bld.tar.dep" src="package/rel/ti_sdo_fc_acpy3,bld.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.C64P"
+            version="ti.targets.C64P{1,0,6.0,7"
+            platform="ti.platforms.sim6xxx:TMS320CDM420"
+            isa="64P"
+            suffix="64P"
+            rootDir="/db/atree/library/trees/depot/cgt6x-6.0.7"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    <library name="acpy3cpud"
+        pname="acpy3cpud.a64P"
+        profile="bridge_debug"
+        target="ti.targets.C64P"/>
+    <library name="acpy3d"
+        pname="acpy3d.a64P"
+        profile="bridge_debug"
+        target="ti.targets.C64P"/>
+    <library name="acpy3"
+        pname="acpy3.a64P"
+        profile="bridge_release"
+        target="ti.targets.C64P"/>
+    <library name="acpy3cpu"
+        pname="acpy3cpu.a64P"
+        profile="bridge_release"
+        target="ti.targets.C64P"/>
+    </libraries>
+    <executables>
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_fc_acpy3"
+        pname="ti_sdo_fc_acpy3.tar"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="acpy3_start.h"/>
+        <file name="acpy3_util.h"/>
+        <file name="acpy3_fastconfigure16b.h"/>
+        <file name="acpy3_wait.h"/>
+        <file name="package/package.ext.xml"/>
+        <file name="acpy3_fastsetfinal.h"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="acpy3cpud.a64P"/>
+        <file name="acpy3d.a64P"/>
+        <file name="acpy3.h"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="acpy3.a64P"/>
+        <file name="acpy3cpu.a64P"/>
+        <file name="acpy3_fastconfigure32b.h"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="acpy3_setfinal.h"/>
+        <file name="package/package.bld.xml"/>
+        <file name="acpy3_qdma.h"/>
+    </release>
+    <release name="ti_sdo_fc_acpy3,src"
+        pname="ti_sdo_fc_acpy3,src.tar"
+        label="source"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="acpy3_fastsetfinal.c"/>
+        <file name="acpy3_start.h"/>
+        <file name="acpy3_fastconfigure16b.c"/>
+        <file name="acpy3_util.h"/>
+        <file name="acpy3_wait.c"/>
+        <file name="acpy3_fastconfigure16b.h"/>
+        <file name="acpy3_wait.h"/>
+        <file name="package/package.ext.xml"/>
+        <file name="acpy3_fastsetfinal.h"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="acpy3cpud.a64P"/>
+        <file name="acpy3_waitlinked.c"/>
+        <file name="acpy3.c"/>
+        <file name="acpy3_init.c"/>
+        <file name="acpy3d.a64P"/>
+        <file name="acpy3.h"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="acpy3_wait_cpucopy.c"/>
+        <file name="acpy3_fastconfigure32b.c"/>
+        <file name="acpy3_fastconfigure32b.h"/>
+        <file name="package/package.c"/>
+        <file name="acpy3.a64P"/>
+        <file name="acpy3cpu.a64P"/>
+        <file name="acpy3_configure.c"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="acpy3_setfinal.c"/>
+        <file name="acpy3_complete.c"/>
+        <file name="acpy3_setfinal.h"/>
+        <file name="acpy3_start_cpucopy.c"/>
+        <file name="acpy3_qdma.c"/>
+        <file name="package/package.bld.xml"/>
+        <file name="acpy3_start.c"/>
+        <file name="acpy3_qdma.h"/>
+    </release>
+    <release name="ti_sdo_fc_acpy3,bld"
+        pname="ti_sdo_fc_acpy3,bld.tar"
+        label="build"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="acpy3_fastconfigure32b.c"/>
+        <file name="package/package.rel.dot"/>
+        <file name="acpy3_wait.h"/>
+        <file name="acpy3_qdma.c"/>
+        <file name="acpy3.pjt"/>
+        <file name="acpy3_fastconfigure32b.h"/>
+        <file name="acpy3cpud.a64P"/>
+        <file name="acpy3_qdma.h"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="acpy3_configure.c"/>
+        <file name="acpy3.a64P"/>
+        <file name="acpy3_complete.c"/>
+        <file name="acpy3_setfinal.c"/>
+        <file name="acpy3_setfinal.h"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="acpy3cpu.a64P"/>
+        <file name="acpy3_util.h"/>
+        <file name="acpy3_waitlinked.c"/>
+        <file name="package.bld"/>
+        <file name="acpy3_fastsetfinal.c"/>
+        <file name="acpy3_wait_cpucopy.c"/>
+        <file name="acpy3_start.c"/>
+        <file name="acpy3_fastsetfinal.h"/>
+        <file name="acpy3_start.h"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="acpy3.c"/>
+        <file name="acpy3.h"/>
+        <file name="acpy3_init.c"/>
+        <file name="package/package.c"/>
+        <file name="package/package.bld.xml"/>
+        <file name="acpy3_fastconfigure16b.c"/>
+        <file name="acpy3_fastconfigure16b.h"/>
+        <file name="acpy3_start_cpucopy.c"/>
+        <file name="acpy3_wait.c"/>
+        <file name="acpy3d.a64P"/>
+        <file name="package/package.ext.xml"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

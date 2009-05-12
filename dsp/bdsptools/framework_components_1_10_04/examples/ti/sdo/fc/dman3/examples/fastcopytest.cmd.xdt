@@ -1,0 +1,35 @@
+%%{
+/*
+ *  Copyright 2007 by Texas Instruments Incorporated.
+ *
+ *  All rights reserved. Property of Texas Instruments Incorporated.
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ * 
+ */
+
+%%}
+/*
+ *  Linker-command file for the fastcopytest application
+ */
+
+%%{
+var chipType = prog.build.cfgArgs.chipType;
+var DDR = chipType == 2430 ? "DDR" : "DDR2";
+%%}
+
+_FCPY_IFCPY = _FCPY_TI_IFCPY;
+_FCPY_IDMA3 = _FCPY_TI_IDMA3;
+
+SECTIONS
+{    
+
+    .image       >      `DDR`
+    .internal    >      L1DSRAM   
+}
+%%{
+/*
+ * @(#) ti.sdo.fc.dman3.examples; 1,0,0,36; 5-10-2007 10:49:53; /db/atree/library/trees/fc-b12x/src/
+ */
+
+%%}

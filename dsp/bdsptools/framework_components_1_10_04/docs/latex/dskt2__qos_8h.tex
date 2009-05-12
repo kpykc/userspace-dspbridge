@@ -1,0 +1,84 @@
+\hypertarget{dskt2__qos_8h}{
+\subsection{dskt2\_\-qos.h File Reference}
+\label{dskt2__qos_8h}\index{dskt2_qos.h@{dskt2\_\-qos.h}}
+}
+
+
+\subsubsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum \hyperlink{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c}{DSKT2\_\-QOS\_\-TI\_\-Msg\-Arg1Types} \{ \par
+\hyperlink{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c63f5c0038e10f8a6ca4cdaef1bb025cd}{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-ALLHEAPS} =  0x200, 
+\par
+\hyperlink{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c303c1716cf5a0498bae3f45091a4403f}{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-DARAM} =  0x201, 
+\par
+\hyperlink{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c61805a68fdf379e62226985008d3a5be}{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-SARAM} =  0x202
+ \}
+\item 
+enum \hyperlink{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e683}{DSKT2\_\-QOS\_\-TI\_\-Get\-Shared\-Scratch\-Msg\-Arg2} \{ \hyperlink{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e6839984fcd2b0b4f7f1de979abcf1faa101}{DSKT2\_\-QOS\_\-ALL\_\-SCRATCHGROUPS} =  0x100
+ \}
+\end{CompactItemize}
+\subsubsection*{Functions}
+\begin{CompactItemize}
+\item 
+Void \hyperlink{dskt2__qos_8h_452b973d6cc9fdb48d076f2463ced3a1}{DSKT2\_\-QOS\_\-get\-Stat} (Uns heap\-Type, Uns mutex\-Id, Lg\-Uns $\ast$size\-Shared\-Scratch, Uns $\ast$in\-Heap)
+\end{CompactItemize}
+
+
+\subsubsection{Enumeration Type Documentation}
+\hypertarget{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c}{
+\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_TI_MsgArg1Types@{DSKT2\_\-QOS\_\-TI\_\-MsgArg1Types}}
+\index{DSKT2_QOS_TI_MsgArg1Types@{DSKT2\_\-QOS\_\-TI\_\-MsgArg1Types}!dskt2_qos.h@{dskt2\_\-qos.h}}
+\paragraph[DSKT2\_\-QOS\_\-TI\_\-MsgArg1Types]{\setlength{\rightskip}{0pt plus 5cm}enum \hyperlink{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c}{DSKT2\_\-QOS\_\-TI\_\-Msg\-Arg1Types}}\hfill}
+\label{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c}
+
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{DSKT2_QOS_SHARED_SCRATCH_ALLHEAPS@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-ALLHEAPS}!dskt2_qos.h@{dskt2\_\-qos.h}}\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_SHARED_SCRATCH_ALLHEAPS@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-ALLHEAPS}}\item[{\em 
+\hypertarget{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c63f5c0038e10f8a6ca4cdaef1bb025cd}{
+DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-ALLHEAPS}
+\label{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c63f5c0038e10f8a6ca4cdaef1bb025cd}
+}]\index{DSKT2_QOS_SHARED_SCRATCH_DARAM@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-DARAM}!dskt2_qos.h@{dskt2\_\-qos.h}}\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_SHARED_SCRATCH_DARAM@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-DARAM}}\item[{\em 
+\hypertarget{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c303c1716cf5a0498bae3f45091a4403f}{
+DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-DARAM}
+\label{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c303c1716cf5a0498bae3f45091a4403f}
+}]\index{DSKT2_QOS_SHARED_SCRATCH_SARAM@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-SARAM}!dskt2_qos.h@{dskt2\_\-qos.h}}\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_SHARED_SCRATCH_SARAM@{DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-SARAM}}\item[{\em 
+\hypertarget{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c61805a68fdf379e62226985008d3a5be}{
+DSKT2\_\-QOS\_\-SHARED\_\-SCRATCH\_\-SARAM}
+\label{dskt2__qos_8h_a4b7cb5a2c0e1b6d0e6d1eed6ded728c61805a68fdf379e62226985008d3a5be}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 19 of file dskt2\_\-qos.h.\hypertarget{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e683}{
+\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_TI_GetSharedScratchMsgArg2@{DSKT2\_\-QOS\_\-TI\_\-GetSharedScratchMsgArg2}}
+\index{DSKT2_QOS_TI_GetSharedScratchMsgArg2@{DSKT2\_\-QOS\_\-TI\_\-GetSharedScratchMsgArg2}!dskt2_qos.h@{dskt2\_\-qos.h}}
+\paragraph[DSKT2\_\-QOS\_\-TI\_\-GetSharedScratchMsgArg2]{\setlength{\rightskip}{0pt plus 5cm}enum \hyperlink{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e683}{DSKT2\_\-QOS\_\-TI\_\-Get\-Shared\-Scratch\-Msg\-Arg2}}\hfill}
+\label{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e683}
+
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{DSKT2_QOS_ALL_SCRATCHGROUPS@{DSKT2\_\-QOS\_\-ALL\_\-SCRATCHGROUPS}!dskt2_qos.h@{dskt2\_\-qos.h}}\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_ALL_SCRATCHGROUPS@{DSKT2\_\-QOS\_\-ALL\_\-SCRATCHGROUPS}}\item[{\em 
+\hypertarget{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e6839984fcd2b0b4f7f1de979abcf1faa101}{
+DSKT2\_\-QOS\_\-ALL\_\-SCRATCHGROUPS}
+\label{dskt2__qos_8h_002e0ce93e06aa89b5e4231f7fd0e6839984fcd2b0b4f7f1de979abcf1faa101}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 25 of file dskt2\_\-qos.h.
+
+\subsubsection{Function Documentation}
+\hypertarget{dskt2__qos_8h_452b973d6cc9fdb48d076f2463ced3a1}{
+\index{dskt2_qos.h@{dskt2\_\-qos.h}!DSKT2_QOS_getStat@{DSKT2\_\-QOS\_\-getStat}}
+\index{DSKT2_QOS_getStat@{DSKT2\_\-QOS\_\-getStat}!dskt2_qos.h@{dskt2\_\-qos.h}}
+\paragraph[DSKT2\_\-QOS\_\-getStat]{\setlength{\rightskip}{0pt plus 5cm}Void DSKT2\_\-QOS\_\-get\-Stat (Uns {\em heap\-Type}, Uns {\em mutex\-Id}, Lg\-Uns $\ast$ {\em size\-Shared\-Scratch}, Uns $\ast$ {\em in\-Heap})}\hfill}
+\label{dskt2__qos_8h_452b973d6cc9fdb48d076f2463ced3a1}
+
+

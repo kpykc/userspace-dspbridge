@@ -1,0 +1,92 @@
+//
+// ======== dman3test ========
+//
+
+printQDMA = function() {
+    print("");
+    for (var i = 0; i < bridge.DMAN3.MAXQDMACHANNELS; i++) {
+        var chanEnable = eval("bridge.DMAN3.USEQDMA" + i);
+
+        if (chanEnable) {
+            print("qdma " + i + ": enabled");
+        }
+        else {
+            print("qdma " + i + ": disabled");
+        }
+    }
+}
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+// This test should only be built for 2430.
+chipType = "2430";
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+//bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+if (1) {
+    bridge.DMAN3.NUMPARAMS_GROUP1 = 4;
+    bridge.DMAN3.NUMPARAMS_GROUP2 = 5;
+    bridge.DMAN3.NUMPARAMS_GROUP3 = 2;
+
+    bridge.DMAN3.NUMTCCS_GROUP12 = 3;
+    bridge.DMAN3.NUMTCCS_GROUP16 = 8;
+    bridge.DMAN3.NUMTCCS_GROUP19 = 9;
+}
+
+bridge.DMAN3.TCC_FREEMASK_HIGH = 0;
+bridge.DMAN3.TCC_FREEMASK_LOW = 0xffffffff;
+bridge.DMAN3.TCC_FREEMASK_LOW = 0x1ff;
+//bridge.DMAN3.TCC_FREEMASK_LOW = 0xff;  // Uncomment to check error catching
+
+print("DMAN3 numTCCs: " + bridge.DMAN3.getNumDMAN3Tccs());
+
+//bridge.DMAN3.NUMTCCS_GROUP19 = 10;     // Uncomment to check error catching
+
+bridge.DMAN3.MAXQDMACHANNELS = 8;
+
+bridge.DMAN3.NUMPARAMENTRIES = 5;
+print("DMAN3 numPaRams: " + bridge.DMAN3.NUMPARAMENTRIES);
+
+//bridge.DMAN3.PARAMBASEINDEX = 124;
+bridge.DMAN3.PARAMBASEINDEX = 123;
+//bridge.DMAN3.NUMPARAMENTRIES = 6;
+//bridge.DMAN3.NUMPARAMS_GROUP2 = 6;
+
+//bridge.DMAN3.MAXQDMACHANNELS = 5;
+//bridge.DMAN3.MAXQDMACHANNELS = 6;
+
+bridge.DMAN3.NULLPARAMINDEX = 1;
+
+bridge.DMAN3.USEQDMA4 = true;
+bridge.DMAN3.USEQDMA5 = true;
+
+printQDMA();
+
+bridge.DMAN3.USEQDMA0 = false;
+bridge.DMAN3.USEQDMA1 = false;
+bridge.DMAN3.USEQDMA2 = false;
+bridge.DMAN3.USEQDMA3 = false;
+bridge.DMAN3.USEQDMA4 = false;
+bridge.DMAN3.USEQDMA5 = false;
+bridge.DMAN3.USEQDMA6 = false;
+bridge.DMAN3.USEQDMA7 = false;
+
+bridge.DMAN3.USEQDMA0 = true;
+bridge.DMAN3.USEQDMA3 = true;
+bridge.DMAN3.USEQDMA7 = true;
+
+bridge.DMAN3.SCRATCHALLOCFXN = prog.extern("DSKT2_allocScratch");
+//bridge.DMAN3.SCRATCHALLOCFXN = null;
+bridge.DMAN3.SCRATCHFREEFXN = prog.extern("DSKT2_freeScratch");
+//bridge.DMAN3.SCRATCHFREEFXN = null;
+
+printQDMA();
+
+prog.gen("dman3test");

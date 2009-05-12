@@ -1,0 +1,41 @@
+
+/* Load "base" platform file, since most c55 devices have the same 
+   properties
+*/
+var file = "ti/dspbridge/dsp/tconf/platforms/c55.tci";
+var filename = utils.findFile(file);
+
+if (filename == null) {
+    throw "Cannot find platform file: " + file;
+}
+
+var plat = utils.loadCapsule(filename);
+
+function setupBIOS () 
+{
+    /* Load C55 common config */
+    plat.setupBIOS("1510");
+}
+
+function setupBRIDGE (dll) 
+{
+    /* Load C55 common config */   
+    plat.setupBRIDGE("v1030", dll);
+
+    if (!dll) {
+        /*
+         * v1030 custom configuration done here
+         * we redefine the default memory config for v1030, DARAM and SARAM 
+         * can then be reconfigured in the final base image TCF script as well
+         */
+        bios.MEM.instance("VECT").base    = 0x19F00;
+        bios.MEM.instance("SARAM").base   = 0x00A008;
+        bios.MEM.instance("SARAM").len    = 0xFEF8;
+        bios.MEM.instance("APIBOOT").base = 0x00A000;
+        bios.MEM.instance("DARAM").len    = 0x9F00;
+        bridge.TIOMAP1510SHM.MBXID       = 2;
+        bridge.PROC.instance("PROC_default").ulInternalMemSize = 0x1a000;
+    }
+}
+
+

@@ -1,0 +1,246 @@
+.Code {
+	font-family: Verdana, sans-serif;
+}
+
+.Comment {
+	color: #006644;
+	font-family: Verdana, sans-serif;
+}
+
+.Keyword {
+	color: #222222;
+	font-family: Verdana, sans-serif;
+}
+
+.Nav {
+	color: white;
+}
+
+.NavDead {
+	color: #999;
+}
+
+.SlugDef {
+	color: #553300;
+	font-family: Verdana, sans-serif;
+	font-weight: bold;
+}
+
+.SlugKw {
+	color: #222222;
+	font-family: Verdana, sans-serif;
+	font-weight: bold;
+}
+
+A {
+	text-decoration: none;
+}
+
+A:hover {
+	text-decoration: underline;
+}
+
+A:link {
+	color: blue;
+}
+
+A:visited {
+	color: blue;
+}
+
+A.Nav:hover {
+	text-decoration: underline;
+}
+
+A.Nav:link {
+	color: white;
+}
+
+A.Nav:visited {
+	color: white;
+}
+
+A.NavDead:hover {
+	text-decoration: none;
+}
+
+A.NavDead:link {
+	color: #999;
+}
+
+A.NavDead:visited {
+	color: #999;
+}
+
+BODY.Hdr {
+	background-color: #66DD99;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+	margin-left: 0pt;
+	margin-right: 0pt;
+}
+
+BODY.Body {
+	margin-top: 0pt;
+}
+
+BODY.Tree {
+	font-family: Verdana, sans-serif;
+	font-size: 8pt;
+	margin-top: 3pt;
+	margin-left: 1pt;
+}
+
+DIV.Text {
+	margin-top: 9pt;
+	margin-bottom: 0pt;
+	margin-left: 2em;
+}
+
+DIV.Tree {
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+	display: none;
+}
+
+HR.BodyDecls {
+	color: #006644;
+	height: 4pt;
+	margin-top: 12pt;
+	margin-bottom: 0pt;
+}
+
+HR.SlugSpacer {
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+}
+
+IMG.Widget {
+	length: 16;
+	width: 16;
+	vertical-align: text-top;
+}
+
+P.DeclName {
+	color: #553300;
+	font-family: Verdana, sans-serif;
+	font-size: 14pt;
+	margin-top: 6pt;
+	margin-bottom: 12pt;
+}
+
+P.Hdr {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 2pt;
+	margin-bottom: 0pt;
+	margin-left: 8pt;
+	color: #553300;
+}
+
+P.Nav {
+	background-color: #064;
+	color: #999;
+	font-family: Verdana, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	line-height: 14pt;
+	margin-top: 2pt;
+	margin-bottom: 0pt;
+	text-align: right;
+}
+
+P.SrcLink {
+	font-family: Verdana, sans-serif;
+	font-size: 8pt;
+	margin-top: 1pt;
+	margin-bottom: 0pt;
+	text-align: right;
+}
+
+P.SubHead {
+	color: #006644;
+	font-family: Verdana, sans-serif;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0pt;
+}
+
+P.Text {
+	margin-top: 9pt;
+	margin-bottom: 0pt;
+	margin-left: 2em;
+}
+
+P.TreeDecl {
+	margin-left: 42pt;
+	margin-top: 1pt;
+	margin-bottom: 0pt;
+	white-space: nowrap;
+}
+
+P.TreePkg {
+	margin-top: 2pt;
+	margin-bottom: 0pt;
+	white-space: nowrap;
+}
+
+P.TreeUnit {
+	margin-left: 16pt;
+	margin-top: 2pt;
+	margin-bottom: 0pt;
+	white-space: nowrap;
+}
+
+PRE.Example {
+	font-family: "Courier New", monospace;
+	margin-top: 9pt;
+	margin-bottom: 0pt;
+	margin-left: 2.5em;
+}
+
+PRE.Src {
+	font-family: "Courier New", monospace;
+	font-size: 75%;
+	margin-top: 9pt;
+}
+
+TABLE.Slug {
+	background-color: #EEE;
+	border-spacing: 10pt;
+	border-style: ridge;
+	font-family: Verdana, sans-serif;
+	font-size: 75%;
+	margin-top: .8em;
+	margin-bottom: 0em;
+}
+
+TABLE.Summary {
+	margin-top: .5em;
+	margin-bottom: 0em;
+	margin-left: 2.5em;
+}
+
+TABLE.TreeDecl {
+	margin-left: 0pt;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+}
+
+TD.SlugComment {
+	width: 2%;
+	white-space: nowrap;
+}
+
+TD.SlugLine {
+	white-space: nowrap;
+}
+
+TD.SlugKey {
+	width: 20%;
+}
+
+TR.SlugSpacer {
+	font-size: 1pt;
+}
+

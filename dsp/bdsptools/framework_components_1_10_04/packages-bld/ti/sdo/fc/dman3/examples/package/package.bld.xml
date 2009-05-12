@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.fc.dman3.examples" version="">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/fastcopytest_2430_x64P.c"/>
+        <srcFile name="bios_rts.c"/>
+        <srcFile name="fcpy_ti_ifcpy.c"/>
+        <srcFile name="fcpy_ti_idma3.c"/>
+        <srcFile name="fcpy_ti_ifcpyvt.c"/>
+        <srcFile name="fcpy_ti_ialg.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci_x64P.c"/>
+        <srcFile name="fcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64Pcfg.s62"/>
+        <srcFile name="fcpy_ti.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430_x64P.c"/>
+        <srcFile name="package/package.c"/>
+        <srcFile name="ifcpy.c"/>
+        <srcFile name="bios_rtsasm.s62"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64Pcfg.s62"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64Pcfg_c.c"/>
+        <srcFile name="fastcopytest.c"/>
+        <srcFile name="fcpy_ti_idma3vt.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64Pcfg_c.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64P.c"/>
+    </sources>
+    <configurations>
+        <srcFile name="fastcopytest.cfg"/>
+        <srcFile name="fastcopytest.tcf"/>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="fcpy_ti.a64P.mak" src="package.bld"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti.o64P.dep" src="fcpy_ti.c"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti_idma3.o64P.dep" src="fcpy_ti_idma3.c"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti_ifcpy.o64P.dep" src="fcpy_ti_ifcpy.c"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti_ialg.o64P.dep" src="fcpy_ti_ialg.c"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti_idma3vt.o64P.dep" src="fcpy_ti_idma3vt.c"/>
+        <srcFile name="package/lib/fcpy_ti/package.o64P.dep" src="package/package.c"/>
+        <srcFile name="package/lib/fcpy_ti/fcpy_ti_ifcpyvt.o64P.dep" src="fcpy_ti_ifcpyvt.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64P.o64P.dep" src="package/cfg/fastcopytest_2430_x64P.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64Pcfg_c.o64P.dep" src="package/cfg/fastcopytest_2430_x64Pcfg_c.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430/fcpy.o64P.dep" src="fcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430/ifcpy.o64P.dep" src="ifcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64Pcfg.o64P.dep" src="package/cfg/fastcopytest_2430_x64Pcfg.s62"/>
+        <srcFile name="package/cfg/fastcopytest_2430/fastcopytest.o64P.dep" src="fastcopytest.c"/>
+        <srcFile name="package/cfg/fastcopytest_2430_x64P.dep" src="package/cfg/fastcopytest_2430_x64P.cfg"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430_x64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430/fcpy.o64P.dep" src="fcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430_x64P.o64P.dep" src="package/cfg/fastcopytest_nobios_2430_x64P.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430/ifcpy.o64P.dep" src="ifcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430/bios_rtsasm.o64P.dep" src="bios_rtsasm.s62"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430/fastcopytest.o64P.dep" src="fastcopytest.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430/bios_rts.o64P.dep" src="bios_rts.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_2430_x64P.dep" src="package/cfg/fastcopytest_nobios_2430_x64P.cfg"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64P.o64P.dep" src="package/cfg/fastcopytest_davinci_x64P.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci/fcpy.o64P.dep" src="fcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci/ifcpy.o64P.dep" src="ifcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci/fastcopytest.o64P.dep" src="fastcopytest.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64Pcfg.o64P.dep" src="package/cfg/fastcopytest_davinci_x64Pcfg.s62"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64Pcfg_c.o64P.dep" src="package/cfg/fastcopytest_davinci_x64Pcfg_c.c"/>
+        <srcFile name="package/cfg/fastcopytest_davinci_x64P.dep" src="package/cfg/fastcopytest_davinci_x64P.cfg"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci_x64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci/fcpy.o64P.dep" src="fcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci/ifcpy.o64P.dep" src="ifcpy.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci/bios_rtsasm.o64P.dep" src="bios_rtsasm.s62"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci_x64P.o64P.dep" src="package/cfg/fastcopytest_nobios_davinci_x64P.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci/fastcopytest.o64P.dep" src="fastcopytest.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci/bios_rts.o64P.dep" src="bios_rts.c"/>
+        <srcFile name="package/cfg/fastcopytest_nobios_davinci_x64P.dep" src="package/cfg/fastcopytest_nobios_davinci_x64P.cfg"/>
+        <srcFile name="package/rel/ti_sdo_fc_dman3_examples.tar.dep" src="package/rel/ti_sdo_fc_dman3_examples.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.C64P"
+            version="ti.targets.C64P{1,0,6.0,7"
+            platform="ti.platforms.sim6xxx:TMS320CDM420"
+            isa="64P"
+            suffix="64P"
+            rootDir="/db/atree/library/trees/depot/cgt6x-6.0.7"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    <library name="fcpy_ti"
+        pname="fcpy_ti.a64P"
+        profile="debug"
+        target="ti.targets.C64P"/>
+    </libraries>
+    <executables>
+    <executable name="fastcopytest_2430"
+        pname="fastcopytest_2430.x64P"
+        target="ti.targets.C64P"
+        platform="ti.platforms.sim6xxx:TMS320CDM420"
+        profile="debug"
+        xCfgScript="package/cfg/fastcopytest_2430_x64P.cfg"
+        cfgScript="fastcopytest.tcf"
+        cfgArgs="%7BchipType%3A%20%222430%22%7D"
+        />
+    <executable name="fastcopytest_nobios_2430"
+        pname="fastcopytest_nobios_2430.x64P"
+        target="ti.targets.C64P"
+        platform="ti.platforms.sim6xxx:TMS320CDM420"
+        profile="debug"
+        xCfgScript="package/cfg/fastcopytest_nobios_2430_x64P.cfg"
+        cfgScript="fastcopytest.cfg"
+        cfgArgs="%7BchipType%3A%20%222430%22%7D"
+        />
+    <executable name="fastcopytest_davinci"
+        pname="fastcopytest_davinci.x64P"
+        target="ti.targets.C64P"
+        platform="ti.platforms.sim6xxx:TMS320CDM420"
+        profile="debug"
+        xCfgScript="package/cfg/fastcopytest_davinci_x64P.cfg"
+        cfgScript="fastcopytest.tcf"
+        cfgArgs="%7BchipType%3A%20%22davinci%22%7D"
+        />
+    <executable name="fastcopytest_nobios_davinci"
+        pname="fastcopytest_nobios_davinci.x64P"
+        target="ti.targets.C64P"
+        platform="ti.platforms.sim6xxx:TMS320CDM420"
+        profile="debug"
+        xCfgScript="package/cfg/fastcopytest_nobios_davinci_x64P.cfg"
+        cfgScript="fastcopytest.cfg"
+        cfgArgs="%7BchipType%3A%20%22davinci%22%7D"
+        />
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_fc_dman3_examples"
+        pname="ti_sdo_fc_dman3_examples.tar"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.rel.dot"/>
+        <file name="fastcopytest_nobios.cmd.xdt"/>
+        <file name="package/cfg/fastcopytest_davinci_x64P.inc"/>
+        <file name="package/cfg/fastcopytest_2430_x64Pcfg_c.c"/>
+        <file name="package/cfg/fastcopytest_nobios_2430_x64P.inc"/>
+        <file name="fcpy_ti_idma3.c"/>
+        <file name="package/cfg/fastcopytest_2430_x64P.cfg"/>
+        <file name="fastcopytest_nobios_2430.x64P"/>
+        <file name="package/cfg/fastcopytest_2430_x64Pcfg.s62"/>
+        <file name="fastcopytest.c"/>
+        <file name="fcpy_ti_idma3vt.c"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="fcpy_ti_ifcpy.c"/>
+        <file name="package/cfg/fastcopytest_nobios_2430_x64P.c"/>
+        <file name="fastcopytest.cmd.xdt"/>
+        <file name="ifcpy.c"/>
+        <file name="davincisim_bios"/>
+        <file name="fastcopytest_nobios.cmd"/>
+        <file name="ifcpy.h"/>
+        <file name="package/cfg/fastcopytest_2430_x64P.inc"/>
+        <file name="package/cfg/fastcopytest_nobios_davinci_x64P.cfg"/>
+        <file name="fcpy_ti_ifcpyvt.c"/>
+        <file name="fcpy_ti_ialg.c"/>
+        <file name="davincisim_nobios"/>
+        <file name="fcpy_ti_priv.h"/>
+        <file name="fcpy.c"/>
+        <file name="package/cfg/fastcopytest_davinci_x64Pcfg_c.c"/>
+        <file name="fcpy_ti64.pjt"/>
+        <file name="fcpy.h"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="package/cfg/fastcopytest_davinci_x64Pcfg.s62"/>
+        <file name="package/cfg/fastcopytest_nobios_davinci_x64P.inc"/>
+        <file name="fcpy_ti.c"/>
+        <file name="fcpy_ti.h"/>
+        <file name="fastcopytest_2430.x64P"/>
+        <file name="fastcopytest_nobios_davinci.x64P"/>
+        <file name="package/cfg/fastcopytest_2430_x64P.c"/>
+        <file name="package/cfg/fastcopytest_davinci_x64P.cfg"/>
+        <file name="package/package.c"/>
+        <file name="package/package.bld.xml"/>
+        <file name="package/cfg/fastcopytest_nobios_2430_x64P.cfg"/>
+        <file name="fastcopytest_davinci.x64P"/>
+        <file name="package/cfg/fastcopytest_nobios_davinci_x64P.c"/>
+        <file name="bios_rts.c"/>
+        <file name="package/cfg/fastcopytest_davinci_x64P.c"/>
+        <file name="bios_rts.h"/>
+        <file name="fcpy_ti.a64P"/>
+        <file name="bios_rtsasm.s62"/>
+        <file name="package/package.ext.xml"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

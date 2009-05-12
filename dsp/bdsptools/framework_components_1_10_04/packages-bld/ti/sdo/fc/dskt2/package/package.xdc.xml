@@ -1,0 +1,115 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.dskt2' release='1, 0, 1' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='13' text='++Framework+Components%27+xDAIS+Algorithm+Manager.'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='15' text='++This+package+provides+an+xDAIS+Manager.'/>
+    </autodoc>
+    <module name='DSKT2' hostonly='1'>
+        <autodoc tag='summary'>
+            <comment line='13' text='++xDAIS+algorithm+socket'/>
+        </autodoc>
+        <const name='DEFAULTSEG' line='23' type='K%21String%21%24' code='s' init='%22IRAM%22'>
+            <autodoc tag='summary'>
+                <comment line='21' text='++Default+segment+to+allocate+memory+from.'/>
+            </autodoc>
+        </const>
+        <config name='DARAM0' line='29' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='27' text='++IALG+memory+space+mapping+of+IALG_DARAM0.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='DARAM1' line='35' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='33' text='++IALG+memory+space+mapping+of+IALG_DARAM1.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='DARAM2' line='41' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='39' text='++IALG+memory+space+mapping+of+IALG_DARAM2.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='SARAM0' line='47' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='45' text='++IALG+memory+space+mapping+of+IALG_SARAM0.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='SARAM1' line='53' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='51' text='++IALG+memory+space+mapping+of+IALG_SARAM1.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='SARAM2' line='59' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='57' text='++IALG+memory+space+mapping+of+IALG_SARAM2.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='ESDATA' line='65' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='63' text='++IALG+memory+space+mapping+of+IALG_ESDATA.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='IPROG' line='71' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='69' text='++IALG+memory+space+mapping+of+IALG_IPROG.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='EPROG' line='77' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='75' text='++IALG+memory+space+mapping+of+IALG_EPROG.++This+must+match+a+BIOS+heap.'/>
+            </autodoc>
+        </config>
+        <config name='DSKT2_HEAP' line='86' hostonly='1' type='K%21String%21%24' code='s' init='%24%21ti.sdo.fc.dskt2.DSKT2%3ADEFAULTSEG%21'>
+            <autodoc tag='summary'>
+                <comment line='82' text='++Memory+segment+for+internal+DSKT2+data+structures.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='84' text='++Objects+internal+to+the+DSKT2+module+will+be+allocated+from+this+heap.'/>
+            </autodoc>
+        </config>
+        <config name='ALLOW_EXTERNAL_SCRATCH' line='96' hostonly='1' type='K%21Bool%21%24' code='b' init='%24Ktrue'>
+            <autodoc tag='summary'>
+                <comment line='90' text='++Allow+external+memory+to+be+used+for+algorithm+scratch+memory+requests.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='92' text='++If+an+algorithm+requests+scratch+memory%2C+and+insufficient+scratch'/>
+                <comment line='93' text='++memory+is+available%2C+scratch+buffers+will+be+allocated+in+external'/>
+                <comment line='94' text='++memory+if+property+is+%27true%27.'/>
+            </autodoc>
+        </config>
+        <config name='DARAM_SCRATCH_SIZES' line='102' hostonly='1' type='K%21UInt%21%24%5BK%21%21%5D' code='An' init='%5B%24%2B0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%24-%5D'>
+            <autodoc tag='summary'>
+                <comment line='100' text='++Shared+IALG_DARAM0+scratch+group+sizes.'/>
+            </autodoc>
+        </config>
+        <config name='SARAM_SCRATCH_SIZES' line='109' hostonly='1' type='K%21UInt%21%24%5BK%21%21%5D' code='An' init='%5B%24%2B0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%24-%5D'>
+            <autodoc tag='summary'>
+                <comment line='107' text='++Shared+IALG_SARAM0+scratch+group+sizes.'/>
+            </autodoc>
+        </config>
+        <config name='debug' line='120' hostonly='1' type='K%21Bool%21%24' code='b' init='%24Kfalse'>
+            <autodoc tag='summary'>
+                <comment line='114' text='++Enable+the+debug+profile+of+the+DSKT2+library.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='116' text='++This+will+likely+result+in+a+larger+and+slower+library+being+linked+in%2C'/>
+                <comment line='117' text='++but+it+will+provide+extra+parameter+checking+and+debug+trace'/>
+                <comment line='118' text='++statements+dropped+in+the+BIOS+SYS+trace+buffer.'/>
+            </autodoc>
+        </config>
+        <config name='cacheWritebackInvalidateFxn' line='133' hostonly='1' type='K%21String%21%24' code='s' init='%22BCACHE_wbInv%22'>
+            <autodoc tag='summary'>
+                <comment line='124' text='++Name+of+function+implementing+cache+writeback+invalidate+with'/>
+                <comment line='125' text='++the+following+signature%3A+'/>
+                <comment line='126' text='++%28*DSKT2_CacheWBInvFxn%29%28Ptr+blockPtr%2C+size_t+byteCnt%2C+bool+wait%29+'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='128' text='++For+C6000+platforms+DSKT2+calls+this+function+to+ensure+that+the'/>
+                <comment line='129' text='++algorithm+instance+memory+is+not+resident+in+Cache+when+it+is+'/>
+                <comment line='130' text='++instantiated.+This+is+necessary+for+compliance+with+XDAIS+C6000+DMA'/>
+                <comment line='131' text='++Rules+and+Guidelines.'/>
+            </autodoc>
+        </config>
+    </module>
+</package>

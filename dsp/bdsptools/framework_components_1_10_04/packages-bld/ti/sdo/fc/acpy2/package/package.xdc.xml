@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.acpy2' release='' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='12' text='++Framework+Components%27+algorithm+copy+library+%28includes+DMA+optimization%29%2C+'/>
+        <comment line='13' text='++for+the+ACPY2+interface.+'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='15' text='++This+package+provides+the+ACPY2+copy+services+for+xDAIS+algorithms.+'/>
+    </autodoc>
+</package>

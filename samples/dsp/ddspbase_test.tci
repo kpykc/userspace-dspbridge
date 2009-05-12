@@ -1,0 +1,112 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== ddspbase.tci ========
+ *
+ */
+
+/* bridge default is 512, that's not enough sometimes */
+var traceSize = 512;
+
+/* do you want to link with the debug bridge library? */
+var fDebugBridge = false;
+
+/* add instance LOG.trace */
+trace = bridge.LOG.create("trace");
+trace.bufLen = 32;
+
+if (fDebugBridge) {
+    // enable Bridge debug support
+    bridge.BRIDGE.enableDebug = 1;
+}
+
+/**************************************************************/
+/* Test Case: SR2898 */
+bridge.TIOMAP1510SHM.EXTHEAPSIZE = 0x5000;
+bridge.NODE.MSGFRAMESEG = prog.get("EXTMEM");
+/**************************************************************/
+
+/**************************************************************/
+/* Test Case: SR2724.6 */
+bridge.TIOMAP1510SHM.SETMAXBUFSIZE = 1;
+bridge.TIOMAP1510SHM.MAXBUFSIZE = 0x7777; /* 0xeeee bytes */
+/**************************************************************/
+
+/**************************************************************/
+/* Test Case: SR2724.6.2 */
+bridge.TIOMAP1510SHM.MAXMESSAGES = 0xd;
+/**************************************************************/
+
+/**************************************************************/
+/* Test Case: SR2724.2, SR2724.3 */
+
+/* Should Fail */
+//bridge.PROC.instance("PROC_default").physicalEntry0 = 0x11e00000;
+//bridge.PROC.instance("PROC_default").virtualEntry0  = 0x80000;
+//bridge.PROC.instance("PROC_default").physicalEntry1 = 0x11e00000;
+//bridge.PROC.instance("PROC_default").physicalEntry2 = 0x11e00000;
+
+/* Should Pass */
+bridge.PROC.instance("PROC_default").virtualEntry1  = 0x100000;
+bridge.PROC.instance("PROC_default").virtualEntry2  = 0x68000;
+bridge.PROC.instance("PROC_default").physicalEntry3 = 0x11e00000;
+bridge.PROC.instance("PROC_default").virtualEntry3  = 0x200000;
+bridge.PROC.instance("PROC_default").physicalEntry4 = 0x11e00000;
+bridge.PROC.instance("PROC_default").virtualEntry4  = 0x280000;
+bridge.PROC.instance("PROC_default").physicalEntry5 = 0x11e00000;
+bridge.PROC.instance("PROC_default").virtualEntry5  = 0x300000;
+bridge.PROC.instance("PROC_default").physicalEntry6 = 0x11e00000;
+bridge.PROC.instance("PROC_default").virtualEntry6  = 0x380000;
+/**************************************************************/
+
+/* disable RTDX to allow the DSP to go to deep sleep */
+// bridge.RTDX.ENABLERTDX = 0;
+// bridge.HST.HOSTLINKTYPE = "NONE";
+// bridge.PWRM.ENABLE = true;
+// bridge.PWRM.IDLEDOMAINS = true;
+
+if ((chipType == "1510") || (chipType == "24xx")) {
+    bridge.TSK_idle.sysStackSize = 1024;
+    bridge.TSK_dispatcher.sysStackSize = 1024;
+}
+
+/* For base image program, use an error function that does not abort */
+bridge.SYS.ERRORFXN = prog.extern("USR_logError");
+bridge.SYS.TRACESIZE = traceSize;
+
+/* Configure all nodes as static */
+var dynamicNode = false;
+
+/* Strmcopy Node */
+utils.importFile("strmcopy.tci");
+
+/* Ping Node */
+utils.importFile("ping.tci");
+
+/* Scale Node */
+utils.importFile("scale.tci");
+
+/* DMMCOPY Node */
+utils.importFile("dmmcopy.tci");
+
+/* Zero Copy Messaging Node */
+utils.importFile("zcmsg.tci");
+
+if (chipType != "2430") {
+    /* DMA Dev Copy Nodes */
+    utils.importFile("dmadevcopy.tci");
+}

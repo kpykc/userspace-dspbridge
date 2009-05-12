@@ -1,0 +1,102 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== ddspbase.tci ========
+ *
+ */
+
+/* bridge default is 512, that's not enough sometimes */
+var traceSize = 512;
+
+/* Do you want to link with the debug bridge library? */
+var fDebugBridge = true;
+
+/* Do you want to include EcostoPowerIdle */
+var ecostoPwrIdle = false;
+
+/* add instance LOG.trace */
+trace = bridge.LOG.create("trace");
+trace.bufLen = 32;
+
+if (fDebugBridge) {
+    // enable Bridge debug support
+    bridge.BRIDGE.enableDebug = 1;
+}
+
+if (chipType != "2430" && chipType != "3430") {
+    bridge.TSK_idle.sysStackSize = 1024;
+    bridge.TSK_dispatcher.sysStackSize = 1024;
+}
+
+if(chipType == "v1035")
+{
+	// add instance NODE.fault
+	fault = bridge.NODE.create("fault");
+	fault.uuid = "F95CA073_EE7D_11D5_A8DD_00B0D055F6D1";
+	fault.name = "fault";
+	if((chipType == "1510") || (chipType == "24xx") || (chipType == "v1030") || (chipType == "v1035")) {
+	    fault.stackSize = 256;
+	}
+	else {
+	    fault.stackSize = 1024;
+	}
+	fault.messageDepth = 8;
+	fault.createFxn = "faultCreate";
+	fault.executeFxn = "faultExecute";
+	fault.deleteFxn = "faultDelete";
+	
+		
+	if(ecostoPwrIdle)
+	{
+	    var idleSamples = prog.module("IDL").create("idleSamples");
+	    idleSamples.fxn = prog.extern("EcostoPowerIdle");
+	    idleSamples.order = 1;
+	    /* Turn off RTDX. */
+	    bridge.RTDX.ENABLERTDX = 0;
+	    bridge.GBL.ENABLEALLTRC = 0;
+	    bridge.GBL.ENABLEINST = 0;
+	}
+
+}
+
+/* For base image program, use an error function that does not abort */
+bridge.SYS.ERRORFXN = prog.extern("USR_logError");
+bridge.SYS.TRACESIZE = traceSize;
+
+
+/* Configure all nodes as static */
+var dynamicNode = false;
+
+/* Strmcopy Node */
+utils.importFile("strmcopy.tci");
+
+/* Ping Node */
+utils.importFile("ping.tci");
+
+/* Scale Node */
+utils.importFile("scale.tci");
+
+/* DMMCOPY Node */
+utils.importFile("dmmcopy.tci");
+
+/* Zero Copy Messaging Node */
+utils.importFile("zcmsg.tci");
+/* ipc */
+if( (chipType == "v1035") && (dspbridge.module("BRIDGE").includeMipcLib) )
+{
+    utils.importFile("mipc.tci");
+}

@@ -1,0 +1,14 @@
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+
+//prog.gen();
+print (prog.cpu.attrs.cpuCore);

@@ -1,0 +1,137 @@
+*  ======== dma4/acpy2_omap.h55 ========
+*  Declaration of the ACPY2 platform related interface.
+*
+*
+
+ .if !$isdefed("ACPY2_OMAP_H55_")
+ACPY2_OMAP_H55_  .equ 1
+
+ .include "idma2.h55"
+
+* typedef enum ACPY2_OMAP_EndianismType  {
+*   ACPY2_OMAP_LITTLEENDIAN,
+*   ACPY2_OMAP_BIGENDIAN
+* } ACPY2_OMAP_EndianismType;
+
+ACPY2_OMAP_LITTLEENDIAN	.set 0
+ACPY2_OMAP_BIGENDIAN	.set 1
+
+* typedef void (*ACPY2_OMAP_CallbackFxn)(Arg callbackArg);
+
+*
+* ======== ACPY2_OMAP_setDstPortEndianism  ========
+* Disable the dst port endianism for EMIF ports.
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*      ACPY2_OMAP_EndianismType :  Little or Big Endian.
+*  Returns:
+*      Nothing
+*  Requires:        
+*      Valid IDMA2_Handle.
+*
+* extern Void ACPY2_OMAP_setDstPortEndianism(IDMA2_Handle, 
+*                                            ACPY2_OMAP_EndianismType);
+
+*
+* ======== ACPY2_OMAP_setSrcPortEndianism  ========
+* Disable the dst port endianism for EMIF ports.
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*      ACPY2_OMAP_EndianismType :  Little or Big Endian.
+*  Returns:
+*      Nothing
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* extern Void ACPY2_OMAP_setSrcPortEndianism(IDMA2_Handle, 
+*                                            ACPY2_OMAP_EndianismType);
+
+*
+* ======== ACPY2_OMAP_getDstPortEndianism  ========
+* Get the dst port endianism.
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*      
+*  Returns:
+*      Destination Port Endianism Type of given logical channel
+*
+*  Requires:
+*      Vvalid IDMA2_Handle.
+*
+* ACPY2_OMAP_EndianismType ACPY2_OMAP_getDstPortEndianism(IDMA2_Handle);
+
+
+*
+* ======== ACPY2_OMAP_getSrcPortEndianism  ========
+* Get the source port endianism.
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*      
+*  Returns:
+*      Source Port Endianism Type of given logical channel:
+*        
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* ACPY2_OMAP_EndianismType ACPY2_OMAP_getSrcPortEndianism(IDMA2_Handle);
+
+*
+*  ======== ACPY2_OMAP_enablePackedBurst  ========
+*  Enable Packed & Burst mode for the given Logical Channel. 
+*
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*  Returns:
+*      Nothing
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* Void ACPY2_OMAP_enablePackedBurst(IDMA2_Handle);
+
+*
+*  ======== ACPY2_OMAP_disablePackedBurst  ========
+*  Disable Packed & Burst mode for the given Logical Channel. 
+*
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*  Returns:
+*      Nothing
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* Void ACPY2_OMAP_disablePackedBurst(IDMA2_Handle);
+
+*
+*  ======== ACPY2_OMAP_setCallbackNotification   ========
+*  Sets the callback function and argument for the function
+*  that (when not NULL) gets called by the DMA ISR when at the moment 
+*  when physical DMA transfer completes on this logical channel
+*
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*      ACPY2_OMAP_CallbackFxn :    Callback function pointer used for
+*                                  notification of completed DMA transfer 
+*      Arg :                       Argument passed to callback function  
+*  Returns:
+*      Nothing
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* Void ACPY2_OMAP_setCallbackNotification(IDMA2_Handle, 
+*                                         ACPY2_OMAP_CallbackFxn, Arg cbArg);
+
+*
+*  ======== ACPY2_OMAP_getPhysicalChannel   ========
+*  Gets the physical channel assigned to the Logical DMA Channel represented by 
+*  the handle.
+*  
+*  Parameters:
+*      IDMA2_Handle :              Algorithm handle
+*  Returns:
+*      Physical channel assigned to handle
+*  Requires:
+*      Valid IDMA2_Handle.
+*
+* Uns ACPY2_OMAP_getPhysicalChannel(IDMA2_Handle);
+
+ .endif ; if !$isdefed("ACPY2_OMAP_H55_")

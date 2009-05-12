@@ -1,0 +1,172 @@
+/*
+ *  ======== dynm.tci ========
+ *
+ *  Manager for memory segments used in dynamic loading. This file contains
+ *  memory properties needed for dynamic loading that are not defined in the
+ *  BIOS MEM module.  It allows us to easily dump dynamic loading info into
+ *  the COFF file.
+ *
+ *  There are three memory regions specifically designated for use with
+ *  the dynamic loader.  They are mapped to designated MEM regions within
+ *  the proc module, and are referenced by way of three generic MEM
+ *  segments: DYN_SARAM, DYN_DARAM, and DYN_EXTERNAL.
+ *
+ *  Since a NODE will not be aware of the MEM regions available to it,
+ *  it may specify a generic loading segment instead.
+ *  When a MEM object is mapped, the DYNM call() property gets called
+ *  to update the corresponding DYNM region.
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+/* Defines must match those in dldr.c */
+var DYNM_CODE     = 0x2;
+var DYNM_DATA     = 0x4;
+var DYNM_CODEDATA = 0x6;
+var DYNM_INTERNAL = 0x8;
+var DYNM_EXTERNAL = 0x10;
+
+var MEM_NULL = prog.module("MEM").instance("MEM_NULL");
+
+
+var $$name = "DYNM";
+
+var $$label = "Properties for DSP Bridge DYNM module";
+
+/* Global properties for DYNM object */
+var $$global = [
+        {
+            name : "NUMDYNMEM",
+            val  : 4,
+            label: "Number of dynamic loading memory segments",
+            type : "Integer",
+        },
+        {
+            name : "DLLVIEWSEG",
+            val  : prog.module("MEM").DATASEG,
+            label: "DLLView Section (.dllview)",
+            type : "Object",
+            test : ["isMemSegment"],
+        },
+            ];
+
+/* Per instance properties */
+var $$instance = [
+        {
+            name : "memSeg",
+            val  : null,
+            label: "memSeg",
+            type : "Object",
+        },
+        {
+            name : "id",
+            val  : 0,
+            label: "id",
+            type : "Integer",
+        },
+        {
+            name : "base",
+            val  : 0,
+            label: "base",
+            type : "Integer",
+        },
+        {
+            name : "len",
+            val  : 0,
+            label: "len",
+            type : "Integer",
+        },
+        {
+            /* DYNM_CODE, DYNM_DATA, DYNM_CODEDATA */
+            name : "memType",
+            val  : 0,
+            label: "memType",
+            type : "Integer",
+        },
+        {
+            name : "iIsModifiable",
+            val  : true,
+            label: "Is object modifiable",
+            type : "Boolean",
+        },
+            ];
+
+var $$template = 
+    {
+        asmSource : "ti/dspbridge/dsp/tconf/modules/dynm_asm.tpl",
+        linker    : "ti/dspbridge/dsp/tconf/modules/dynm_cmd.tpl"
+    };
+
+/*
+ *  ======== External Functions ========
+ */
+function getMemType (val)
+{
+    var retval = 0;
+
+    if (val.dynamicLoading == 1) {
+        var proc_tmp = dspbridge.module("PROC").instance("PROC_default");
+
+        /* Code and/or data? */
+        if (val.space == "code") {
+            retval = DYNM_CODE;
+        } else {
+            if (val.space == "data") {
+                retval = DYNM_DATA;
+            } else {
+                if (val.space == "code/data") {
+                    retval = DYNM_CODEDATA;
+                } else {
+                    // Impossible to get here
+                    throw (val.name  + " does not have a valid space.");
+                }
+            }
+        }
+
+        if (val.base < proc_tmp.ulInternalMemSize) {
+            retval |= DYNM_INTERNAL;
+        }
+        else {
+            retval |= DYNM_EXTERNAL;
+        }
+    }
+
+    return (retval);
+}
+
+/*
+ *  ======== Module Initialization ========
+ */
+function init ()
+{
+    // Only generate DYNM instances for base images
+    if (!dspbridge.module("BRIDGE").BRIDGELIB) {
+        var dynm_0_tmp = this.create("DYNM_0");
+        dynm_0_tmp.id = 0;
+        dynm_0_tmp.base = 0;
+        dynm_0_tmp.len = 0;
+        dynm_0_tmp.memSeg = MEM_NULL;
+        dynm_0_tmp.memType = 0;
+
+        var dynm_1_tmp = this.create("DYNM_1");
+        dynm_1_tmp.id = 1;
+        dynm_1_tmp.base = 0;
+        dynm_1_tmp.len = 0;
+        dynm_1_tmp.memSeg = MEM_NULL;
+        dynm_1_tmp.memType = 0;
+
+        var dynm_2_tmp = this.create("DYNM_2");
+        dynm_2_tmp.id = 2;
+        dynm_2_tmp.base = 0;
+        dynm_2_tmp.len = 0;
+        dynm_2_tmp.memSeg = MEM_NULL;
+        dynm_2_tmp.memType = 0;
+
+        var dynm_3_tmp = this.create("DYNM_3");
+        dynm_3_tmp.id = 3;
+        dynm_3_tmp.base = 0;
+        dynm_3_tmp.len = 0;
+        dynm_3_tmp.memSeg = MEM_NULL;
+        dynm_3_tmp.memType = 0;
+    } 
+}

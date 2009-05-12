@@ -1,0 +1,37 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== loaddyn.tci =========
+ */
+
+loadnode = bridge.NODE.create("loadnode");
+
+loadnode.uuid = "D91A01BD_D215_11D4_8626_00105A98CA01";
+loadnode.name = "LOAD_TI";
+loadnode.nodeType = "TASKNODE";
+loadnode.priority = 12;
+loadnode.stackSize = 1024;
+loadnode.timeout = -1;
+loadnode.createFxn = "LOAD_TI_create";
+loadnode.executeFxn = "LOAD_TI_execute";
+loadnode.deleteFxn = "LOAD_TI_delete";
+loadnode.loadType = "Dynamic";
+loadnode.messageDepth = 2;
+if (chipType != "2430" && chipType != "3430") {
+    loadnode.createCodeSeg = bridge.DYN_EXTERNAL;
+    loadnode.createDataSeg = bridge.DYN_DARAM;
+}

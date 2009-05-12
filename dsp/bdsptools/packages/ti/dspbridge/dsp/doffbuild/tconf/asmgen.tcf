@@ -1,0 +1,394 @@
+/*
+ *! ============================================================
+ *! Copyright 2004 by Texas Instruments Incorporated.
+ *! All rights reserved. Property of Texas Instruments Incorporated.
+ *! Restricted rights to use, duplicate or disclose this code are
+ *! granted through contract.
+ *! ============================================================
+ */
+/*
+ *  ======== asmgen.tcf ========
+ *  asmgen will generate assembly files that enable a dynamic node to
+ *  be built with dependent libraries and/or multiple dynamic phase
+ *  libraries.
+ *
+ *  If the three phases for a dynamic node are being built into
+ *  three separate dynamic libraries, this script will generate
+ *  three assembly files containing section information about
+ *  what phase the library corresponds to.  The assembly files
+ *  must be built and linked with the corresponding phase library.
+ *
+ *  If dependent libraries are being generated, asmgen will read
+ *  an input script/chart and generate an assembly file for each
+ *  dependent library as well as information for the library that
+ *  references it.  The assembly files must be built and linked with
+ *  their corresponding library.
+ *
+ *  Usage:
+ *
+ *   tconf asmgen.tcf [-x <file1.xml>] [-c <file1.cdb>] [-da|du|dd <deplibschart.txt>] [-isa XX]
+ *
+ *  Examples:
+ *
+ *	tconf asmgen.tcf -c <file1.cdb> -da <deplibschart.txt> -isa 62
+ *		to generate all possible assembly files with .s62 extension
+ *  or
+ *	tconf asmgen.tcf -c <file1.cdb> -du <deplibschart.txt> -isa 55
+ *		to generate *_psect.s55 files and only *_uuid.s55
+ *		given a chart
+ *  or
+ *	tconf asmgen.tcf -c <file1.cdb> -dd <deplibschart.txt> -isa 55
+ *		to generate *_psect.s55 files and only *_deplibs.s55
+ *		given a chart
+ *  or
+ *	tconf asmgen.tcf -c <file1.cdb> -isa 55
+ *		to only generate *_psect.s55 assembly files
+ *  or
+ *	tconf asmgen.tcf -da <deplibschart.txt> -isa 55
+ *		to only generate *_uuid.s55 and *_deplibs.s55 assembly files
+ *  or
+ *	tconf asmgen.tcf -du <deplibschart.txt> -isa 55
+ *		to only generate *_uuid.s55 assembly files
+ *  or
+ *	tconf asmgen.tcf -dd <deplibschart.txt> -isa 55
+ *		to only generate *_deplibs.s55 assembly files
+ *  or
+ *	tconf asmgen.tcf -dd <deplibschart.txt> -isa 62
+ *		to only generate *_deplibs.s62 assembly files
+ *
+ *  Where:
+ *   -x indicates that an XML file is to be loaded that contains the
+ *    configuration information for each node.
+ *
+ *   -c indicates that a CDB file is to be loaded that contains the
+ *    configuration information for each node.
+ *
+ *   -deplibschart.txt is the name of the input chart that
+ *    specifies the dependent library names, uuids, and dependencies
+ *
+ *   -da indicates that all dependent library assembly files should be
+ *    generated.
+ *
+ *   -du indicates that ONLY the dependent library's UUID assembly
+ *    files should be generated - <filename>_uuid.s55.
+ *
+ *   -dd indicates that ONLY the assembly files for the library
+ *    that references the dependent library should be generated -
+ *    <filename>_deplibs.s55
+ *
+ *   -f indicates that it is okay to add duplicate dependent library
+ *    references to *_deplibs.s55 assembly files
+ *
+ *   -isa indicates the particular instruction set architecture that
+ *    should be used in the generated files.  "55" is the default.
+ *
+ *  Example:
+ *	tconf asmgen.tcf -c pingdll.cdb
+ *		OR
+ *	tconf asmgen.tcf -c pingdll.cdb -da pingdeplibschart.txt
+ *		OR
+ *	tconf asmgen.tcf -c pingdll.cdb -du pingdeplibschart.txt
+ *		OR
+ *	tconf asmgen.tcf -c pingdll.cdb -dd pingdeplibschart.txt
+ *		OR
+ *	tconf asmgen.tcf -da pingdeplibschart.txt
+ *		OR
+ *	tconf asmgen.tcf -du pingdeplibschart.txt
+ *		OR
+ *	tconf asmgen.tcf -dd pingdeplibschart.txt
+ *
+ *  Note:
+ *	-If you wish to regenerate the *_deplibs assembly files, first
+ *	 make sure the files have been deleted.  Otherwise, this script
+ *	 will append to the file.  This is necessary if the script has
+ *	 to write multiple dependent library information to a *_deplibs.s55
+ *	 file.
+ */
+
+/* Make sure necessary arguments have been passed */
+
+var args = arguments;
+var cdbFile = null, chartName = null, generate = null, override = false;
+var xmlFile = null;
+var userIsa = "55";
+
+ProcessArgs();
+genAsm();
+
+function genAsm() {
+
+    if (xmlFile) {
+        var xml = new XML(readFile(xmlFile));
+        var nodes = xml.NODE.instances.*;
+
+        for each (var node in nodes) {
+            if (node.splitPhases == "true") {
+                var uuid = node.uuid;
+                var algName = node.name;
+
+                createPsectAsm(algName + "_Create_psect.s" + userIsa,
+                                uuid, "create");
+                createPsectAsm(algName + "_Execute_psect.s" + userIsa,
+                                uuid, "execute");
+                createPsectAsm(algName + "_Delete_psect.s" + userIsa,
+                                uuid, "delete");
+            }
+        }
+    }
+
+    if (cdbFile) {
+        prog.load(cdbFile);
+
+        /* Obtain node configuration */
+        var NODE = prog.module("NODE");
+        var nodes = NODE.instances();
+        var i;
+
+        /* For all nodes in CDB, if iPhaseSplitFlag is set, generate asm */
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].splitPhases) {
+                var uuid = nodes[i].uuid;
+                var algName = nodes[i].name;
+
+                createPsectAsm(algName + "_Create_psect.s" + userIsa,
+                                uuid, "create");
+                createPsectAsm(algName + "_Execute_psect.s" + userIsa,
+                                uuid, "execute");
+                createPsectAsm(algName + "_Delete_psect.s" + userIsa,
+                                uuid, "delete");
+            }
+        }
+    }
+
+    /* In both cases, chart may not have been given */
+    if (chartName) {
+        var input, inLine, begin, index, depLibName, depLibUUID;
+        input = new java.io.BufferedReader(new java.io.FileReader(chartName));
+
+        /* Parse through chart and process entries accordingly */
+        while ((inLine = input.readLine()) != null) {
+            if (inLine == '') {
+                continue;
+            }
+
+            begin = inLine.substring(0,1);
+
+            /* Skip Comments */
+            if (begin == '#' || begin == '\n') {
+                continue;
+            }
+
+            /* Obtain name for dependent library */
+            depLibName = inLine.substring(0,inLine.indexOf(','));
+            inLine = inLine.substring(inLine.indexOf(',')+1,inLine.length());
+
+            /* Obtain dependent library's UUID */
+            index = inLine.indexOf(',');
+
+            if (index == -1 && inLine != null) {
+                depLibUUID = inLine.substring(0,inLine.length());
+                inLine = null;
+            }
+            else {
+                depLibUUID = inLine.substring(0,index);
+                inLine = inLine.substring(index+1,inLine.length());
+            }
+
+            /* If we are asked to generate asm uuid files, or null, generate */
+            if (generate == "uuid" || generate == null) {
+                /* Create asm file for dependent library */
+                createDeplibAsm(depLibName, depLibUUID, 3, "_uuid",
+                    depLibName);
+            }
+
+            /* Obtain dependent library's Persistent status */
+            if (inLine != null) {
+                index = inLine.indexOf(',');
+            }
+
+            /* If there is no next comma, then there is no list - just return */
+            if (index == -1 || inLine == null) {
+                return;
+            }
+            else {
+                var persistent = inLine.substring(0,index);
+                inLine = inLine.substring(index+1,inLine.length());
+            }
+
+            /* Obtain names of libraries that reference deplib */
+            i = 0;
+            var refLibs = new Array();
+
+            while (inLine != null) {
+                index = inLine.indexOf(',');
+                if (index != -1) {
+                    refLibs[i++] = inLine.substring(0,index);
+                    inLine = inLine.substring(index+1,inLine.length());
+                }
+                else {
+                    if (inLine != null && inLine != "") {
+                        refLibs[i++] = inLine;
+                        inLine = null;
+                    }
+                    break;
+                }
+            }
+
+            /* If asked to generate asm deplibs files, or null, generate */
+            if (generate == "deplibs" || generate == null) {
+                i = 0;
+                /* Create asm for all libraries that reference this deplib */
+                while (refLibs[i] != null) {
+                    createDeplibAsm(refLibs[i++], depLibUUID, persistent,
+                    "_deplibs", depLibName);
+                }
+            }
+        }
+        input.close();
+    }
+}
+
+/*
+ * Create *_psect.s55 files to build with phase library so that loader
+ * can know what phase it is and to what node it belongs
+ */
+function createPsectAsm(name, uuid, phase) {
+
+    /* If global symbol defined, add names */
+    try {
+        if (userOutDir != "") {
+            name = userOutDir + name;
+        }
+
+        if (gblDoff != undefined) {
+            gblDoff.outFiles += name + ",";
+        }
+    } catch (e) {};
+
+    var file = new java.io.FileWriter(name);
+    var header = (";\n; ======== "+name+" ========\n;\n; This is a "+
+    "generated assembly file that aids in\n; the determination of"+
+    "which phase is contained\n; in the corresponding library.\n;\n");
+    var content = ("    .sect \".dspbridge_psect\"\n\t.string \""+uuid+
+    ","+phase+"\"\t; phase\n");
+    file.write(header);
+    file.write(content);
+    file.close();
+}
+
+/*
+ * Create *_deplibs.s55 files to build with node library or *_uuid.s55
+ * files to build with dependent library so that loader can know UUID
+ * of dependent library and what libraries are associated with a node library
+ */
+function createDeplibAsm(name, uuid, persistent, section, depLibName) {
+    filename = name + section + ".s" + userIsa;
+
+    /* If global symbol defined, add names */
+    try {
+        if (userOutDir != "") {
+            filename = userOutDir + filename;
+        }
+
+        if (gblDoff != undefined) {
+            if (!(gblDoff.outFiles).match(filename)) {
+                gblDoff.outFiles += filename + ",";
+            }
+        }
+    } catch (e) {};
+
+    var file1 = new java.io.File(filename);
+
+    /* If file is new, write header */
+    if (!(file1.exists()) || section == "_uuid") {
+        var file2 = new java.io.FileWriter(file1);
+        var header = (";\n; ======== "+filename+" ========\n;\n; This is a "+
+        "generated assembly file that aids in\n; the generation and "+
+        "use of dependent dynamic libraries\n;\n;\n");
+        file2.write(header);
+        var content1 = ("    .sect \".dspbridge"+section+"\"\n");
+        file2.write(content1);
+    }
+    else {
+        /* Open already created file - DO NOT OVERWRITE */
+        var file2 = new java.io.FileWriter(file1, true);
+
+        if (!override) {
+            /* Check to see that UUID hasn't already been added */
+            var nextLine;
+            var contents = "";
+            var inp = new java.io.BufferedReader(new java.io.FileReader(file1));
+
+            while ((nextLine = inp.readLine()) != null) {
+                contents += nextLine;
+            }
+
+            inp.close();
+
+            if (contents.match(uuid)) {
+                print("** \"" + depLibName + "\" already added to \"" +
+                        filename + "\"");
+                file2.close();
+                return;
+            }
+        }
+    }
+
+    if (persistent != 3) {
+        var content2 = ("\t.string \""+uuid+","+persistent+",\"; "+depLibName+"\n");
+    }
+    else {
+        var content2 = ("\t.string \""+uuid+",\"; "+depLibName+"\n");
+    }
+    file2.write(content2);
+    file2.close();
+}
+
+function ProcessArgs() {
+    var i = 0;
+
+    if (args.length < 2 || args.length > 6) {
+        throw new Error("Usage: tconf asmgen.tcf [-c <file1.cdb>] " +
+            "[-da|du|dd <deplibschart.txt>] [-isa]\n");
+        return;
+    }
+    else {
+        while (i < args.length) {
+            if (args[i] == "-c") {
+                cdbFile = args[++i];
+            }
+            else if (args[i] == "-x") {
+                xmlFile = args[++i];
+            }
+            else if (args[i] == "-da") {
+                chartName = args[++i];
+            }
+            else if (args[i] == "-du") {
+                chartName = args[++i];
+                generate = "uuid";
+            }
+            else if (args[i] == "-dd") {
+                chartName = args[++i];
+                generate = "deplibs";
+            } else if (args[i] == "-f") {
+                override = true;
+            } else if (args[i] == "-isa") {
+                userIsa = args[++i];
+            }
+            i++;
+        }
+    }
+}
+
+function readFile (fileName)
+{
+    var ins = new java.io.BufferedReader(new java.io.FileReader(fileName));
+    var outs = new java.io.StringWriter();
+    var nextLine;
+    while ((nextLine = ins.readLine()) != null) {
+        outs.write(nextLine);
+        outs.write("\n");
+    }
+    outs.flush();
+    return (outs.toString());
+}

@@ -1,0 +1,83 @@
+/* 
+ *  Copyright 2007
+ *  Texas Instruments Incorporated
+ *
+ *  All rights reserved.  Property of Texas Instruments Incorporated
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ * 
+ */
+/*
+ *  ======== package.bld ========
+ *  Build script for dskt package.
+ *
+ */
+
+/* if true send DBG_printf to SYS_printf (default is to LOG) */
+var fSendDBGtoSYS = true;
+var COPTS = "" ;
+if (fSendDBGtoSYS) {
+    COPTS += " -D_DBG_WITH_SYS_";
+}
+
+var LIBBASE = "dskt2" ;
+
+var OBJS = ["dskt2_scratch", "dskt2_qos", "dskt2actv", "dskt2crea",
+    "dskt2ctrl", "dskt2dact", "dskt2free", "dskt2_permute"];
+
+/* This package uses the headers package and the dman package. */
+Pkg.uses = 
+    [
+     "ti/bios/include",
+     "ti/sdo/fc/utils",
+     ];
+
+/* The source package release */
+srcRelease = Pkg.addRelease(Pkg.name.replace(/\./g, '_') + ",src");
+srcRelease.attrs.label = "source";
+srcRelease.attrs.exportSrc = true;
+srcRelease.otherFiles = ["_dskt2.h", "_dskt.h"];
+
+/* The build package release */
+bldRelease = Pkg.addRelease(Pkg.name.replace(/\./g, '_') + ",bld");
+bldRelease.attrs.label = "build";
+bldRelease.attrs.exportSrc = true;
+bldRelease.otherFiles = ["_dskt2.h", "_dskt.h", "package.bld", "dskt2.pjt"];
+
+
+Pkg.otherFiles = [
+    "dskt2_qos.h",
+    "dskt2.h",
+    "DSKT2.link.xdt",
+    "dskt2.tci",
+    "dskt2_c.tpl",
+    "dskt2_cmd.tpl",
+];
+
+/* loop over all targets */
+for (var i = 0; i < Build.targets.length; i++) {
+    var targ = Build.targets[i];
+    var plat = targ.platform;   /* use the target's default platform */
+
+    print("building for target " + targ.name + " ...");
+
+    /* loop over all "bridge" profiles */
+    for (var profName in targ.profiles) {
+        if (profName.search(/^bridge_/) >= 0) {
+
+            print ("... " + profName + " profile...");
+
+            var lib = Pkg.addLibrary(LIBBASE + profTail[profName], targ, {
+                profile: profName,
+                releases : [srcRelease, bldRelease],
+                copts: COPTS + " " + targ.profiles[profName].compileOpts.copts
+            });
+            lib.addObjects(OBJS);
+        }
+    }
+}
+
+/*
+ *  @(#) ti.sdo.fc.dskt2; 1, 0, 1,66; 5-10-2007 10:50:09; /db/atree/library/trees/fc-b12x/src/
+ */
+

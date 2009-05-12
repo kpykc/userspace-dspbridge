@@ -1,0 +1,32 @@
+
+utils.importFile("bridgeutils.tci");
+
+bridgeutils.loadPlatform("innovator2430_bridge");
+
+//bridge.DSKT2.EXTERNALSEG = prog.get("EXTMEM");
+var EXTMEM = prog.module("MEM").instance("EXTMEM");
+EXTMEM.enableHeapLabel = true;
+EXTMEM.heapLabel = prog.extern("EXTMEM_HEAP");
+
+// Setting this here since previous default of DATASEG is equal to IRAM
+//bridge.DYNM.DLLVIEWSEG = bridge.MEM.DATASEG;
+
+//bridge.DMAN24XX.OBJMEMSEG = prog.get("EXTMEM");
+bridge.DMAN24XX.OBJMEMSEG = prog.get("CACHE_L1D");
+//bridge.DMAN24XX.OBJMEMSEG = prog.get("JUNK");
+//bridge.DSKT2.DSKT2SEG = prog.get("CACHE_L1D");
+//bridge.DSKT2.DSKT2SEG = prog.get("JUNK");
+
+bridge.DMAN24XX.DMANIRQ = 4;
+
+bridge.DMAN24XX_CH0.enabled = true;
+bridge.DMAN24XX_CH5.enabled = true;
+bridge.DMAN24XX_CH0.priority = "low";
+
+//bridge.DMAN24XX.NUMCHANNELS = 12;
+
+bridge.DMAN24XX_CH11.enabled = true;
+bridge.DMAN24XX_CH15.enabled = true;
+bridge.DMAN24XX_CH16.enabled = true;
+
+prog.gen("dman24xxtest");

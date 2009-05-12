@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/release.dtd -->
+<release name="" label="" date="" buildCount="">
+<package name="ti.sdo.fc.dman3.examples"
+    version=""/>
+<imports>
+    <package name="ti.bios"
+        version=""/>
+    <package name="ti.sdo.fc.dman3"
+        version=""/>
+    <package name="ti.sdo.fc.acpy3"
+        version=""/>
+    <package name="ti.sdo.fc.utils"
+        version=""/>
+    <package name="ti.sdo.fc.utils.api"
+        version=""/>
+</imports>
+<references>
+    <package name="ti.psl"
+        version="5, 0, 0, 0">
+        <file name=".interfaces"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.psl.sch"/>
+        <file name="psl.xdt"/>
+    </package>
+    <package name="ti.platforms.generic"
+        version="1, 0, 0">
+        <file name="Platform.tcp"/>
+    </package>
+    <package name="ti.platforms.evmDM6446"
+        version="1, 0, 0">
+        <file name="Platform.tci"/>
+    </package>
+    <package name="ti.platforms.sdp2430"
+        version="1, 0, 0">
+        <file name="Platform.tci"/>
+    </package>
+    <package name="xdc.spec.jserver"
+        version="1, 0, 0, 0">
+        <file name="package/package.c"/>
+        <file name="package/xdc.spec.jserver.sch"/>
+    </package>
+    <package name="ti.sdo.fc.utils"
+        version="1, 0, 0">
+        <file name=".interfaces"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.sdo.fc.utils.sch"/>
+    </package>
+    <package name="ti.sdo.fc.acpy3"
+        version="1, 0, 0">
+        <file name=".interfaces"/>
+        <file name="acpy3.h"/>
+        <file name="acpy3_fastconfigure16b.h"/>
+        <file name="acpy3_fastconfigure32b.h"/>
+        <file name="acpy3_fastsetfinal.h"/>
+        <file name="acpy3_qdma.h"/>
+        <file name="acpy3_setfinal.h"/>
+        <file name="acpy3_start.h"/>
+        <file name="acpy3_util.h"/>
+        <file name="acpy3_wait.h"/>
+        <file name="acpy3d.a64P"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.sdo.fc.acpy3.sch"/>
+    </package>
+    <package name="ti.rtdx"
+        version="">
+        <file name="Settings.xs"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.rtdx.sch"/>
+        <file name="rtdx.xdt"/>
+    </package>
+    <package name="ti.targets"
+        version="1, 0, 0, 0">
+        <file name="ITarget.xs"/>
+        <file name="linkcmd.xdt"/>
+        <file name="package.xs"/>
+        <file name="package/ti.targets.sch"/>
+        <file name="std.h"/>
+    </package>
+    <package name="xdc.shelf"
+        version="1, 0, 0, 0">
+        <file name="package/package.c"/>
+        <file name="package/xdc.shelf.sch"/>
+    </package>
+    <xdcRoot base="/db/toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/">
+        <file name="include/utils.tci"/>
+    </xdcRoot>
+    <package name="ti.bios"
+        version="5, 2, 3, 11">
+        <file name="Build.xs"/>
+        <file name="bios.tci"/>
+        <file name="bios.xdt"/>
+        <file name="config/bios_2430.tci"/>
+        <file name="config/bios_DM420.tci"/>
+        <file name="config/bios_DM6446.tci"/>
+        <file name="include/_hook.h"/>
+        <file name="include/_log.h"/>
+        <file name="include/atm.h"/>
+        <file name="include/buf.h62"/>
+        <file name="include/c62.h62"/>
+        <file name="include/c64.h64"/>
+        <file name="include/c6x.h62"/>
+        <file name="include/chk.h62"/>
+        <file name="include/clk.h62"/>
+        <file name="include/clk2430.h64P"/>
+        <file name="include/clkC6000.h62"/>
+        <file name="include/clkDA700.h62"/>
+        <file name="include/clkDM420.h62"/>
+        <file name="include/confbeg.s62"/>
+        <file name="include/confend.s62"/>
+        <file name="include/dev.h62"/>
+        <file name="include/dgn.h62"/>
+        <file name="include/dhl.h62"/>
+        <file name="include/dio.h62"/>
+        <file name="include/dpi.h62"/>
+        <file name="include/ecm.h62"/>
+        <file name="include/fxn.h"/>
+        <file name="include/fxn.h62"/>
+        <file name="include/gbl.h62"/>
+        <file name="include/gio.h62"/>
+        <file name="include/hook.h62"/>
+        <file name="include/hst.h"/>
+        <file name="include/hst.h62"/>
+        <file name="include/hwi.h"/>
+        <file name="include/hwi.h62"/>
+        <file name="include/idl.h62"/>
+        <file name="include/isrc.h62"/>
+        <file name="include/knl.h"/>
+        <file name="include/knl.h62"/>
+        <file name="include/lck.h62"/>
+        <file name="include/lnk.h62"/>
+        <file name="include/log.h"/>
+        <file name="include/log.h62"/>
+        <file name="include/mbx.h62"/>
+        <file name="include/mem.h"/>
+        <file name="include/mem.h62"/>
+        <file name="include/msgq.h62"/>
+        <file name="include/obj.h"/>
+        <file name="include/obj.h62"/>
+        <file name="include/pip.h"/>
+        <file name="include/pip.h62"/>
+        <file name="include/pool.h62"/>
+        <file name="include/prd.h"/>
+        <file name="include/prd.h62"/>
+        <file name="include/que.h"/>
+        <file name="include/que.h62"/>
+        <file name="include/rta.h62"/>
+        <file name="include/rtdx.h62"/>
+        <file name="include/sem.h"/>
+        <file name="include/sem.h62"/>
+        <file name="include/sio.h62"/>
+        <file name="include/std.h"/>
+        <file name="include/std.h62"/>
+        <file name="include/sts.h"/>
+        <file name="include/sts.h62"/>
+        <file name="include/swi.h"/>
+        <file name="include/swi.h62"/>
+        <file name="include/sys.h"/>
+        <file name="include/sys.h62"/>
+        <file name="include/tistdtypes.h"/>
+        <file name="include/trc.h"/>
+        <file name="include/trc.h62"/>
+        <file name="include/trg.h"/>
+        <file name="include/tsk.h"/>
+        <file name="include/tsk.h62"/>
+        <file name="include/udev.h62"/>
+        <file name="include/vers.h62"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.bios.sch"/>
+    </package>
+    <package name="ti.targets.rts6000"
+        version="1, 0, 0, 0">
+        <file name="lib/boot.a64P"/>
+        <file name="lib/ti.targets.rts6000.a64P"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.targets.rts6000.sch"/>
+    </package>
+    <package name="xdc.spec"
+        version="1, 0, 0, 0">
+        <file name="package/package.c"/>
+        <file name="package/xdc.spec.sch"/>
+    </package>
+    <package name="xdc"
+        version="1, 1, 0, 0">
+        <file name="IPackage.xdc"/>
+        <file name="IPackage.xs"/>
+        <file name="om2.xs"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/xdc.sch"/>
+        <file name="std.h"/>
+        <file name="xdc.tci"/>
+    </package>
+    <package name="ti.sdo.fc.utils.api"
+        version="">
+        <file name=".interfaces"/>
+        <file name="alg.h"/>
+        <file name="api.a64P"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.sdo.fc.utils.api.sch"/>
+    </package>
+    <package name="ti.sdo.fc.dman3"
+        version="1, 0, 1">
+        <file name=".interfaces"/>
+        <file name="DMAN3.link.xdt"/>
+        <file name="DMAN3.xdt"/>
+        <file name="dman3.h"/>
+        <file name="dman3Cfgd.a64P"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.sdo.fc.dman3.sch"/>
+    </package>
+    <package name="xdc.bld"
+        version="1, 0, 0, 0">
+        <file name="BuildEnvironment.xs"/>
+        <file name="Executable.xs"/>
+        <file name="ITarget.xs"/>
+        <file name="Library.xs"/>
+        <file name="PackageContents.xs"/>
+        <file name="Repository.xs"/>
+        <file name="Utils.xs"/>
+        <file name="_gen.xs"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/xdc.bld.sch"/>
+    </package>
+    <package name="ti.platforms.sim6xxx"
+        version="1, 0, 0, 0">
+        <file name="Platform.xs"/>
+        <file name="Sanity.h"/>
+        <file name="package.xs"/>
+        <file name="package/internal/Sanity.xdc.h"/>
+        <file name="package/package.c"/>
+        <file name="package/package.defs.h"/>
+        <file name="package/ti.platforms.sim6xxx.sch"/>
+    </package>
+    <targetRoot base="/db/toolsrc/library/vendors2005/ti/c6x/6.0.7/Linux/"
+        trgs="ti.targets.C64P">
+        <file name="include/linkage.h"/>
+        <file name="include/setjmp.h"/>
+        <file name="include/stdarg.h"/>
+        <file name="include/stddef.h"/>
+        <file name="include/stdint.h"/>
+        <file name="include/stdio.h"/>
+        <file name="include/stdlib.h"/>
+        <file name="include/string.h"/>
+    </targetRoot>
+    <package name="xdc.utils"
+        version="1, 0, 0, 0">
+        <file name="Clock.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/xdc.utils.sch"/>
+    </package>
+    <package name="xdc.rts"
+        version="1, 0, 0, 0">
+        <file name="Error.h"/>
+        <file name="HeapMin.h"/>
+        <file name="HeapMin.xs"/>
+        <file name="HeapStd.h"/>
+        <file name="IHeap.h"/>
+        <file name="IModule.h"/>
+        <file name="ISystemProvider.h"/>
+        <file name="Memory.h"/>
+        <file name="Memory.xs"/>
+        <file name="SysMin.h"/>
+        <file name="SysNull.h"/>
+        <file name="SysStd.h"/>
+        <file name="System.h"/>
+        <file name="System.xs"/>
+        <file name="_SysProxy.h"/>
+        <file name="package.xs"/>
+        <file name="package/internal/Error.xdc.h"/>
+        <file name="package/internal/HeapMin.xdc.h"/>
+        <file name="package/internal/HeapStd.xdc.h"/>
+        <file name="package/internal/Memory.xdc.h"/>
+        <file name="package/internal/SysMin.xdc.h"/>
+        <file name="package/internal/SysNull.xdc.h"/>
+        <file name="package/internal/SysStd.xdc.h"/>
+        <file name="package/internal/System.xdc.h"/>
+        <file name="package/package.c"/>
+        <file name="package/package.defs.h"/>
+        <file name="package/xdc.rts.sch"/>
+        <file name="std.h"/>
+        <file name="xdc.h"/>
+    </package>
+    <package name="xdc.cfg"
+        version="1, 0, 0, 0">
+        <file name="Program.xdt"/>
+        <file name="Program.xs"/>
+        <file name="cfg.tci"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/xdc.cfg.sch"/>
+    </package>
+    <package name="xdc.platform"
+        version="1, 0, 0, 0">
+        <file name="ExeContext.xs"/>
+        <file name="IPlatform.xs"/>
+        <file name="Utils.xs"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/xdc.platform.sch"/>
+    </package>
+    <package name="ti.catalog.c6000"
+        version="1, 0, 0, 0">
+        <file name="C2430.tci"/>
+        <file name="C64P.tci"/>
+        <file name="CDM6446.tci"/>
+        <file name="IAntara.xs"/>
+        <file name="IDaVinci.xs"/>
+        <file name="IHimalaya.xs"/>
+        <file name="ITMS320C642x.xs"/>
+        <file name="ITMS320C6452.xs"/>
+        <file name="ITMS320C64_128K.xs"/>
+        <file name="ITMS320C64_1M.xs"/>
+        <file name="ITMS320C64_256K.xs"/>
+        <file name="ITMS320C64_512K.xs"/>
+        <file name="ITMS320C6x0x.xs"/>
+        <file name="ITMS320C6x1x.xs"/>
+        <file name="ITMS320CDRA44x.xs"/>
+        <file name="ITMS320CTCI648x.xs"/>
+        <file name="TMS320C2430.xs"/>
+        <file name="TMS320C3430.xs"/>
+        <file name="TMS320C6454.xs"/>
+        <file name="TMS320CTCI6486.xs"/>
+        <file name="c6x.xs"/>
+        <file name="package.xs"/>
+        <file name="package/package.c"/>
+        <file name="package/ti.catalog.c6000.sch"/>
+    </package>
+    <package name="ti.xdais"
+        version="1, 2.0, 0, 0">
+        <file name="ialg.h"/>
+        <file name="idma3.h"/>
+        <file name="xdas.h"/>
+    </package>
+</references>
+<orphans>
+    <file name="/db/atree/library/trees/fc-b12x/src/config.bld"/>
+</orphans>
+</release>

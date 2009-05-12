@@ -1,0 +1,101 @@
+digraph dependencies {
+    label="\nPackage ti.sdo.fc.dman Dependency Graph";
+    size="7.5,10";
+    rankdir=LR;
+    ranksep=".75";
+    concentrate="true";
+    node [fixedsize=true, width=1.5, style=filled, color=black];
+    node [font=Helvetica, fontsize=12, fillcolor=lightgrey];
+    ti_sdo_fc_dman [shape=record,label="ti.sdo.fc.dman|", URL="package.rel.xml"];
+    node [fontsize=10, fillcolor=white];
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+    xdc [shape=record,label="xdc|1, 1, 0, 0", URL="../../../../../../../../../../toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/packages/xdc/package/package.rel.svg"];
+    ti_sdo_fc_dman -> xdc;
+    xdc_bld [shape=record,label="xdc.bld|1, 0, 0, 0", URL="../../../../../../../../../../toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/packages/xdc/bld/package/package.rel.svg"];
+    ti_sdo_fc_dman -> xdc_bld;
+    ti_sdo_fc_utils [shape=record,label="ti.sdo.fc.utils|1, 0, 0", URL="../../utils/package/package.rel.svg"];
+    ti_sdo_fc_dman -> ti_sdo_fc_utils;
+    ti_sdo_fc_acpy2 [shape=record,label="ti.sdo.fc.acpy2|", URL="../../acpy2/package/package.rel.svg"];
+    ti_sdo_fc_dman -> ti_sdo_fc_acpy2;
+    ti_targets [shape=record,label="ti.targets|1, 0, 0, 0", URL="../../../../../../../../../../toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/packages/ti/targets/package/package.rel.svg"];
+    ti_sdo_fc_dman -> ti_targets;
+    ti_bios [shape=record,label="ti.bios|5, 2, 3, 11", URL="../../../../../../../../../../rtree/install/trees/products/sabios-h05/product/Linux/bios_5_31/packages/ti/bios/package/package.rel.svg"];
+    ti_sdo_fc_dman -> ti_bios;
+    xdc_rts [shape=record,label="xdc.rts|1, 0, 0, 0", URL="../../../../../../../../../../toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/packages/xdc/rts/package/package.rel.svg"];
+    ti_sdo_fc_dman -> xdc_rts;
+    ti_xdais [shape=record,label="ti.xdais|1, 2.0, 0, 0", URL="../../../../../../imports/ti/xdais/package/package.rel.svg"];
+    ti_sdo_fc_dman -> ti_xdais;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+    gnu_targets [shape=record,label="gnu.targets|1, 0, 0, 0", URL="../../../../../../../../../../toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/packages/gnu/targets/package/package.rel.svg"];
+    ti_xdais -> gnu_targets;
+    ti_xdais -> ti_targets;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+    ti_psl [shape=record,label="ti.psl|5, 0, 0, 0", URL="../../../../../../../../../../rtree/install/trees/products/sabios-h05/product/Linux/bios_5_31/packages/ti/psl/package/package.rel.svg"];
+    ti_bios -> ti_psl;
+    ti_rtdx [shape=record,label="ti.rtdx|", URL="../../../../../../../../../../rtree/install/trees/products/sabios-h05/product/Linux/bios_5_31/packages/ti/rtdx/package/package.rel.svg"];
+    ti_bios -> ti_rtdx;
+
+    edge [style=solid, color=lightgrey]
+    ti_csl [shape=record,label="ti.csl|not found"style=rounded, ];
+    ti_bios -> ti_csl;
+    ti_bios -> ti_psl;
+    ti_bios -> ti_rtdx;
+    ti_bios -> ti_targets;
+    ti_bios -> xdc_rts;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+    ti_rtdx -> xdc_rts;
+    ti_rtdx -> ti_targets;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+    ti_sdo_fc_acpy2 -> ti_sdo_fc_dman;
+    ti_sdo_fc_acpy2 -> ti_sdo_fc_utils;
+    ti_sdo_fc_acpy2 -> ti_targets;
+    ti_sdo_fc_acpy2 -> ti_bios;
+    ti_sdo_fc_acpy2 -> xdc_rts;
+    ti_sdo_fc_acpy2 -> ti_xdais;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+    xdc_bld -> xdc;
+
+    edge [style=solid, color=blue]
+
+    edge [style=solid, color=lightgrey]
+}

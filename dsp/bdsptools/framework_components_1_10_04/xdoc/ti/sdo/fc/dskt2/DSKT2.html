@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<TITLE>ti.sdo.fc.dskt2DSKT2</TITLE>
+<LINK rel=stylesheet type=text/css href=../../../../styles.css>
+</HEAD>
+<SCRIPT>
+function load(hdr) {
+if (self != top && top.frames.hdr) {
+    top.frames.hdr.location.replace(hdr);
+    }
+}
+</SCRIPT>
+<SCRIPT>function goFwd(to, dname, nosave) {    if (self != top && top.goFwd) {        return (top.goFwd(to, dname, nosave));    }    location.href = "../../../../" + to + (dname?("#"+dname):"");    return (false);}</SCRIPT>
+<BODY onLoad="load('DSKT2-hdr.html')">
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR><TD class=SlugLine colspan=10><SPAN class=Comment>//!    xDAIS algorithm socket
+</SPAN></TD></TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10><SPAN class=SlugKw>metaonly</SPAN> <SPAN class=SlugKw>module </SPAN> <SPAN class=SlugDef>DSKT2</SPAN></TD></TR>
+<TR><TD class=SlugLine colspan=10>{</TD></TR>
+<TR><TD class=SlugLine colspan=10>}</TD></TR>
+</TABLE>
+<P class=SrcLink>
+sourced in <A target=body href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2-src.html')">ti/sdo/fc/dskt2/DSKT2.xdc</A>
+</P>
+<HR class=BodyDecls>
+<A id=__decl__0 name=__decl__0></A>
+<A name=DEFAULTSEG></A>
+<BR>
+<P id=__decl__0-P class=DeclName>
+<SPAN class=Keyword>const </SPAN>
+DEFAULTSEG
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Default segment to allocate memory from.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>const </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>DEFAULTSEG</SPAN>
+&nbsp;=&nbsp;"IRAM"
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__1 name=__decl__1></A>
+<A name=DARAM0></A>
+<BR>
+<P id=__decl__1-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+DARAM0
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_DARAM0.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>DARAM0</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__2 name=__decl__2></A>
+<A name=DARAM1></A>
+<BR>
+<P id=__decl__2-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+DARAM1
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_DARAM1.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>DARAM1</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__3 name=__decl__3></A>
+<A name=DARAM2></A>
+<BR>
+<P id=__decl__3-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+DARAM2
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_DARAM2.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>DARAM2</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__4 name=__decl__4></A>
+<A name=SARAM0></A>
+<BR>
+<P id=__decl__4-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+SARAM0
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_SARAM0.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>SARAM0</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__5 name=__decl__5></A>
+<A name=SARAM1></A>
+<BR>
+<P id=__decl__5-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+SARAM1
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_SARAM1.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>SARAM1</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__6 name=__decl__6></A>
+<A name=SARAM2></A>
+<BR>
+<P id=__decl__6-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+SARAM2
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_SARAM2.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>SARAM2</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__7 name=__decl__7></A>
+<A name=ESDATA></A>
+<BR>
+<P id=__decl__7-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+ESDATA
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_ESDATA.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>ESDATA</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__8 name=__decl__8></A>
+<A name=IPROG></A>
+<BR>
+<P id=__decl__8-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+IPROG
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_IPROG.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>IPROG</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__9 name=__decl__9></A>
+<A name=EPROG></A>
+<BR>
+<P id=__decl__9-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+EPROG
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    IALG memory space mapping of IALG_EPROG.  This must match a BIOS heap.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>EPROG</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__10 name=__decl__10></A>
+<A name=DSKT2_HEAP></A>
+<BR>
+<P id=__decl__10-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+DSKT2_HEAP
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Memory segment for internal DSKT2 data structures.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>DSKT2_HEAP</SPAN>
+&nbsp;=&nbsp;<A href="javascript: void goFwd('ti/sdo/fc/dskt2/DSKT2.html')">DEFAULTSEG</A>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<P class=SubHead>DETAILS</P>
+<DIV class=Text><P>
+  Objects internal to the DSKT2 module will be allocated from this heap.
+
+</P></DIV>
+<HR class=BodyDecls>
+<A id=__decl__11 name=__decl__11></A>
+<A name=ALLOW_EXTERNAL_SCRATCH></A>
+<BR>
+<P id=__decl__11-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+ALLOW_EXTERNAL_SCRATCH
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Allow external memory to be used for algorithm scratch memory requests.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>Bool</SPAN>&nbsp;<SPAN class=SlugDef>ALLOW_EXTERNAL_SCRATCH</SPAN>
+&nbsp;=&nbsp;<SPAN class=SlugKw>true</SPAN>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<P class=SubHead>DETAILS</P>
+<DIV class=Text><P>
+  If an algorithm requests scratch memory, and insufficient scratch
+  memory is available, scratch buffers will be allocated in external
+  memory if property is 'true'.
+
+</P></DIV>
+<HR class=BodyDecls>
+<A id=__decl__12 name=__decl__12></A>
+<A name=DARAM_SCRATCH_SIZES></A>
+<BR>
+<P id=__decl__12-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+DARAM_SCRATCH_SIZES
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Shared IALG_DARAM0 scratch group sizes.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>UInt</SPAN>&nbsp;<SPAN class=SlugDef>DARAM_SCRATCH_SIZES</SPAN>[<SPAN class=SlugKw></SPAN>]
+&nbsp;=&nbsp;[</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0</TD></TR><TR><TD>]
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__13 name=__decl__13></A>
+<A name=SARAM_SCRATCH_SIZES></A>
+<BR>
+<P id=__decl__13-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+SARAM_SCRATCH_SIZES
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Shared IALG_SARAM0 scratch group sizes.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>UInt</SPAN>&nbsp;<SPAN class=SlugDef>SARAM_SCRATCH_SIZES</SPAN>[<SPAN class=SlugKw></SPAN>]
+&nbsp;=&nbsp;[</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0</TD></TR><TR><TD>]
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<HR class=BodyDecls>
+<A id=__decl__14 name=__decl__14></A>
+<A name=debug></A>
+<BR>
+<P id=__decl__14-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+debug
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Enable the debug profile of the DSKT2 library.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>Bool</SPAN>&nbsp;<SPAN class=SlugDef>debug</SPAN>
+&nbsp;=&nbsp;<SPAN class=SlugKw>false</SPAN>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<P class=SubHead>DETAILS</P>
+<DIV class=Text><P>
+  This will likely result in a larger and slower library being linked in,
+  but it will provide extra parameter checking and debug trace
+  statements dropped in the BIOS SYS trace buffer.
+
+</P></DIV>
+<HR class=BodyDecls>
+<A id=__decl__15 name=__decl__15></A>
+<A name=cacheWritebackInvalidateFxn></A>
+<BR>
+<P id=__decl__15-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+cacheWritebackInvalidateFxn
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Name of function implementing cache writeback invalidate with
+  the following signature: 
+  (*DSKT2_CacheWBInvFxn)(Ptr blockPtr, size_t byteCnt, bool wait) 
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>String</SPAN>&nbsp;<SPAN class=SlugDef>cacheWritebackInvalidateFxn</SPAN>
+&nbsp;=&nbsp;"BCACHE_wbInv"
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<P class=SubHead>DETAILS</P>
+<DIV class=Text><P>
+  For C6000 platforms DSKT2 calls this function to ensure that the
+  algorithm instance memory is not resident in Cache when it is 
+  instantiated. This is necessary for compliance with XDAIS C6000 DMA
+  Rules and Guidelines.
+
+</P></DIV>
+</BODY>
+</HTML>

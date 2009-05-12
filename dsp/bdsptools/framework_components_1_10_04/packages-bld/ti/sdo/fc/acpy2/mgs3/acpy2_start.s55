@@ -1,0 +1,463 @@
+ ;
+ ;  ======== mgs3/acpy2_start.s55 ========
+ ;
+ ;  This file implements ACPY2_start assembly routine
+ ;
+ ;
+;------------------------------------------------------------------------------------------
+;  History:
+;     Mar 24, 2005 by Craig Leeds
+;       Further Optimizations applied:
+;          Whenever data is accessed via indirect auxiliary register offset,
+;          the "short" modifier was used if it was possible.  This would shrink the
+;          the instruction by 2 bytes, though not necessarily change the number of 
+;          cycles required to execute the instruction.  However, in shrinking the
+;          the number of bytes, it lessens the possibility of a pipeline delay
+;          due to a pre-fetch IBQ delay.  This optimization was applied in several 
+;          instuctions.
+;
+;          Use BSET instead of OR to set a single bit in an accumulator.  The instruction
+;          is one byte smaller.
+;
+;          Instructions were rearranged to allow for pipeline delays to be satisfied
+;          without on-the-fly NOPs being inserted.  This was done for the usage of
+;          AR registers for indirect access after being set.  
+;
+;          Combinable instructions were paralleled together assuming there were no
+;          obvious pipeline delay repercussions.  If necessary, instructions were
+;          juggled to allow for it.
+;
+;          In two places, ADD was modified to AADD in order to allow parallel instructions.
+;
+;          AC3 is set to dst-DARAMSIZE instead of DARAMSIZE-dst so that the value can be 
+;          set in a single instruction instead of 2.  Hence the subsequent XCCPART 
+;          conditional is reversed.
+;
+;          AR1 is not set to point to the regs structure.  The structure is already 
+;          is already accessed with AR3.  This saves the setting of the AR1 to the
+;          head of the instruction and the subsequent adding the offset to CCR2.
+;          Rather than accessing the regs structure using AR3 with offsets, since
+;          the top of the structure is used in order, these elements of the 
+;          structure are accessed using *AR3+.  This pushes AR3 far enough down
+;          in the structure so that regs->CCR2 can be accessed with AR3 via a short 
+;          offset, saving instruction size, and eliminating the use of AR1.
+;
+;          Writes to the DMA registers were staggered as much as possible to avoid
+;          pipeline delays for back-to-back writes.
+;
+;          The job queue buffer was modified.  A new element 'nextJob' was added 
+;          which points to the next physical job in the buffer.  The last job 
+;          points back to the first.  This simplifies the circular addressing.  
+;          Hence, the 'buffer' and lenM1' elements could be removed from the 
+;          queue object.
+;
+;       Code was added to protect against the job queue overflowing.  If it is
+;       going to overflow, then interrupts are temporarily re-enabled to allow
+;       for DMA isrs triggering to allow for the queue to stop being full.
+;       Then the request is placed in the queue. 
+;          
+;
+;------------------------------------------------------------------------------------------
+
+ .if DMA_OPT
+;==============================================================================
+;includes
+;------------------------------------------------------------------------------
+
+    .include "dma_omap.h55"
+
+
+;/d============================================================================
+;/d function prototype and global variables
+;/d----------------------------------------------------------------------------
+    .def _ACPY2_start
+    .def _ACPY2_startAligned
+
+  .if _INSTR_BANDWIDTH
+        .ref _ACPY2_OMAP_updateChannelStats
+  .endif
+
+    .def DMA_Port_consts
+
+;/d****************************************************************************
+;/d* UNDEFINED EXTERNAL REFERENCES                                            *
+;/d****************************************************************************
+    .global _SYS_abort
+    .global _HWI_disable
+    .global _HWI_restore
+    .global __DMA_jobQueue
+
+;******************************************************************************
+;* CONSTANTS                                                                  *
+;******************************************************************************
+    .sect ".const:DMAConsts"
+    .align 4
+DMA_Port_consts
+    .long 0xbffffe
+    .long 0x28000
+    .long 0x10000
+    .long 0x28000
+    .long 0xbffffe
+    .long 0x10000
+
+
+;/d============================================================================
+;/d macros
+;/d----------------------------------------------------------------------------
+;********************
+
+;Remarks disabled
+    .noremark 5573
+    .noremark 5571
+    .noremark 5650      
+    .noremark 5673
+        
+;/d============================================================================
+;/d     FUNCTION NAME: ACPY2_start(              ;returns void
+;/d         handle          ;IDMA2_handle, passed in XAR0
+;/d         src             ;IDMA2_AdrPtr address, passed in AC0
+;/d         dst             ;IDMA2_AdrPtr address, passed in AC1
+;/d         Cnt             ; unsigned Count, passed in T0
+;/d                         );
+;/d Description      : *  Implementaion of ACPY2_start 
+;/d Function Type    : "c" callable
+;/d Assumptions      : none
+;/d     Notes            : 
+;/d     call frequency   : - 
+;/d     cycle count      : 106 cycles on omap1510 EVM   
+;/d Function Uses Regs : AC0,AC1,AC2,AC3,T0,T1,T2,T3,XAR0,XAR1,XAR2,XAR3,XAR4,
+;/d                      "XAR5"
+;/d Save On Entry Regs : T3, T2, "XAR5"
+;/d----------------------------------------------------------------------------
+
+    .sect ".text:ACPY_internal"
+    .align 4
+
+_ACPY2_startAligned:
+_ACPY2_start:
+    ; Consider inserting TSK_disable() here when _RTS_MODE is not defined
+* Note: the 1710 is a _VCORE3_ but not the 1510 nor 1623
+
+    MOV dbl(*AR0(short(#IDMA2_Obj.jobQueue))), XAR1; XAR1 = handle->jobQueue
+
+  .if MAKE_HWI_CALL
+    ; state = HWI_disable();
+    PSHBOTH XAR5            ; Push the registers used in this function
+                            ;     whose values are to be retained.
+    MOV T0, AR4             ; AR4 contains "Cnt" value
+    CALL #_HWI_disable      ; Call HWI_disable(), Returns "state" in T0
+    SWAP AR4, T0            ; T0 = Cnt, AR4 = state
+    MOV AR4, AR5            ; AR5 = state
+  .else
+    ; Disable Interrupt bit in ST1 register
+    BTST #11, mmap(ST1_55), TC1     ; Test INTM bit in ST1 and store the
+                                    ;     result in TC1
+    BSET ST1_INTM                   ; Disable Interrupts
+*
+* NOTE: The following 5 cycles are potentially interruptible 
+* on the 1510 and 1623 processors.
+* Be careful to only include instructions that don't need to be executed
+* atomically with the rest of the algorithm!!!
+*
+  .endif
+        
+    MOV #DMA_ChBase, AC3            ; AC3 = Base address of DMA chan. registers
+    AMOV #DMA_Port_consts, XAR2     ; XAR2 = Address of OMAP specific "DMA_Port_consts"
+
+    ADD *AR0(short(#IDMA2_Obj.channel)) << #5, AC3   ; AC3 = AC3 + handle->channel * 32
+
+    ;handle->numJobs++              ; increment job count on this logical chnl.
+    ;handle->jobQueue->reqPending++ ; increment count of pending transfers on
+                                    ;     this physical channel.
+
+  .if (IDMA2_Obj.numJobs == 0)
+    ADD #1, *AR0                            ; handle->numJobs++
+  .else
+    ADD #1, *AR0(short(#IDMA2_Obj.numJobs)) ; handle->numJobs++
+  .endif   
+    MOV *AR1(short(#_DMA_QueueObj.reqPending)), T1 ; T1 = handle->jobQueue->reqPending
+    ADD #1,*AR1(short(#_DMA_QueueObj.reqPending))  ; handle->jobQueue->reqPending++
+
+    ; if (handle->jobQueue->reqPending == _DMA_QUEUEEMPTY) {
+    ;     DMA_load(handle, src, dst, cnt);  Directly load the regs
+    ; }
+    ; else {
+    ;     DMA_put(handle, src, dst, cnt); Otherwise put job on queue
+    ; }
+                                
+    BCC ACPY_SL1, T1 == #_DMA_QUEUEEMPTY ; Branch to DMA_Load inline portion if
+                                         ;     there is no request pending
+    ||MOV AC3, XAR3                   ; XAR3 = AC3 = regs
+
+
+    ; Inline assembly version of "DMA_put" function
+
+;******************************************************************************
+;* Portion NAME: _DMA_put                                                     *
+;* Put the DMA_Job on the queue, and start the dma device.                    *
+;* Called with interrupts disabled.                                           *
+;* Function Uses Regs : AC0,AC1,AC2,AC3,T0,XAR0,XAR1,XAR2,XAR3,               *
+;******************************************************************************
+
+    ; XAR1 = queue
+
+*
+* If queue->reqPending >= queue->len, then turn ISRs back on and wait
+* until queue->reqPending is less than queue->len before placing
+* this new request on the queue.  Note that the old value of 
+* queue->reqPending is in T1.
+*
+    SUB *AR1(short(#_DMA_QueueObj.len)), T1  ; T1 = queue->reqPending - queue->len
+    MOV dbl(*AR1(short(#_DMA_QueueObj.writePtr))), XAR2 ; XAR2 = queue->writePtr (Pipe 4 Ok for AR2 for MOV)
+    BCC QueueOverflowHandling, T1 >= #0
+
+QueueOK:
+    MOV pair(T0), dbl(*AR2+) ; queue->writePtr->cnt = cnt, (Pipe 0 of 4 for AR2 from MOV)
+*                            ; queue->writePtr->filler = T1 (irrelevant)
+*                            ; AR2 = &queue->writePtr->src
+    MOV AC0, dbl(*AR2+)      ; queue->writePtr->src = src
+*                            ; AR2 = &queue->writePtr->dst
+    ||AADD #_DMA_QueueObj.writePtr, AR1  ; AR1 = &queue->writePtr
+
+    MOV AC1, dbl(*AR2+)      ; queue->writePtr->dst = dst
+*                            ; AR2 = &queue->writePtr->handle
+    MOV XAR0, dbl(*AR2+)     ; queue->writePtr->handle = handle
+*                            ; AR2 = &queue->writePtr->nextJob    
+    ; queue->writePtr = queue->writePtr->nextJob;
+    MOV dbl(*AR2), dbl(*AR1) ; queue->writePtr = queue->writePtr->nextJob
+
+  .if _INSTR_BANDWIDTH
+    PSH mmap(@ST0_L)         ; TC1 is saved and restored
+    MOV #0, T0      ; CASE 4 (cnt<-0) for calling ACPY2_OMAP_updateChannelStats
+    CALL #_ACPY2_OMAP_updateChannelStats 
+   .noremark 5601 ; Interrupts are disabled
+    POP mmap(@ST0_L) 
+   .remark 5601
+  .endif
+    ;********end instrumented ********************************** 
+
+  .if MAKE_HWI_CALL
+        ;HWI_restore(state);
+        MOV AR5, T0                                     ; T0 = state
+        CALL #_HWI_restore
+        POPBOTH XAR5
+  .else
+        XCCPART !TC1 || BCLR ST1_INTM   ; If TC1 == 0 then Enable interrupts
+  .endif
+    ; Consider inserting TSK_enable() here when _RTS_MODE is not defined
+    RET                                 ; Return to the calling function
+                                       
+        
+;******** end DMA_put *************
+
+
+
+
+
+
+
+    .align 4
+ACPY_SL1:
+    ; Inline assembly version of "DMA_load" function
+
+;******************************************************************************
+;* Portion NAME: _DMA_load                                                    *
+;* If the DMA is idle, program it according to job and start the transfer     *
+;* Called with interrupts disabled                                            *
+;* Function Uses Regs : AC0,AC1,AC2,AC3,T0,T1,T2,T3,XAR0,XAR1,XAR2,XAR3,XAR4  *
+;******************************************************************************
+    ;regs = dmaChan_dman[handle->channel];
+ 
+    MOV AC3, XAR4                            ; XAR4 = AC3 = regs
+    ||PSH T3, T2                             ; Push registers used in this function
+                                             ;     whose values are to be retained.
+    ; handle->jobQueue->curHandle = handle                              
+  .if (_DMA_QueueObj.curHandle == 0)
+    MOV XAR0, dbl(*AR1)
+  .else   
+    MOV XAR0, dbl(*AR1(short(#_DMA_QueueObj.curHandle)))
+  .endif   
+
+;********* Calculate Src Port Value ******* 
+
+    SUB dbl(*AR2+), AC0, AC3                  ; AC3 = src - SDRAMTOP 
+
+    ;set source addr lower and upper
+    ;regs->CSSA_L = GETLOWORD((LgUns)src);      
+    MOV AC0, port(*AR3(short(#DDMA_ChanRegs.CSSA_L)))  ; (Pipe 4 just Ok from MOV for AR3)
+    SUB dbl(*AR2+), AC0, AC2                   ; AC2 = src - (DARAMSIZE + SARAMSIZE)
+    ;regs->CSSA_H = GETHIWORD((LgUns)src);
+    MOV HI(AC0), port(*AR3(short(#DDMA_ChanRegs.CSSA_H)))
+
+    XCCPART AC3 <= #0 || MOV #CSDP_SRCEMIF, T2 ; If SDRAMTOP >=src then
+                                               ;     T2 = CSDP_SRCEMIF
+    XCCPART AC2 < #0 || MOV #CSDP_SRCSARAM, T2 ; If DARAMSIZE + SARAMSIZE > src
+                                               ;     then T2 = CSDP_SRCSARAM
+
+    ;set destination addr lower and upper
+    ;regs->CDSA_L = GETLOWORD((LgUns)dst);
+    MOV AC1, port(*AR3(short(#DDMA_ChanRegs.CDSA_L)))
+    SUB dbl(*AR2+), AC0                        ; AC0 = src - DARAMSIZE
+    SUB dbl(*AR2+), AC1, AC2                   ; AC2 = dst - (DARAMSIZE+SARAMSIZE)
+    XCCPART AC0 < #0 || MOV #CSDP_SRCDARAM, T2 ; If DARAMSIZE >=src then
+                                               ;     T2 = CSDP_SRCDARAM    
+
+;********* Calculate Dst Port Value ********
+
+    SUB dbl(*AR2+), AC1, AC3                   ; AC3 = dst - SDRAMTOP,
+    OR *AR0(short(#IDMA2_Obj.csdp)), T2, AR1   ; AR1 = handle->csdp | T2 =
+                                               ;     handle->csdp | srcport
+    XCCPART AC3 <= #0 || MOV #CSDP_DSTEMIF, T3 ; If SDRAMTOP >= dst then
+                                               ;     T3 = CSDP_DSTEMIF
+    ;regs->CDSA_H = GETHIWORD((LgUns)dst);
+    MOV HI(AC1), port(*AR3(short(#DDMA_ChanRegs.CDSA_H)))
+    XCCPART AC2 < #0 || MOV #CSDP_DSTSARAM, T3 ; If DARAMSIZE + SARAMSIZE >= dst
+                                               ;     then T3 = CSDP_DSTSARAM
+* Craig Leeds 3/18/05: as an optimization, AC3 is set to dst-DARAMSIZE
+* instead of DARAMSIZE-dst so that the value can be set in a single instruction
+* instead of 2.  Hence the subsequent XCCPART conditional is reversed.
+    SUB dbl(*AR2), AC1, AC3                    ; AC3 = dst - DARAMSIZE
+    ||XOR #CSDP_SRCEMIF, T2, T1                ; T1 = T2 ^ CSDP_SRCEMIF =
+                                               ;     srcport ^ CSDP_SRCEMIF
+    XCCPART AC3 < #0 || MOV #CSDP_DSTDARAM, T3 ; If DARAMSIZE >= dst then
+                                               ;     T3 = CSDP_DSTDARAM
+
+
+;********* Calculation of Src and Dst Ports done *******
+
+        ; NO LONGER SET THE PACKED-BURST MODE as per CQ7575
+        ; OR #CSDP_SRCDSTPKBEN_ENA, AR1     ; AR1 = AR1 | CSDP_SRCDSTPKBEN_ENA
+        OR T3, AR1                          ; AR1 = srcport | dstport | handle->csdp
+    
+  .if _INSTR_BANDWIDTH
+    PSHBOTH XAR0            ; Save the handle before it gets modified
+                            ; used to CALL instrumentation API      
+  .endif
+
+    XOR #CSDP_DSTEMIF, T3                   ; T3 = T3 XOR CSDP_DSTEMIF =
+                                            ;     dstport XOR CSDP_DSTEMIF
+    OR T1, T3                               ; T3 = T3 | T1 = 
+                                            ;    (srcport XOR CSDP_SRCEMIF) |
+                                            ;    (dstport XOR CSDP_DSTEMIF)
+    ; ********************************************************************
+    ||AADD #IDMA2_Obj.ccr, AR0                ; AR0  = AR0 + IDMA2_Obj.ccr =
+                                            ;     address of handle->ccr
+    ; HACK - must be resolved
+  .if DISABLE_DATA_BURST_1510
+        
+        ;if( srcport == CSDP_SRCEMIF && dstport == CSDP_DSTEMIF)
+        ;regs->CSDP &= 0x3FFF ; //disable dst bursting
+        XCCPART T3 == #0 || AND #0x3fff, AR1 ; clear high 2 bits
+  .endif
+
+    ;regs->CSDP = srcport | dstport | handle->csdp | CSDP_SRCDSTPKBEN_ENA;
+
+  .if _DISABLE_8BIT_PACKBURST
+        ; DISABLE BURST/PACK MODE FOR 8 BIT TRANSFERS
+        AND #1, AR1, T2
+        XCCPART T2 == #0 || AND #0x1E3F, AR1
+  .endif      
+
+* Note: increment AR3 so that subsequent ||ADD can use the k3 syntax
+    MOV AR1, port(*AR3+)                    ; regs->CSDP = AR1
+*                                           ; AR3 = &regs->CCR    
+    MOV dbl(*AR0+), AC0                     ; HI(AC0) = handle->ccr,
+                                            ;     LO(AC0) = handle->cfn
+    ||AADD #DDMA_ChanRegs.CEN-DDMA_ChanRegs.CCR, AR3 ; AR3 = &regs->CEN
+
+    MOV dbl(*AR0+), AC1                     ; HI(AC1) = handle->csei,
+                                            ;     LO(AC1) = handle->csfi
+    MOV dbl(*AR0+), AC2                     ; HI(AC2) = handle->cdei,
+                                            ;     LO(AC2) = handle->cdfi
+    MOV *AR0, AC3                           ; AC3 = handle->ccr2
+    BSET #23, AC0                           ; AC0 = AC0 | (CCR_CHENABL<<16) (bit 31)
+
+    MOV T0, port(*AR3+)                     ; *AR3 = regs->CEN = T0 = cnt
+*                                           ; AR3 = &regs->CFN    
+    MOV AC0, port(*AR3+)                    ; regs->CFN = handle->cfn
+*                                           ; AR3 = &regs->CSFI    
+    MOV AC1, port(*AR3+)                    ; regs->CSFI = handle->csfi
+*                                           ; AR3 = &regs->CSEI    
+    MOV HI(AC1),port(*AR3+)                 ; regs->CSEI = handle->csei
+*                                           ; AR3 = &regs->CSACO    
+
+    MOV HI(AC2),port(*AR3(short(#DDMA_ChanRegs.CDEI-DDMA_ChanRegs.CSACO))) ; regs->CDEI = handle->cdei
+    MOV AC2,port(*AR3(short(#DDMA_ChanRegs.CDFI-DDMA_ChanRegs.CSACO)))     ; regs->CDFI = handle->cdfi
+        
+    ; program the ccr2 register for little endian dst/src ports for emifs
+    ; regs->CCR2 = handle->ccr2
+    MOV AC3,port(*AR3(short(#DDMA_ChanRegs.CCR2-DDMA_ChanRegs.CSACO)))     ; regs->CCR2 = 
+
+    ; Enable this DMA channel
+    ;regs->CCR |= CCR_CHANENABL
+    MOV HI(AC0), port(*AR4(short(#DDMA_ChanRegs.CCR))) ; regs->CCR
+
+
+
+;******** End DMA_load *************
+    ;
+  .if _INSTR_BANDWIDTH
+    ;       This path corresponds to CASE 3 (TO contains the cnt, started
+    ;       transfer directly in ACPY2_start
+    POPBOTH XAR0            ; Push the registers used in this function
+  .endif
+
+ACPY_SL2:
+    ; (bw)
+    ; The (instrumented) path that branches here from top sets cnt (TO) to 0
+    ; to indicate the current transfer is simply queued in S/W Queue 
+    ; which corresponds to CASE 4
+
+    ;******* instrumentation call for DMA bandwidth data *******
+    ;       handle          ;IDMA2_handle, passed in XAR0
+    ;       Cnt             ; unsigned Count, passed in T0
+    ;       They are already present in AR0 and TO, so don't need to preserve
+    ;       anything else modified by updateChannelStats ...
+
+    ;       ACPY2_OMAP_updateChannelStats(handle, cnt);
+
+  .if _INSTR_BANDWIDTH
+
+    PSH mmap(@ST0_L) 
+
+    CALL #_ACPY2_OMAP_updateChannelStats 
+
+  .noremark 5601 ; Interrupts are disabled
+    POP mmap(@ST0_L) 
+  .remark 5601
+
+  .endif
+    ;********end instrumented ********************************** 
+
+
+    .if MAKE_HWI_CALL
+        ;HWI_restore(state);
+        POP T3, T2
+        MOV AR5, T0                                     ; T0 = state
+        CALL #_HWI_restore
+        POPBOTH XAR5
+    .else
+        XCCPART !TC1 || BCLR ST1_INTM   ; If TC1 == 0 then Enable interrupts
+        POP T3, T2
+    .endif
+    ; Consider inserting TSK_enable() here when _RTS_MODE is not defined
+    RET                                 ; Return to the calling function
+
+
+                                       
+    .sect ".text:ACPY_start"  ; This code does not have to be on-chip
+    .align 4
+QueueOverflowHandling:
+    BCLR ST1_INTM  ; Temporarily enable interrupts to allow for the queue to shrink
+    MOV  *AR1(short(_DMA_QueueObj.len)), AR3    ; AR3 = queue->len
+QueueOverflowLoop:
+    SUB *AR1(short(_DMA_QueueObj.reqPending)), AR3, T1  ; T1 = queue->len - queue->reqPending (new)
+    BCC QueueOverflowLoop, T1 < #0
+
+    BSET ST1_INTM  ; disable interrupts again until the end of the routine
+    ||B  QueueOK   ; Note: This Branch will provide the 6 ticks necessary for 
+*                  ; interrupts to be truly disabled
+
+ .endif ; defined DMA_OPT
+    .end
+

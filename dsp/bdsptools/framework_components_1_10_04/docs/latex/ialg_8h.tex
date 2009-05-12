@@ -1,0 +1,97 @@
+\hypertarget{ialg_8h}{
+\subsection{ialg.h File Reference}
+\label{ialg_8h}\index{ialg.h@{ialg.h}}
+}
+
+
+\subsubsection{Detailed Description}
+This header defines all types, constants, and functions defined by x\-DAIS for algorithms. 
+
+
+
+Definition in file \hyperlink{ialg_8h-source}{ialg.h}.
+
+
+
+This graph shows which files directly or indirectly include this file:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=123pt]{ialg_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{struct_i_a_l_g___mem_rec}{IALG\_\-Mem\-Rec}
+\begin{CompactList}\small\item\em Memory records. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Obj}
+\begin{CompactList}\small\item\em Algorithm instance object definition. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_a_l_g___params}{IALG\_\-Params}
+\begin{CompactList}\small\item\em Algorithm instance creation parameters. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_a_l_g___status}{IALG\_\-Status}
+\begin{CompactList}\small\item\em Pointer to algorithm specific status structure. \item\end{CompactList}\item 
+struct \hyperlink{struct_i_a_l_g___fxns}{IALG\_\-Fxns}
+\begin{CompactList}\small\item\em Defines the fields and methods that must be supplied by all x\-DAIS algorithms. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g8a220fa863380937542f6a38be47ceda}{IALG\_\-DEFMEMRECS}~4
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g0e3202a4d8dc0bd3cb300633922ffd54}{IALG\_\-OBJMEMREC}~0
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g200f155f9e2720011270e99f17bb6675}{IALG\_\-SYSCMD}~256
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g2c15898121a23a164e4ea2bcc4f7e7dc}{IALG\_\-EOK}~0
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g604e5600815cbd58846e0c5c05b6ba18}{IALG\_\-EFAIL}~-1
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g86018453b8f991c8cb545b2e43c80c9c}{IALG\_\-MPROG}~0x0008
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_gfc53b940e2982a2e859bda0555180eb7}{IALG\_\-MXTRN}~0x0010
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_g93e8704d8e88d2f3dde1a85317232b59}{IALG\_\-is\-Prog}(s)
+\item 
+\#define \hyperlink{group__ti__xdais___i_a_l_g_ge2530ce6b07542f579871961a3fcfd4f}{IALG\_\-is\-Off\-Chip}(s)
+\end{CompactItemize}
+\subsubsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Obj} $\ast$ \hyperlink{group__ti__xdais___i_a_l_g_g16c037803ea218ba3dc5158f55ef27c0}{IALG\_\-Handle}
+\begin{CompactList}\small\item\em Handle to an algorithm instance object. \item\end{CompactList}\item 
+typedef unsigned int \hyperlink{group__ti__xdais___i_a_l_g_g9032f20923ef2ba1d6b88c87a20075fa}{IALG\_\-Cmd}
+\begin{CompactList}\small\item\em Algorithm specific command. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum \hyperlink{group__ti__xdais___i_a_l_g_g805f1c1330403c05633277a073862e3d}{IALG\_\-Mem\-Attrs} \{ \par
+\hyperlink{group__ti__xdais___i_a_l_g_gg805f1c1330403c05633277a073862e3d85e0509f7e82ebd01b57f899122de9b4}{IALG\_\-SCRATCH}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg805f1c1330403c05633277a073862e3d68adbe0194074e0474333b76f7d1e090}{IALG\_\-PERSIST}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg805f1c1330403c05633277a073862e3d42356e6aa11869bfd15f31472f49a7c6}{IALG\_\-WRITEONCE}
+ \}
+\begin{CompactList}\small\item\em Memory attributes. \item\end{CompactList}\item 
+enum \hyperlink{group__ti__xdais___i_a_l_g_g262eb64dc7343999fa07d535ae163497}{IALG\_\-Mem\-Space} \{ \par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae1634976410b22d1d073ab55b289ca2f3c03b35}{IALG\_\-EPROG}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae163497946577db145f691f81d7085fc51e2201}{IALG\_\-IPROG}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae16349785fff905ed5e83445e3424ce5ba03175}{IALG\_\-ESDATA}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae163497a98151c21c55ddaf8c1918d8007e5493}{IALG\_\-EXTERNAL}, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae163497f6a85bf972a4d090e2c0e4d31565f879}{IALG\_\-DARAM0} =  0, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae163497d7b3b18fc0263be0f0702d263f600d9c}{IALG\_\-DARAM1} =  1, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae163497a5c6d8cfdb63c11fafd22bb87204c5cd}{IALG\_\-SARAM} =  2, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae1634974b31d959f6af27a012a87957c05d9c4a}{IALG\_\-SARAM0} =  2, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae1634974ac938c5e58e4d4a30458b63869f0095}{IALG\_\-SARAM1} =  3, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae16349717fc19eac565b29871efbfed54760414}{IALG\_\-DARAM2} =  4, 
+\par
+\hyperlink{group__ti__xdais___i_a_l_g_gg262eb64dc7343999fa07d535ae1634976db79aaafcf9b4354f2828c2a94b8590}{IALG\_\-SARAM2} =  5
+ \}
+\begin{CompactList}\small\item\em Defined memory spaces. \item\end{CompactList}\end{CompactItemize}

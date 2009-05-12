@@ -1,0 +1,51 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== ping.tci ========
+ *
+ */
+
+// add instance NODE.pingNode
+pingNode = bridge.NODE.create("pingNode");
+
+pingNode.uuid = "12A3C3C1_D015_11D4_9F69_00C04F3A59AE";
+pingNode.name = "PING_TI";
+pingNode.nodeType = "TASKNODE";
+pingNode.priority = 1;
+pingNode.stackSize = 1024;
+pingNode.stackSeg = 0;
+pingNode.messageDepth = 2;
+pingNode.numInputStreams = 0;
+pingNode.numOutputStreams = 0;
+pingNode.timeout = 2000;
+pingNode.createFxn = "PING_TI_create";
+pingNode.executeFxn = "PING_TI_execute";
+pingNode.deleteFxn = "PING_TI_delete";
+
+if (dynamicNode) {
+    pingNode.loadType = "Dynamic";
+    pingNode.splitPhases = splitPhases;
+
+    if (chipType != "2430" && chipType != "3430") {
+            pingNode.createCodeSeg = bridge.DYN_EXTERNAL;
+            pingNode.createDataSeg = bridge.DYN_EXTERNAL;
+            pingNode.executeCodeSeg = bridge.DYN_EXTERNAL;
+            pingNode.executeDataSeg = bridge.DYN_EXTERNAL;
+            pingNode.deleteCodeSeg = bridge.DYN_EXTERNAL;
+            pingNode.deleteDataSeg = bridge.DYN_EXTERNAL;
+    }
+}

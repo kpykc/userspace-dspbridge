@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="framework_components_1_10_04" version="">
+    <units>
+    </units>
+    <sources>
+    </sources>
+    <configurations>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="package/rel/exports/framework_components_1_10_04,bld.tar.dep" src="package/rel/exports/framework_components_1_10_04,bld.inc"/>
+        <srcFile name="package/rel/exports/framework_components_1_10_04,src.tar.dep" src="package/rel/exports/framework_components_1_10_04,src.inc"/>
+        <srcFile name="package/rel/framework_components_1_10_04.tar.dep" src="package/rel/framework_components_1_10_04.inc"/>
+        <srcFile name="package/rel/exports/framework_components_1_10_04.tar.dep" src="package/rel/exports/framework_components_1_10_04.inc"/>
+        <srcFile name="package/rel/exports/framework_components_1_10_04,bridge.tar.dep" src="package/rel/exports/framework_components_1_10_04,bridge.inc"/>
+    </makefiles>
+    <targets>
+    </targets>
+    <libraries>
+    </libraries>
+    <executables>
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="exports/framework_components_1_10_04,bld"
+        pname="exports/framework_components_1_10_04,bld.tar"
+        label="undefined"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.xdc.xml"/>
+        <file name="packages-bld"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="docs"/>
+        <file name="xdoc"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="examples"/>
+        <file name="package/package.ext.xml"/>
+        <file name="release_notes.html"/>
+    </release>
+    <release name="exports/framework_components_1_10_04,src"
+        pname="exports/framework_components_1_10_04,src.tar"
+        label="undefined"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.xdc.xml"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="docs"/>
+        <file name="packages-src"/>
+        <file name="xdoc"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="examples"/>
+        <file name="package/package.ext.xml"/>
+        <file name="release_notes.html"/>
+    </release>
+    <release name="framework_components_1_10_04"
+        pname="framework_components_1_10_04.tar"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.xdc.xml"/>
+        <file name="packages-bld"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="packages-src"/>
+        <file name="packages"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="fctools/packages"/>
+        <file name="package/package.ext.xml"/>
+        <file name="examples"/>
+    </release>
+    <release name="exports/framework_components_1_10_04"
+        pname="exports/framework_components_1_10_04.tar"
+        label="undefined"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.xdc.xml"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="docs"/>
+        <file name="packages"/>
+        <file name="xdoc"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="fctools/packages"/>
+        <file name="package/package.ext.xml"/>
+        <file name="examples"/>
+        <file name="release_notes.html"/>
+    </release>
+    <release name="exports/framework_components_1_10_04,bridge"
+        pname="exports/framework_components_1_10_04,bridge.tar"
+        label="undefined"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.xdc.xml"/>
+        <file name="packages-bld"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="docs"/>
+        <file name="xdoc"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="fctools/packages"/>
+        <file name="package/package.ext.xml"/>
+        <file name="examples"/>
+        <file name="release_notes.html"/>
+    </release>
+    </releases>
+    <repositories>
+    <repository name="packages"
+        pname="packages">
+        <importedRelease
+            package="ti.sdo.fc.acpy2"
+            pname="ti_sdo_fc_acpy2.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.acpy3"
+            pname="ti_sdo_fc_acpy3.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils.api"
+            pname="ti_sdo_fc_utils_api.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils"
+            pname="ti_sdo_fc_utils.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman"
+            pname="ti_sdo_fc_dman.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman3"
+            pname="ti_sdo_fc_dman3.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dskt2"
+            pname="ti_sdo_fc_dskt2.tar"
+            label="default">
+        </importedRelease>
+    </repository>
+    <repository name="packages-src"
+        pname="packages-src">
+        <importedRelease
+            package="ti.sdo.fc.acpy2"
+            pname="ti_sdo_fc_acpy2,src.tar"
+            label="source">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.acpy3"
+            pname="ti_sdo_fc_acpy3,src.tar"
+            label="source">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils.api"
+            pname="ti_sdo_fc_utils_api.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman3.examples"
+            pname="ti_sdo_fc_dman3_examples.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils"
+            pname="ti_sdo_fc_utils.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman"
+            pname="ti_sdo_fc_dman,src.tar"
+            label="source">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman3"
+            pname="ti_sdo_fc_dman3,src.tar"
+            label="source">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dskt2"
+            pname="ti_sdo_fc_dskt2,src.tar"
+            label="source">
+        </importedRelease>
+    </repository>
+    <repository name="packages-bld"
+        pname="packages-bld">
+        <importedRelease
+            package="ti.sdo.fc.acpy2"
+            pname="ti_sdo_fc_acpy2,bld.tar"
+            label="build">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.acpy3"
+            pname="ti_sdo_fc_acpy3,bld.tar"
+            label="build">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils.api"
+            pname="ti_sdo_fc_utils_api.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman3.examples"
+            pname="ti_sdo_fc_dman3_examples.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.utils"
+            pname="ti_sdo_fc_utils.tar"
+            label="default">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman"
+            pname="ti_sdo_fc_dman,bld.tar"
+            label="build">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dman3"
+            pname="ti_sdo_fc_dman3,bld.tar"
+            label="build">
+        </importedRelease>
+        <importedRelease
+            package="ti.sdo.fc.dskt2"
+            pname="ti_sdo_fc_dskt2,bld.tar"
+            label="build">
+        </importedRelease>
+    </repository>
+    <repository name="fctools/packages"
+        pname="fctools/packages">
+    </repository>
+    <repository name="examples"
+        pname="examples">
+        <importedRelease
+            package="ti.sdo.fc.dman3.examples"
+            pname="ti_sdo_fc_dman3_examples.tar"
+            label="default">
+        </importedRelease>
+    </repository>
+    </repositories>
+</package>

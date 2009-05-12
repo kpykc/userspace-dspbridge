@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<TITLE>ti.sdo.fc.acpy3ACPY3</TITLE>
+<LINK rel=stylesheet type=text/css href=../../../../styles.css>
+</HEAD>
+<SCRIPT>
+function load(hdr) {
+if (self != top && top.frames.hdr) {
+    top.frames.hdr.location.replace(hdr);
+    }
+}
+</SCRIPT>
+<SCRIPT>function goFwd(to, dname, nosave) {    if (self != top && top.goFwd) {        return (top.goFwd(to, dname, nosave));    }    location.href = "../../../../" + to + (dname?("#"+dname):"");    return (false);}</SCRIPT>
+<BODY onLoad="load('ACPY3-hdr.html')">
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR><TD class=SlugLine colspan=10><SPAN class=Comment>//!    Joule ACPY3 library
+</SPAN></TD></TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10><SPAN class=SlugKw>metaonly</SPAN> <SPAN class=SlugKw>module </SPAN> <SPAN class=SlugDef>ACPY3</SPAN></TD></TR>
+<TR><TD class=SlugLine colspan=10>{</TD></TR>
+<TR><TD class=SlugLine colspan=10>}</TD></TR>
+</TABLE>
+<P class=SrcLink>
+sourced in <A target=body href="javascript: void goFwd('ti/sdo/fc/acpy3/ACPY3-src.html')">ti/sdo/fc/acpy3/ACPY3.xdc</A>
+</P>
+<HR class=BodyDecls>
+<A id=__decl__0 name=__decl__0></A>
+<A name=debug></A>
+<BR>
+<P id=__decl__0-P class=DeclName>
+<SPAN class=Keyword>config </SPAN>
+debug
+<SPAN class=Keyword></SPAN>
+</P>
+<TABLE class=Slug border=1 cellpadding=3 cellspacing=0 rules=none width=100%>
+<TR>
+<TD class=SlugLine colspan=10><SPAN class=Comment>//!    Enable the debug profile of the ACPY3 library.
+</SPAN></TD>
+</TR>
+<TR class=SlugSpacer><TD colspan=10>&nbsp;</TD></TR>
+<TR><TD class=SlugLine colspan=10>
+<SPAN class=SlugKw>config </SPAN>
+<SPAN class=SlugKw>Bool</SPAN>&nbsp;<SPAN class=SlugDef>debug</SPAN>
+&nbsp;=&nbsp;<SPAN class=SlugKw>false</SPAN>
+</TD></TR>
+</TABLE>
+</DL>
+</DIV>
+<P class=SubHead>DETAILS</P>
+<DIV class=Text><P>
+  This will likely result in a larger and slower library being linked in,
+  but it will provide extra parameter checking and debug trace
+  statements dropped in the BIOS SYS trace buffer.
+
+</P></DIV>
+</BODY>
+</HTML>

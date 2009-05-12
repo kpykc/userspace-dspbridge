@@ -1,0 +1,90 @@
+/*
+ *  ======== dsm.tci ========
+ *  Note: Original CDB contained no modifiable properties.
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var $$name = "DSM";
+
+var $$label = "Properties for DSP Bridge DSM module";
+
+/* Global properties for DSM object */
+var $$global = [
+        {
+            name : "enableInst",
+            val  : false,
+            label: "Enable DSM instrumentation",
+            type : "Boolean",
+            test : ["setEnableInst"],
+        },
+            ];
+
+/* Template files */
+var $$template = 
+    {
+        cSource   : "ti/dspbridge/dsp/tconf/modules/dsm_c.tpl",
+    };
+
+/*
+ *  ======== Test Functions ========
+ */
+function setEnableInst (text, val)
+{
+    if ( (val) && (bios.GBL.ENABLEINST) ) {
+        throw (text + " not supported for now");
+    }
+}
+
+/*
+ *  ======== Module Initialization ========
+ */
+function init ()
+{
+    // add DSM module via UDEV
+    // add DSM instance "host"
+    var host =  bios.UDEV.create("host");
+    host.comment = "DSP/BIOS Bridge Link Device";
+    host.deviceId = -1; //needed? see gen'ed code
+    host.fxnTable = prog.extern("DSM_FXNS");
+    host.initFxn = prog.extern("DSM_init");
+}
+
+/*
+ *  ======== Module Finalization ========
+ */
+function finalize ()
+{
+    if (this.enableInst) {
+
+        if (0) {
+            // This STS object is in dsm.cdb, but is never used.
+            var dsmIssuedBufferCount =
+            prog.module("STS").create("dsmIssuedBufferCount");
+            dsmIssuedBufferCount.comment = "Buffer count";
+        }
+
+        var dsmChannelCount = prog.module("STS").create("dsmChannelCount");
+        dsmChannelCount.comment = "Channel count";
+
+        var stsInputIntRate = prog.module("STS").create("stsInputIntRate");
+        stsInputIntRate.comment = "Channel count";
+
+        var stsOutputIntRate = prog.module("STS").create("stsOutputIntRate");
+        stsOutputIntRate.comment = "Channel count";
+
+        var instLog = prog.module("LOG").create("instLog");
+        instLog.comment = "Instrumentation Log";
+        instLog.bufLen = 128;
+        instLog.logType = "circular";
+        instLog.dataType = "raw data";
+        instLog.format = "%d, %u, %u";
+
+        var instBufLog = prog.module("LOG").create("instBufLog");
+        instBufLog.comment = "Instrumentation Outstanding Buffer Log";
+        instBufLog.bufLen = 128;
+        instBufLog.logType = "circular";
+        instBufLog.dataType = "raw data";
+        instBufLog.format = "%d, %d, %u";
+    }
+}

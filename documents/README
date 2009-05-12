@@ -1,0 +1,42 @@
+                       Linux DSP/BIOS Bridge User Guide
+
+Running Applications on DSP
+===========================
+
+To run an application on DSP one should have both bridgedriver and DSP
+binaries.
+
+To build bridgedriver, bridge api library and samples please refer to the
+README document in each of those folders.
+
+Once all binaries are build follow below steps to run sample applications.
+
+1. Create a user specified directory in the linux target file system 
+   e.g: /dspbridge
+2. Copy bridge driver(bridgedriver.ko), utilities to install and uninstall 
+   bridge driver( Scripts under mpu_driver/utils folder ) to the directory
+   created.
+3. Copy the bridge api libraies(libbridge.so, libbridge.so.2, libqos.a and
+   libqos.so.2) to /lib folder of the target filesystem, make sure pthread
+   libraries are part of the target filesystem.
+4. Copy the sample binaries (srmcopy.out, ping.out dmmcopy.out,scale.out,
+   cexec.out and zerocopymsg.out) to the directory created on target file
+   system.
+5. Copy DSP sample binaries (*.dof64P and *.dll64P ) from the samples folder
+   (samples/dsp/samples )to the directory created on target file system. 
+6. Load the sample dsp binary and start the image by running cexec.out 
+   program. 
+    # ./cexec.out ddspbase_tiomap3430.dof64P
+7. On successful run the output displayed as: 
+    DSP device detected !!
+    DSPProcessor_Start succeeded.
+    Hit any key to terminate cexec.
+8. Run sample applications.
+    e.g: 1. ./ping.out 10
+         2. ./dmmcopy.out <inputfile> <outputfile>
+         3. ./scale.out 10
+         4. ./strmcopy.out <inputfile> <outputfile>
+         5. ./zerocopymsg.out
+		
+For more information on samples functionality, refer to the DSP Bridge 
+programming and reference guides.

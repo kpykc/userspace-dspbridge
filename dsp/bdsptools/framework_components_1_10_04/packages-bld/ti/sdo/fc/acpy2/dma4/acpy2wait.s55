@@ -1,0 +1,94 @@
+*
+*  ======== dma4/acpy2wait.s55 ========
+*
+
+ .if (!$isdefed("DMA_OPT"))
+DMA_OPT .equ 0		; if not defined
+ .endif
+
+ .if DMA_OPT | 1
+
+    .title "acpy2wait24xx.s55"
+
+	.def	_ACPY2_wait
+
+    .model mem=large
+    .c54cm_off
+    .cpl_on
+    .mmregs
+    .arms_on
+
+* #include <std.h>
+* #ifndef _RTS_MODE
+* #include <tsk.h>
+* #include <dbc.h>
+* #else
+* #include <dbc_rts.h>
+* #endif
+* #include <ti/xdais/acpy2.h>
+* #include "_dma.h"
+
+    .include "_dma.h55"
+
+    .sect ".text:ACPY2_wait"
+    .align 4
+
+*
+*  ======== ACPY2_wait ========
+*  Wait for all data transfer on logical channel to complete. This
+*  implementation does a TSK_yield while waiting for all outstanding
+*  jobs to complete. Other implementations might do other processing while
+*  waiting.
+*
+
+**************************************************************************
+*
+* Void ACPY2_wait(IDMA2_Handle handle)
+*
+* Input:
+*    XAR0	handle
+*   
+* Output:
+*    none
+*
+*  Modified registers:
+*    AR1
+*
+**************************************************************************
+
+*Void ACPY2_wait(IDMA2_Handle handle)
+*{
+*    _DMA_Handle	dmaHandle = (_DMA_Handle)handle;
+*
+*    while (dmaHandle->numJobs > 0) {
+*#ifndef _RTS_MODE
+*        //TSK_yield();
+*#endif
+*    }
+*}
+_ACPY2_wait:			; (IDMA2_Handle handle)
+    ; AR0 contains "handle"
+    ; The first field in the "handle" structure is numJobs
+    MOV *AR0, AR1                       ; AR1 = handle->numJobs
+    ; Consider inserting TSK_yield() here when _RTS_MODE is not defined
+    RETCC AR1 <= #0
+*
+* Without the TSK_yield option, it is better to repeat the above two
+* statements a few times before branching back to the top.
+* In that way, the return is most likely to be as quick as possible.
+*
+    MOV *AR0, AR1                       ; AR1 = handle->numJobs
+    RETCC AR1 <= #0
+
+    MOV *AR0, AR1                       ; AR1 = handle->numJobs
+    RETCC AR1 <= #0
+
+    MOV *AR0, AR1                       ; AR1 = handle->numJobs
+    RETCC AR1 <= #0
+
+    MOV *AR0, AR1                       ; AR1 = handle->numJobs
+    RETCC AR1 <= #0
+
+    B _ACPY2_wait
+
+ .endif ; if DMA_OPT

@@ -1,0 +1,581 @@
+\hypertarget{group___d_s_p_a_c_p_y3}{
+\subsection{ACPY3 (C64P)}
+\label{group___d_s_p_a_c_p_y3}\index{ACPY3 (C64P)@{ACPY3 (C64P)}}
+}
+
+
+\subsubsection{Detailed Description}
+The ACPY3 module provides a comprehensive list of DMA operations an algorithm can perform on logical DMA channels it acquires through the IDMA3 protocol. Example of ACPY3 operations include channel configuration, DMA transfer scheduling, and DMA transfer synchronization.
+
+\begin{Desc}
+\item[Remarks:]For additional information, please refer to the \char`\"{}Using DMA with Framework Components for 'C64x+\char`\"{} document. \end{Desc}
+
+
+\subsubsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params}
+\begin{CompactList}\small\item\em DMA transfer specific parameters. Defines the configuration of a logical channel. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum \hyperlink{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}{ACPY3\_\-Param\-Field16b} \{ \par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608f590c76a022dbe56043c8a0a577a88c8}{ACPY3\_\-PARAMFIELD\_\-ELEMENTSIZE} =  8, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608b95b07e80a06c8d2b0ccd191de1fb8aa}{ACPY3\_\-PARAMFIELD\_\-NUMELEMENTS} =  10, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a3a4872acfc89e4da1820e0839b0fb87}{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-SRC} =  16, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a1c08ec69ae102d758b8678c492038e3}{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-DST} =  18, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608cd1fe7c99a4596d8724a9cf359bf8f57}{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-SRC} =  24, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608ad2460b82b3834e625dcdb3e1e2c140c}{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-DST} =  26, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e6085593f2242b7d6741c9dcb4233909942d}{ACPY3\_\-PARAMFIELD\_\-NUMFRAMES} =  28
+ \}
+\begin{CompactList}\small\item\em ACPY3 16-bit param field structure. These values are passed to \hyperlink{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}{ACPY3\_\-fast\-Configure16b()} to indicate the field of the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} structure to be changed. \item\end{CompactList}\item 
+enum \hyperlink{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}{ACPY3\_\-Param\-Field32b} \{ \par
+\hyperlink{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0807013269912df7c5dbc2361483d2e1e}{ACPY3\_\-PARAMFIELD\_\-SRCADDR} =  4, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0927624fccb072b2ff847a10c4729fedf}{ACPY3\_\-PARAMFIELD\_\-DSTADDR} =  12, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0ce2eb39c83c77fa1ee38d5c87e045e83}{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEXES} =  16, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de088347f099298128f5989f76636e64dc5}{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEXES} =  24
+ \}
+\begin{CompactList}\small\item\em ACPY3 32-bit param field structure. These values are passed to \hyperlink{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}{ACPY3\_\-fast\-Configure32b()} to indicate the field of the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} structure to be changed. \item\end{CompactList}\item 
+enum \hyperlink{group___d_s_p_a_c_p_y3_gbe2d02fcbde983c823b138f20667cbfc}{ACPY3\_\-Transfer\-Type} \{ \par
+\hyperlink{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcf9cef75ab1829399370006a48d16182e}{ACPY3\_\-1D1D}, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc7e3376fb0def5e38484dfb121e7b2fb7}{ACPY3\_\-1D2D}, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc3ad50651b016c2c96f8fb6f724213623}{ACPY3\_\-2D1D}, 
+\par
+\hyperlink{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcd8ac84d79831cfe53a4088a321989a85}{ACPY3\_\-2D2D}
+ \}
+\begin{CompactList}\small\item\em ACPY3 DMA Transfer Types:. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Functions}
+\begin{CompactItemize}
+\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} $\ast$params, Md\-Int transfer\-No)
+\begin{CompactList}\small\item\em Functions called by the framework for allocating and initializing the channel state. Configure all DMA transfer settings for the logical channel. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}{ACPY3\_\-fast\-Configure16b} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, \hyperlink{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}{ACPY3\_\-Param\-Field16b} field\-Id, Md\-Uns value, Md\-Int transfer\-No)
+\begin{CompactList}\small\item\em Modify the 16-bit DMA transfer parameter, indicated by the parameter field id, field\-Id, of the current channel settings. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}{ACPY3\_\-fast\-Configure32b} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, \hyperlink{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}{ACPY3\_\-Param\-Field32b} field\-Id, Uns value, Md\-Int transfer\-No)
+\begin{CompactList}\small\item\em Modify the 32-bit DMA transfer parameter, indicated by the parameter field id, field\-Id, of the current channel settings. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_gfc7ddb15d68ef3741abfb8843763fce5}{ACPY3\_\-set\-Final} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, Md\-Int transfer\-No)
+\begin{CompactList}\small\item\em Indicate that a given transfer will be the last in a sequence of linked transfers. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g44f2ce173d41bc7bbfb6e7fb500ec58f}{ACPY3\_\-fast\-Set\-Final} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, Md\-Int transfer\-No)
+\begin{CompactList}\small\item\em Indicate that a given transfer will be the last in a sequence of linked transfers. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}{ACPY3\_\-start} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\begin{CompactList}\small\item\em Submit a single or linked transfer using the most recently configured transfer parameter settings. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\begin{CompactList}\small\item\em Wait for all data transfers on a logical channel to complete. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g6acf0b26cee48d5cbc81e2c9049128ea}{ACPY3\_\-wait\-Linked} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, Md\-Uns wait\-Id)
+\begin{CompactList}\small\item\em Wait for an individual transfer in a Linked transfer to finish. \item\end{CompactList}\item 
+Bool \hyperlink{group___d_s_p_a_c_p_y3_ge22deca1f6878a359a619cff8654d9de}{ACPY3\_\-complete} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\begin{CompactList}\small\item\em Check to see if all dma transfers on logical channel are finished. \item\end{CompactList}\item 
+Bool \hyperlink{group___d_s_p_a_c_p_y3_g88a22e18670a97816b27dcd90abf2ae9}{ACPY3\_\-complete\-Linked} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle, Md\-Uns wait\-Id)
+\begin{CompactList}\small\item\em Non-blocking query to check completion of an individual transfer in a Linked transfer. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_gf9dc07965774895d79323a47b36cc442}{ACPY3\_\-activate} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\begin{CompactList}\small\item\em Activate the given channel. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_g2736d2e136e868577a71710571027de5}{ACPY3\_\-deactivate} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} handle)
+\begin{CompactList}\small\item\em Deactivates the given channel. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_gc79227aad8cb9f68ab67da77de81fd17}{ACPY3\_\-init} (Void)
+\begin{CompactList}\small\item\em Initialize the ACPY3 module. Called by framework. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_a_c_p_y3_ge7072f7010b53bdeab5ac76737b380af}{ACPY3\_\-exit} (Void)
+\begin{CompactList}\small\item\em Finalization of the ACPY3 module. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Variables}
+\begin{CompactItemize}
+\item 
+\hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Obj} \hyperlink{group___d_s_p_a_c_p_y3_g7171d01619b7fc26dbb11eb9aaf1a3b2}{ACPY3\_\-PROTOCOL}
+\end{CompactItemize}
+
+
+\subsubsection{Enumeration Type Documentation}
+\hypertarget{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_ParamField16b@{ACPY3\_\-ParamField16b}}
+\index{ACPY3_ParamField16b@{ACPY3\_\-ParamField16b}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-ParamField16b]{\setlength{\rightskip}{0pt plus 5cm}enum \hyperlink{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}{ACPY3\_\-Param\-Field16b}}\hfill}
+\label{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}
+
+
+ACPY3 16-bit param field structure. These values are passed to \hyperlink{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}{ACPY3\_\-fast\-Configure16b()} to indicate the field of the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} structure to be changed. 
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{ACPY3_PARAMFIELD_ELEMENTSIZE@{ACPY3\_\-PARAMFIELD\_\-ELEMENTSIZE}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_ELEMENTSIZE@{ACPY3\_\-PARAMFIELD\_\-ELEMENTSIZE}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608f590c76a022dbe56043c8a0a577a88c8}{
+ACPY3\_\-PARAMFIELD\_\-ELEMENTSIZE}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608f590c76a022dbe56043c8a0a577a88c8}
+}]\index{ACPY3_PARAMFIELD_NUMELEMENTS@{ACPY3\_\-PARAMFIELD\_\-NUMELEMENTS}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_NUMELEMENTS@{ACPY3\_\-PARAMFIELD\_\-NUMELEMENTS}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608b95b07e80a06c8d2b0ccd191de1fb8aa}{
+ACPY3\_\-PARAMFIELD\_\-NUMELEMENTS}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608b95b07e80a06c8d2b0ccd191de1fb8aa}
+}]\index{ACPY3_PARAMFIELD_ELEMENTINDEX_SRC@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-SRC}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_ELEMENTINDEX_SRC@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-SRC}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a3a4872acfc89e4da1820e0839b0fb87}{
+ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-SRC}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a3a4872acfc89e4da1820e0839b0fb87}
+}]\index{ACPY3_PARAMFIELD_ELEMENTINDEX_DST@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-DST}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_ELEMENTINDEX_DST@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-DST}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a1c08ec69ae102d758b8678c492038e3}{
+ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEX\_\-DST}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608a1c08ec69ae102d758b8678c492038e3}
+}]\index{ACPY3_PARAMFIELD_FRAMEINDEX_SRC@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-SRC}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_FRAMEINDEX_SRC@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-SRC}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608cd1fe7c99a4596d8724a9cf359bf8f57}{
+ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-SRC}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608cd1fe7c99a4596d8724a9cf359bf8f57}
+}]\index{ACPY3_PARAMFIELD_FRAMEINDEX_DST@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-DST}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_FRAMEINDEX_DST@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-DST}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608ad2460b82b3834e625dcdb3e1e2c140c}{
+ACPY3\_\-PARAMFIELD\_\-FRAMEINDEX\_\-DST}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e608ad2460b82b3834e625dcdb3e1e2c140c}
+}]\index{ACPY3_PARAMFIELD_NUMFRAMES@{ACPY3\_\-PARAMFIELD\_\-NUMFRAMES}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_NUMFRAMES@{ACPY3\_\-PARAMFIELD\_\-NUMFRAMES}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e6085593f2242b7d6741c9dcb4233909942d}{
+ACPY3\_\-PARAMFIELD\_\-NUMFRAMES}
+\label{group___d_s_p_a_c_p_y3_ggf9624d3d925ec0d15bd845967664e6085593f2242b7d6741c9dcb4233909942d}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 49 of file acpy3.h.\hypertarget{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_ParamField32b@{ACPY3\_\-ParamField32b}}
+\index{ACPY3_ParamField32b@{ACPY3\_\-ParamField32b}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-ParamField32b]{\setlength{\rightskip}{0pt plus 5cm}enum \hyperlink{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}{ACPY3\_\-Param\-Field32b}}\hfill}
+\label{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}
+
+
+ACPY3 32-bit param field structure. These values are passed to \hyperlink{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}{ACPY3\_\-fast\-Configure32b()} to indicate the field of the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} structure to be changed. 
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{ACPY3_PARAMFIELD_SRCADDR@{ACPY3\_\-PARAMFIELD\_\-SRCADDR}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_SRCADDR@{ACPY3\_\-PARAMFIELD\_\-SRCADDR}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0807013269912df7c5dbc2361483d2e1e}{
+ACPY3\_\-PARAMFIELD\_\-SRCADDR}
+\label{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0807013269912df7c5dbc2361483d2e1e}
+}]\index{ACPY3_PARAMFIELD_DSTADDR@{ACPY3\_\-PARAMFIELD\_\-DSTADDR}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_DSTADDR@{ACPY3\_\-PARAMFIELD\_\-DSTADDR}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0927624fccb072b2ff847a10c4729fedf}{
+ACPY3\_\-PARAMFIELD\_\-DSTADDR}
+\label{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0927624fccb072b2ff847a10c4729fedf}
+}]\index{ACPY3_PARAMFIELD_ELEMENTINDEXES@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEXES}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_ELEMENTINDEXES@{ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEXES}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0ce2eb39c83c77fa1ee38d5c87e045e83}{
+ACPY3\_\-PARAMFIELD\_\-ELEMENTINDEXES}
+\label{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de0ce2eb39c83c77fa1ee38d5c87e045e83}
+}]\index{ACPY3_PARAMFIELD_FRAMEINDEXES@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEXES}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_PARAMFIELD_FRAMEINDEXES@{ACPY3\_\-PARAMFIELD\_\-FRAMEINDEXES}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de088347f099298128f5989f76636e64dc5}{
+ACPY3\_\-PARAMFIELD\_\-FRAMEINDEXES}
+\label{group___d_s_p_a_c_p_y3_gg96f43d4bc010da2d1bb9dc08ea828de088347f099298128f5989f76636e64dc5}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 66 of file acpy3.h.\hypertarget{group___d_s_p_a_c_p_y3_gbe2d02fcbde983c823b138f20667cbfc}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_TransferType@{ACPY3\_\-TransferType}}
+\index{ACPY3_TransferType@{ACPY3\_\-TransferType}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-TransferType]{\setlength{\rightskip}{0pt plus 5cm}enum \hyperlink{group___d_s_p_a_c_p_y3_gbe2d02fcbde983c823b138f20667cbfc}{ACPY3\_\-Transfer\-Type}}\hfill}
+\label{group___d_s_p_a_c_p_y3_gbe2d02fcbde983c823b138f20667cbfc}
+
+
+ACPY3 DMA Transfer Types:. 
+
+Note that all transfers can be specified using the ACPY3\_\-2D2D transfer type, and providing element and frame indices for both source and destination. However, the other transfer types are provided to simplify configuration when applicable. For example, when using the ACPY3\_\-1D2D transfer type, you do not need to set the source element and frame indices in the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} structure. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{ACPY3_1D1D@{ACPY3\_\-1D1D}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_1D1D@{ACPY3\_\-1D1D}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcf9cef75ab1829399370006a48d16182e}{
+ACPY3\_\-1D1D}
+\label{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcf9cef75ab1829399370006a48d16182e}
+}]Only one element is copied from source to destination. The size of the element is specified in the element\-Size field of \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} \index{ACPY3_1D2D@{ACPY3\_\-1D2D}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_1D2D@{ACPY3\_\-1D2D}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc7e3376fb0def5e38484dfb121e7b2fb7}{
+ACPY3\_\-1D2D}
+\label{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc7e3376fb0def5e38484dfb121e7b2fb7}
+}]After each element is copied to destination, the source and destination of the next element to copy is updated as follows:\begin{itemize}
+\item src = src + element size\item dst = dst + destination element index\end{itemize}
+
+
+After an entire frame is copied (the frame size specified by the num\-Elements field of \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params}), the source and destination of the next frame to copy are given by:\begin{itemize}
+\item src = src + element size\item dst = start of frame + destination frame index \end{itemize}
+\index{ACPY3_2D1D@{ACPY3\_\-2D1D}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_2D1D@{ACPY3\_\-2D1D}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc3ad50651b016c2c96f8fb6f724213623}{
+ACPY3\_\-2D1D}
+\label{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfc3ad50651b016c2c96f8fb6f724213623}
+}]This is similar to ACPY3\_\-1D2D, except that source and destination are updated after an element is copied, as follows:\begin{itemize}
+\item src = src + source element index\item dst = dst + element size\end{itemize}
+
+
+After an entire frame is copied by:\begin{itemize}
+\item src = start of frame + source frame index\item dst = dst + element size \end{itemize}
+\index{ACPY3_2D2D@{ACPY3\_\-2D2D}!DSPACPY3@{DSPACPY3}}\index{DSPACPY3@{DSPACPY3}!ACPY3_2D2D@{ACPY3\_\-2D2D}}\item[{\em 
+\hypertarget{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcd8ac84d79831cfe53a4088a321989a85}{
+ACPY3\_\-2D2D}
+\label{group___d_s_p_a_c_p_y3_ggbe2d02fcbde983c823b138f20667cbfcd8ac84d79831cfe53a4088a321989a85}
+}]This transfer type combines ACPY3\_\-1D2D and ACPY3\_\-2D1D, so that source and destination are updated after an element is copied by:\begin{itemize}
+\item src = src + source element index\item dst = dst + destination element index\end{itemize}
+
+
+After a frame is copied by:\begin{itemize}
+\item src = start of frame + source frame index\item dst = start of frame + destination frame index \end{itemize}
+\end{description}
+\end{Desc}
+
+
+
+Definition at line 85 of file acpy3.h.
+
+\subsubsection{Function Documentation}
+\hypertarget{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_configure@{ACPY3\_\-configure}}
+\index{ACPY3_configure@{ACPY3\_\-configure}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-configure]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-configure (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} $\ast$ {\em params}, Md\-Int {\em transfer\-No})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}
+
+
+Functions called by the framework for allocating and initializing the channel state. Configure all DMA transfer settings for the logical channel. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em params}]DMA transfer specific parameters used to configure this logical DMA channel. \item[\mbox{$\leftarrow$} {\em transfer\-No}]Indicates the individual transfer to be configured using the passed 'params'\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]channel must be in active state 
+
+params-$>$wait\-Id != (num\-Waits - 1), unless configuring the last transfer. 
+
+valid IDMA\_\-Obj handle 
+
+handle-$>$protocol == \&ACPY3\_\-PROTOCOL 
+
+0 $<$= transfer\-No $<$ originally requested number of transfers \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_fastConfigure16b@{ACPY3\_\-fastConfigure16b}}
+\index{ACPY3_fastConfigure16b@{ACPY3\_\-fastConfigure16b}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-fastConfigure16b]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-fast\-Configure16b (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, \hyperlink{group___d_s_p_a_c_p_y3_gf9624d3d925ec0d15bd845967664e608}{ACPY3\_\-Param\-Field16b} {\em field\-Id}, Md\-Uns {\em value}, Md\-Int {\em transfer\-No})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}
+
+
+Modify the 16-bit DMA transfer parameter, indicated by the parameter field id, field\-Id, of the current channel settings. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em field\-Id}]Indicates which of the parameters is to be modified. \item[\mbox{$\leftarrow$} {\em value}]New value of the parameter to be modified. \item[\mbox{$\leftarrow$} {\em transfer\-No}]Indicates which transfer the parameters correspond to (same value that would be passed to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}). logical DMA handle and environment (env, env\-Size) fields.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Algorithm instance must be in \char`\"{}active\char`\"{} state using IALG interface.
+
+Channel must be in \char`\"{}active\char`\"{} state.\end{Desc}
+\begin{Desc}
+\item[Remarks:]Once a channel has been configured once with \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}, \hyperlink{group___d_s_p_a_c_p_y3_g2c54ca4dc3d0cf3f861259bc7cf0f8de}{ACPY3\_\-fast\-Configure16b()} can be used to update any of the 16-bit parameter fields, for example, the number of elements in a frame to be transferred.
+
+Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-FASTCONFIGURE16B\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file.
+
+\begin{itemize}
+\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 0, this function requires 8 ticks.\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 1, this function requires 14 ticks. \end{itemize}
+\end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_fastConfigure32b@{ACPY3\_\-fastConfigure32b}}
+\index{ACPY3_fastConfigure32b@{ACPY3\_\-fastConfigure32b}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-fastConfigure32b]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-fast\-Configure32b (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, \hyperlink{group___d_s_p_a_c_p_y3_g96f43d4bc010da2d1bb9dc08ea828de0}{ACPY3\_\-Param\-Field32b} {\em field\-Id}, Uns {\em value}, Md\-Int {\em transfer\-No})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}
+
+
+Modify the 32-bit DMA transfer parameter, indicated by the parameter field id, field\-Id, of the current channel settings. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em field\-Id}]Indicates which of the parameters is to be modified. \item[\mbox{$\leftarrow$} {\em value}]New value of the parameter to be modified. \item[\mbox{$\leftarrow$} {\em transfer\-No}]Indicates which transfer the parameters correspond to (same value that would be passed to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}). logical DMA handle and environment (env, env\-Size) fields.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]{\tt handle} must be a valid channel handle.
+
+Algorithm instance must be in \char`\"{}active\char`\"{} state using IALG interface.
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Remarks:]Once a channel has been configured once with \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}, \hyperlink{group___d_s_p_a_c_p_y3_g2ad7ed5dc554a991c4c11f644f5a8272}{ACPY3\_\-fast\-Configure32b()} can be used to update any of the 32-bit parameter fields, for example, the source address of the data to be transferred.
+
+Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-FASTCONFIGURE32B\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file.
+
+\begin{itemize}
+\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 0, this function requires 8 ticks.\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 1, this function requires 14 ticks. \end{itemize}
+\end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_gfc7ddb15d68ef3741abfb8843763fce5}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_setFinal@{ACPY3\_\-setFinal}}
+\index{ACPY3_setFinal@{ACPY3\_\-setFinal}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-setFinal]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-set\-Final (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, Md\-Int {\em transfer\-No})}\hfill}
+\label{group___d_s_p_a_c_p_y3_gfc7ddb15d68ef3741abfb8843763fce5}
+
+
+Indicate that a given transfer will be the last in a sequence of linked transfers. 
+
+This API can be used to dynamically change the number of transfers in a linked transfers. Any wait\-Id previously associated with given transfer \char`\"{}transfer\-No\char`\"{} will be replaced with the wait\-Id 'num\-Waits - 1' since \hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait()} uses this wait\-Id to check for transfer completion.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em transfer\-No}]Indicates which transfer that will be the last in the set of linked transfers. (This is the same value that was passed to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}).\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Remarks:]This API can be used if a channel was created to transfer num\-Transfers linked transfers, but at some point, it may be that fewer transfers than num\-Transfers should be started. 
+
+Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-SETFINAL\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file.
+
+\begin{itemize}
+\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 0, this routine requires 66 ticks.\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 1, this routine requires 66 ticks.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle. 
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]transfer\-No's wait\-Id is set to 'num\-Waits - 1' 
+
+Any previously associated wait\-Id with the old \char`\"{}final\char`\"{} transfer is cleared. As a consequence applications may need to call \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()} to restore the appropriate wait\-Id. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g44f2ce173d41bc7bbfb6e7fb500ec58f}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_fastSetFinal@{ACPY3\_\-fastSetFinal}}
+\index{ACPY3_fastSetFinal@{ACPY3\_\-fastSetFinal}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-fastSetFinal]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-fast\-Set\-Final (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, Md\-Int {\em transfer\-No})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g44f2ce173d41bc7bbfb6e7fb500ec58f}
+
+
+Indicate that a given transfer will be the last in a sequence of linked transfers. 
+
+This API can be used to dynamically change the number of transfers in a linked transfers. Any wait\-Id previously This function is only usable when the handle only has a single wait\-Id. Otherwise is works exactly the same as ACPY3\_\-set\-Final. It just runs much faster.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em transfer\-No}]Indicates which transfer that will be the last in the set of linked transfers. (This is the same value that was passed to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}).\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Remarks:]This API can be used if a channel was created to transfer num\-Transfers linked transfers, but at some point, it may be that fewer transfers than num\-Transfers should be started.
+
+Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-FASTSETFINAL\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file.
+
+\hyperlink{group___d_s_p_a_c_p_y3_g44f2ce173d41bc7bbfb6e7fb500ec58f}{ACPY3\_\-fast\-Set\-Final()} does the work of \hyperlink{group___d_s_p_a_c_p_y3_gfc7ddb15d68ef3741abfb8843763fce5}{ACPY3\_\-set\-Final()} but assumes that there is only 1 TCC allocated to the handle. It is very much optimized compared to \hyperlink{group___d_s_p_a_c_p_y3_gfc7ddb15d68ef3741abfb8843763fce5}{ACPY3\_\-set\-Final()}.
+
+\begin{itemize}
+\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 0, this routine requires 15 ticks.\item When \_\-ACPY3\_\-DIRTY\_\-BITS is 1, this routine requires 21 ticks.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle. 
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]transfer\-No's wait\-Id is set to 'num\-Waits - 1' \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_start@{ACPY3\_\-start}}
+\index{ACPY3_start@{ACPY3\_\-start}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-start]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-start (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle})}\hfill}
+\label{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}
+
+
+Submit a single or linked transfer using the most recently configured transfer parameter settings. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle. 
+
+Channel must be in 'active' state. 
+
+Channel must be in 'configured' state.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]handle-$>$transfer\-Pending = TRUE\end{Desc}
+\begin{Desc}
+\item[Remarks:]Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-START\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file.
+
+\hyperlink{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}{ACPY3\_\-start()} requires the following number of ticks: \begin{TabularC}{3}
+\hline
+Number of Linked Transfers &ACPY3\_\-DIRTY\_\-BITS=0 &ACPY3\_\-DIRTY\_\-BITS=1  \\\hline
+1, 2, or 3 &89 &101  \\\hline
+4, 8, 12, or 16 &92 &110  \\\hline
+all other numbers &149 &167  \\\hline
+\end{TabularC}
+\end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_wait@{ACPY3\_\-wait}}
+\index{ACPY3_wait@{ACPY3\_\-wait}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-wait]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-wait (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}
+
+
+Wait for all data transfers on a logical channel to complete. 
+
+\hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait()} uses wait\-Id 'num\-Waits - 1' to wait for the completion of all transfers. Therefore, this wait\-Id should not be used to configure any intermediate transfers.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle 
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]handle-$>$transfer\-Pending = FALSE\end{Desc}
+\begin{Desc}
+\item[Remarks:]This function will not return until all the data transfers on the given channel have completed.
+
+Both an inlined version and a non-inlined version of this function are supported. To use the inlined version, add the line \#define ACPY3\_\-WAIT\_\-INLINE or \#define ACPY3\_\-INLINE\_\-ALL to the source file where this function is used. The \#define must go above the line, \#include $<$\hyperlink{acpy3_8h}{acpy3.h}$>$. By default, this function will not be inlined. Another alternative is to define the macro in the build option of the file or of the project file. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g6acf0b26cee48d5cbc81e2c9049128ea}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_waitLinked@{ACPY3\_\-waitLinked}}
+\index{ACPY3_waitLinked@{ACPY3\_\-waitLinked}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-waitLinked]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-wait\-Linked (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, Md\-Uns {\em wait\-Id})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g6acf0b26cee48d5cbc81e2c9049128ea}
+
+
+Wait for an individual transfer in a Linked transfer to finish. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em wait\-Id}]The wait\-Id for the transfer to wait on, that was passed in the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle 
+
+Channel must be in 'active' state. 
+
+0 $<$= wait\-Id $<$ originally requested number of wait\-Id 
+
+Channel contains one transfer T, i-th transfer, such that i $<$ handle-$>$num\-Pa\-Rams and T configured with given wait\-Id.\end{Desc}
+\begin{Desc}
+\item[Remarks:]This function will not return until the data transfer that was configured with 'wait\-Id' has completed. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_ge22deca1f6878a359a619cff8654d9de}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_complete@{ACPY3\_\-complete}}
+\index{ACPY3_complete@{ACPY3\_\-complete}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-complete]{\setlength{\rightskip}{0pt plus 5cm}Bool ACPY3\_\-complete (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle})}\hfill}
+\label{group___d_s_p_a_c_p_y3_ge22deca1f6878a359a619cff8654d9de}
+
+
+Check to see if all dma transfers on logical channel are finished. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Return values:]
+\begin{description}
+\item[{\em TRUE}]No transfers are pending (i.e., \hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait()} has been called since last \hyperlink{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}{ACPY3\_\-start()}), or all transfers on this channel have completed. \item[{\em FALSE}]One or more transfers on this channel have not completed.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle 
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Remarks:]This function will not wait for data transfers to complete, but will return immediately with completion status. 
+
+There is no need to call \hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait()} once \hyperlink{group___d_s_p_a_c_p_y3_ge22deca1f6878a359a619cff8654d9de}{ACPY3\_\-complete()} returns TRUE. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g88a22e18670a97816b27dcd90abf2ae9}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_completeLinked@{ACPY3\_\-completeLinked}}
+\index{ACPY3_completeLinked@{ACPY3\_\-completeLinked}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-completeLinked]{\setlength{\rightskip}{0pt plus 5cm}Bool ACPY3\_\-complete\-Linked (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle}, Md\-Uns {\em wait\-Id})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g88a22e18670a97816b27dcd90abf2ae9}
+
+
+Non-blocking query to check completion of an individual transfer in a Linked transfer. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle. \item[\mbox{$\leftarrow$} {\em wait\-Id}]The wait\-Id for the transfer to check for completion, that was passed in the \hyperlink{struct_a_c_p_y3___params}{ACPY3\_\-Params} to \hyperlink{group___d_s_p_a_c_p_y3_g427e8e4fd5c445b2f9bb5d971c06c099}{ACPY3\_\-configure()}.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Return values:]
+\begin{description}
+\item[{\em TRUE}]No transfers are pending (i.e., \hyperlink{group___d_s_p_a_c_p_y3_g499bc0643a52f5cfd0828c1ce21cd69b}{ACPY3\_\-wait()} has been called since last \hyperlink{group___d_s_p_a_c_p_y3_gb4102200f00a9df3961a8374c0042bed}{ACPY3\_\-start()}), or the individual transfer that was configured with wait\-Id has completed. \item[{\em FALSE}]The transfer configured with wait\-Id has not completed.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid channel handle. 
+
+wait\-Id $<$ handle-$>$num\-Tccs 
+
+Channel must be in 'active' state.\end{Desc}
+\begin{Desc}
+\item[Remarks:]This function will not wait for the data transfer to complete, but will return immediately with completion status. 
+
+There is no need to call \hyperlink{group___d_s_p_a_c_p_y3_g6acf0b26cee48d5cbc81e2c9049128ea}{ACPY3\_\-wait\-Linked()} once \hyperlink{group___d_s_p_a_c_p_y3_g88a22e18670a97816b27dcd90abf2ae9}{ACPY3\_\-complete\-Linked()} returns TRUE. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_gf9dc07965774895d79323a47b36cc442}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_activate@{ACPY3\_\-activate}}
+\index{ACPY3_activate@{ACPY3\_\-activate}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-activate]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-activate (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle})}\hfill}
+\label{group___d_s_p_a_c_p_y3_gf9dc07965774895d79323a47b36cc442}
+
+
+Activate the given channel. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]{\tt handle} must be a valid channel handle.
+
+Algorithm instance must be in \char`\"{}active\char`\"{} state using IALG interface.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]Channel is in 'active' state, any ACPY3 APIs can be called using this handle.
+
+handle-$>$transfer\-Pending == FALSE \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_g2736d2e136e868577a71710571027de5}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_deactivate@{ACPY3\_\-deactivate}}
+\index{ACPY3_deactivate@{ACPY3\_\-deactivate}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-deactivate]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-deactivate (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em handle})}\hfill}
+\label{group___d_s_p_a_c_p_y3_g2736d2e136e868577a71710571027de5}
+
+
+Deactivates the given channel. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em handle}]IDMA3 channel handle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]{\tt handle} must be a valid channel handle.
+
+Channel must be in 'active' state.
+
+Algorithm instance must be in 'active' state using IALG interface\end{Desc}
+\begin{Desc}
+\item[Postcondition:]Channel is in 'deactivated' state. \end{Desc}
+\hypertarget{group___d_s_p_a_c_p_y3_gc79227aad8cb9f68ab67da77de81fd17}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_init@{ACPY3\_\-init}}
+\index{ACPY3_init@{ACPY3\_\-init}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-init]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-init (Void)}\hfill}
+\label{group___d_s_p_a_c_p_y3_gc79227aad8cb9f68ab67da77de81fd17}
+
+
+Initialize the ACPY3 module. Called by framework. 
+
+\hypertarget{group___d_s_p_a_c_p_y3_ge7072f7010b53bdeab5ac76737b380af}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_exit@{ACPY3\_\-exit}}
+\index{ACPY3_exit@{ACPY3\_\-exit}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-exit]{\setlength{\rightskip}{0pt plus 5cm}Void ACPY3\_\-exit (Void)}\hfill}
+\label{group___d_s_p_a_c_p_y3_ge7072f7010b53bdeab5ac76737b380af}
+
+
+Finalization of the ACPY3 module. 
+
+
+
+\subsubsection{Variable Documentation}
+\hypertarget{group___d_s_p_a_c_p_y3_g7171d01619b7fc26dbb11eb9aaf1a3b2}{
+\index{DSPACPY3@{DSPACPY3}!ACPY3_PROTOCOL@{ACPY3\_\-PROTOCOL}}
+\index{ACPY3_PROTOCOL@{ACPY3\_\-PROTOCOL}!DSPACPY3@{DSPACPY3}}
+\paragraph[ACPY3\_\-PROTOCOL]{\setlength{\rightskip}{0pt plus 5cm}\hyperlink{struct_i_d_m_a3___protocol_obj}{IDMA3\_\-Protocol\-Obj} \hyperlink{group___d_s_p_a_c_p_y3_g7171d01619b7fc26dbb11eb9aaf1a3b2}{ACPY3\_\-PROTOCOL}}\hfill}
+\label{group___d_s_p_a_c_p_y3_g7171d01619b7fc26dbb11eb9aaf1a3b2}
+
+

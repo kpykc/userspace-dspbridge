@@ -1,0 +1,896 @@
+/*
+ *  ======== node.tci ========
+ *
+ *  This file defines three dummy MEM objects: DYN_SARAM, DYN_DARAM, and
+ *  DYN_EXTERNAL.  They are mapped to DYNM memory regions 0, 1, and 2,
+ *  respectively.  The DYNM regions are mapped accordingly to a valid MEM
+ *  section by the OEM base image.  These are place holders so that a NODE
+ *  can specify internal or external memory, rather than a specific memory
+ *  segment.
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var STATIC_LOAD = 0;
+var DYNAMIC_LOAD = 1;
+var OVERLAY_LOAD = 2;
+
+var NODE_DEVICE     = 0;
+var NODE_TASK       = 1;
+var NODE_DAISSOCKET = 2;
+
+var NUMPROFILES = 16; /* Max # of node profiles supported. */
+
+/*
+ *  Defines for packing dynamic load memory requirements into two
+ *  masks, one for code and one for data.
+ *  Need to pack since number of parameters passed to NODE_Obj
+ *  macro is limited.
+ *  Since DYNM objects must be pre-created, we have limited them to 32.
+ *  Therefore, we need 5 bits to represent them.
+ *  Format of data and code masks are:
+ *
+ *   uuuuuuuu|fueeeeee|fudddddd|fucccccc|
+ *  where
+ *      u = unused
+ *      cccccc = pref/req dynamic mem segid for create phase data/code
+ *      dddddd = pref/req dynamic mem segid for delete phase data/code
+ *      eeeeee = pref/req. dynamic mem segid for execute phase data/code
+ *      f = required flag = 1 if required, 0 if preferred.
+ *
+ *  This would allow for a maximum of 64 dynamic loading memory segments
+ *  (0-31), specified by the 0th to 5th bits. However, if the 5th bit is
+ *  set, this will give a different meaning to the segid:
+ *      segid = 32 - Any internal memory segment can be used
+ *      segid = 33 - Any external memory segment can be used
+ *      segid = 63 - Any memory segment can be used
+ *
+ */
+var CREATEMASK  = 0x000000ff;
+var CREATEBIT   = 0;
+var DELETEMASK  = 0x0000ff00;
+var DELETEBIT   = 8;
+var EXECUTEMASK = 0x00ff0000;
+var EXECUTEBIT  = 16;
+
+var CREATEPHASE  = 0;
+var DELETEPHASE  = 1;
+var EXECUTEPHASE = 2;
+
+var CODEMASK   = 0;
+var DATAMASK   = 1;
+
+var NULLID     = 63;
+var MEMDARAMID = 0;
+var MEMSARAMID = 1;
+var MEMEXTID   = 2;
+var MEMEXT2ID  = 3;
+
+var NULLMASK = 0xff3f3f3f;
+var SEGBITS  = 0x7f;		/* Bits 0 - 6 */
+var FLAGBIT  = 7			/* 7th bit is pref./req. flag */
+
+var SYSSTACKSIZE = prog.module("TSK").SYSSTACKSIZE;
+
+var DMAN_DEFAULTCHANNEL = 4;
+
+var IDMA_Fxn = new Extern("IDMA_Fxn");
+var MEM_NULL = prog.module("MEM").instance("MEM_NULL");
+
+var $$name = "NODE";
+
+var $$label = "Properties for DSP Bridge NODE objects";
+
+/* Global properties for NODE object */
+var $$global = [
+        {
+            name : "MSGFRAMESEG",
+            val  : prog.module("MEM").BIOSOBJSEG,
+            label: "Memory segment for message frames",
+            type : "Object",
+            test : ["isMemSegment"]
+        },
+        {
+            name : "MAXNODEHEAPS",
+            val  : 32,
+            label: "Max # of nodes with external heaps",
+            type : "Integer",
+            test : ["isValidMaxNodeHeaps"],
+        },
+            ];
+
+/* Per instance properties */
+var $$instance = [
+        {
+            name : "uuid",
+            val  : "12345678_1234_1234_1234_12345678ABCD",
+            label: "DSP_UUID (UUID)",
+            type : "String",
+        },
+        {
+            name : "name",
+            val  : "nodeName",
+            label: "Node name",
+            type : "String",
+        },
+        {
+            name : "nodeType",
+            val  : "TASKNODE",
+            label: "Node type",
+            type : "String",
+            test : ["setNodeType"],
+        },
+        {
+            /* TBD: Property was not visible in original CDB.  Remove? */
+            name : "bCacheOnGPP",
+            val  : false,
+            label: "GPP cache flag",
+            type : "Boolean",
+        },
+        {
+            /* TBD: Does not appear to be in use. Remove? */
+            name : "dspr_cbStruct",
+            val  : 1024,
+            label: "Static data size",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use. Remove? */
+            name : "dspr_uStaticDataSize",
+            val  : 512,
+            label: "Static data size",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_uGlobalDataSize",
+            val  : 128,
+            label: "Global data size",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_ProgMemSize",
+            val  : 3072,
+            label: "Program memory size",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_uWCExecutionTime",
+            val  : 5,
+            label: "Execution time",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_uWCPeriod",
+            val  : 3,
+            label: "Period",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_uWCDeadline",
+            val  : 1000,
+            label: "Deadline",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_uAvgExecutionTime",
+            val  : 100,
+            label: "Average execution time",
+            type : "Integer",
+        },
+        {
+            /* TBD: Does not appear to be in use.  Remove? */
+            name : "dspr_MinPeriod",
+            val  : 10,
+            label: "Minimum period",
+            type : "Integer",
+        },
+        {
+            name : "priority",
+            val  : 1,
+            label: "Runtime priority",
+            type : "Integer",
+            test : ["isValidNodePriority"],
+        },
+        {
+            name : "stackSize",
+            val  : 128,
+            label: "Stack size (MAUs)",
+            type : "Integer",
+            test : ["isValidStackSize"],
+        },
+        {
+            /*
+             * System stack size for 55x.  Set to arbitrary value for non-55x
+             *  platforms since it won't be used.
+             */
+            name : "sysStackSize",
+            val  : SYSSTACKSIZE,
+            label: "System stack size (MAUs)",
+            type : "Integer",
+            test : ["isValidSysStackSize"],
+        },
+        {
+            name : "stackSeg",
+            val  : 0,
+            label: "Stack segment",
+            type : "Integer",
+            test : ["isValidStackSeg"],
+        },
+        {
+            name : "messageDepth",
+            val  : 1,
+            label: "Maximum messages queued to node",
+            type : "Integer",
+            test : ["isValidMessageDepth"],
+        },
+        {
+            name : "numInputStreams",
+            val  : 1,
+            label: "# of node input streams",
+            type : "Integer",
+            test : ["isValidNodeStream"],
+        },
+        {
+            name : "numOutputStreams",
+            val  : 1,
+            label: "# of node output streams",
+            type : "Integer",
+            test : ["isValidNodeStream"],
+        },
+        {
+            name : "timeout",
+            val  : 10000,
+            label: "Timeout value of GPP blocking calls (milliseconds):",
+            type : "Integer",
+            test : ["isValidTimeout"],
+        },
+        {
+            name : "createFxn",
+            val  : "createFxnName",
+            label: "Create Phase Function Name",
+            type : "String",
+        },
+        {
+            name : "loadType",
+            val  : "Static",
+            label: "Load type of node",
+            type : "String",
+            test : ["isValidLoadType"],
+        },
+        {
+            name : "splitPhases",
+            val  : false,
+            label: "Phases split across multiple libraries",
+            type : "Boolean",
+        },
+        {
+            name : "createCodeSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for create phase code",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireCreateCodeSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+        {
+            name : "createDataSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for create phase data",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireCreateDataSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+        {
+            name : "executeFxn",
+            val  : "executeFxnName",
+            label: "Execute Phase Function Name:",
+            type : "String",
+        },
+        {
+            name : "executeCodeSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for execute phase code",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireExecuteCodeSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+        {
+            name : "executeDataSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for execute phase data",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireExecuteDataSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+        {
+            name : "deleteFxn",
+            val  : "deleteFxnName",
+            label: "Delete Phase Function Name:",
+            type : "String",
+        },
+        {
+            name : "deleteCodeSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for delete phase code",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireDeleteCodeSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+        {
+            name : "deleteDataSeg",
+            val  : MEM_NULL,
+            label: "Preferred memory segment for delete phase data",
+            type : "Object",
+            test : ["setMemSegment", "isDynPlaceholder"],
+        },
+        {
+            name : "requireDeleteDataSeg",
+            val  : false,
+            label: "Always use this segment",
+            type : "Boolean",
+        },
+            /*
+             * TBD: Original CDB comments indicate uMsgSegid, sNotifyType, and
+             * nNotifyType are no longer used.  If this is true, remove
+             * these properties. Keep for now to maintain order in asm file.
+             */
+        {
+            name : "uMsgSegid",
+            val  : 0,
+            label: "Segment for message buffers",
+            type : "Integer",
+            // TBD: temporarily disabled to bypass debug error.
+            //test : ["isValidMsgSegid"],
+        },
+        {
+            name : "sNotifyType",
+            val  : "Post Semaphore",
+            label: "Message notification type",
+            type : "String",
+        },
+        {
+            name : "algStructName",
+            val  : "iAlgName",
+            label: "Name of structure containing iAlg interface",
+            type : "String",
+        },
+        {
+            /* TBD: @@internal */
+            name : "bRegisterObject",
+            val  : true,
+            label: "Register in DCD database",
+            type : "Boolean",
+            test : ["enableObjectRegistration"],
+        },
+        {
+            /* THIS MAY NO LONGER BE NEEDED */
+            name : "dcdRegAndDyn",
+            val  : true,
+            label: "Register and dynamic load",
+            type : "Boolean",
+        },
+        {
+            name : "dataMask",
+            val  : NULLMASK,
+            label: "data mask",
+            type : "Hexadecimal",
+        },
+        {
+            name : "codeMask",
+            val  : NULLMASK,
+            label: "code mask",
+            type : "Hexadecimal",
+        },
+        {
+            name : "usesDMA",
+            val  : false,
+            label: "Uses DMA",
+            type : "Boolean",
+        },
+        {
+            name : "iDMAFxns",
+            val  : IDMA_Fxn,
+            label: "iDMA Function Pointer",
+            type : "Object",
+        },
+        {
+            name : "queueId0",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 0 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId1",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 1 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId2",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 2 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId3",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 3 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId4",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 4 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId5",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 5 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId6",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 6 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "queueId7",
+            val  : DMAN_DEFAULTCHANNEL,
+            label: "QueueId 7 is mapped to channel",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile0",
+            val  : 0,
+            label: "Dynamic heap size for profile 0 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile1",
+            val  : 0,
+            label: "Dynamic heap size for profile 1 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile2",
+            val  : 0,
+            label: "Dynamic heap size for profile 2 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile3",
+            val  : 0,
+            label: "Dynamic heap size for profile 3 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile4",
+            val  : 0,
+            label: "Dynamic heap size for profile 4 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile5",
+            val  : 0,
+            label: "Dynamic heap size for profile 5 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile6",
+            val  : 0,
+            label: "Dynamic heap size for profile 6 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile7",
+            val  : 0,
+            label: "Dynamic heap size for profile 7 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile8",
+            val  : 0,
+            label: "Dynamic heap size for profile 8 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile9",
+            val  : 0,
+            label: "Dynamic heap size for profile 9 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile10",
+            val  : 0,
+            label: "Dynamic heap size for profile 10 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile11",
+            val  : 0,
+            label: "Dynamic heap size for profile 11 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile12",
+            val  : 0,
+            label: "Dynamic heap size for profile 12 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile13",
+            val  : 0,
+            label: "Dynamic heap size for profile 13 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile14",
+            val  : 0,
+            label: "Dynamic heap size for profile 14 (MAUs):",
+            type : "Integer",
+        },
+        {
+            name : "heapSizeProfile15",
+            val  : 0,
+            label: "Dynamic heap size for profile 15 (MAUs):",
+            type : "Integer",
+        },
+        {
+	    name : "stackSegName",
+	    val  : "stackSegName",
+	    label: "Node Stack Segment name",
+	    type : "String",
+	},
+        
+            ];
+
+var $$template = 
+    {
+        asmSource : "ti/dspbridge/dsp/tconf/modules/node_asm.tpl",
+        cSource   : "ti/dspbridge/dsp/tconf/modules/node_c.tpl",
+        linker    : "ti/dspbridge/dsp/tconf/modules/node_cmd.tpl",
+    };
+
+/* Module's init function */
+var $$initFxn = prog.extern("NODE_initCfg");
+
+/*
+ *  ======== Test Functions ========
+ *  Test functions should be sorted alphabetically to help developers locate the
+ *  desired function.
+ */
+function enableObjectRegistration (text, val)
+{
+    this.dcdRegAndDyn = val;
+}
+
+function isMemSegment (text, obj)
+{
+    if (dspbridge.module("BRIDGE").BRIDGELIB) {
+        return;
+    }
+    dspbridge.$$test.isMemSegment(text, obj);
+}
+
+function isValidLoadType (text, val)
+{
+    /* device node can only be static */
+    if (this.nodeType == "DEVNODE") {
+        return;
+    }
+ 
+    switch (val) {
+    case "Overlay":
+    case "Static":
+        if (dspbridge.module("BRIDGE").BRIDGELIB) {
+            throw (text + " must be set to \"Dynamic\" for a dynamic cfg");
+        }
+        break;
+    case "Dynamic":
+        if (!dspbridge.module("BRIDGE").BRIDGELIB) {
+            throw (text + " cannot be set to \"Dynamic\" for a static cfg");
+        }
+        break;
+        break;
+        
+    default:
+        throw (text + " is not a valid load type for a node instance");
+        break;
+    }
+}
+
+function isValidMessageDepth (text, val)
+{
+    if (val < 1) {
+        throw (text + ": Number of message frames must be > 0");
+    }
+}
+
+function isValidMsgSegid (text, val)
+{
+    if ( (val < 0) || (val >= prog.module("MEM").gNumHeap) ) {
+        throw (text + ": Memory segment is out of range");
+    }
+}
+
+function isValidNodePriority (text, val)
+{
+    if ((val < 1) || (val > 15)) {
+        throw (text + " is out of valid node priority range");
+    }
+}
+
+function isValidNodeStream (text, val)
+{
+    if ((val < 0) || (val > 8)) {
+        throw (text + " is out of valid stream value range");
+    }
+}
+
+function isValidStackSeg (text, val)
+{
+    if (dspbridge.module("BRIDGE").BRIDGELIB) {
+        return;
+    }
+
+    if ( (val < 0) || (val >= prog.module("MEM").gNumHeap) ) {
+        throw (text + ": Memory segment is out of range");
+    }
+}
+
+function isValidStackSize (text, val)
+{
+    if (val < 32) {
+        throw (text + " cannot be smaller than 32 MAUs");
+    }
+
+    /* TBD: Do we worry about stack size alignment at this point? */
+}
+
+function isValidSysStackSize (text, val)
+{
+    if (val < 16) {
+        throw (text + " cannot be smaller than 16 MAUs");
+    }
+
+    /* TBD: Do we worry about stack size alignment at this point? */
+}
+
+function isValidTimeout (text, val)
+{
+    if (val < -1) {
+        throw (text + ": Timeout must be >= 0 or -1 (DSP_FOREVER)");
+    }
+}
+
+function isValidMaxNodeHeaps (text, val)
+{
+    if (dspbridge.module("BRIDGE").BRIDGELIB) {
+        return;
+    }
+    if (val < 0) {
+        throw (text + " must be >= 0");
+    }
+}
+
+function isDynPlaceholder (text, val)
+{
+    var DYN_SRAM_TMP = prog.module("MEM").instance("DYN_SRAM");
+    var DYN_SARAM_TMP = prog.module("MEM").instance("DYN_SARAM");
+    var DYN_DARAM_TMP = prog.module("MEM").instance("DYN_DARAM");
+    var DYN_EXTERNAL_TMP = prog.module("MEM").instance("DYN_EXTERNAL");
+
+    if ((val != DYN_SARAM_TMP) && (val != DYN_DARAM_TMP) &&
+        (val != DYN_EXTERNAL_TMP) && (val != DYN_SRAM_TMP) &&
+        (val != MEM_NULL)) {
+        throw (val.name + " is not a valid dynamic abstract data type.");
+    }
+}
+
+function setMemSegment (text, val)
+{
+    var propName;
+    var phaseType; /* create/execute/delete */
+    var segmentType; /* CODEMASK/DATAMASK */
+    var requireMemSegFlag;
+    var memId;
+    var phaseVal;
+    var requiredSeg;
+
+    /* Extract the phase name (create/execute/delete) and segment type
+       (code/data). */
+    propName = text.replace(/^.*::/gi, "");
+
+    phaseType = (propName.search(/create/i) != -1) ?   "create" :
+                ((propName.search(/execute/i) != -1) ? "execute" :
+                                                       "delete");
+
+    segmentType = ( propName.search(/CodeSeg/) != -1) ? CODEMASK : DATAMASK;
+    memId = this.module.getMemId(val);
+
+    switch (phaseType) {
+    case "create":
+        phaseVal = CREATEPHASE;
+        if (segmentType == CODEMASK) {
+            requiredSeg = this.requireCreateCodeSeg;
+        }
+        else {
+            requiredSeg = this.requireCreateDataSeg;
+        }
+        break;
+
+    case "execute":
+        phaseVal = EXECUTEPHASE;
+        if (segmentType == CODEMASK) {
+            requiredSeg = this.requireExecuteCodeSeg;
+        }
+        else {
+            requiredSeg = this.requireExecuteDataSeg;
+        }
+        break;
+
+    case "delete":
+        phaseVal = DELETEPHASE;
+        if (segmentType == CODEMASK) {
+            requiredSeg = this.requireDeleteCodeSeg;
+        }
+        else {
+            requiredSeg = this.requireDeleteDataSeg;
+        }
+        break;
+    }
+
+    this.module.setMemIdMask(segmentType, phaseVal, memId, requiredSeg, this);
+}
+
+function setNodeType (text, val)
+{
+    switch (val) {
+        case "DEVNODE":
+        this.loadType = "Static";
+        break;
+
+        case "TASKNODE":
+        case "XDAISNODE":
+        break;
+
+        default:
+        throw (text + " is not a valid type for a node instance");
+        break;
+    }
+}
+
+/*
+ *  ======== Internal Helper Functions ========
+ *  Helper functions should be listed alphabetically.
+ */
+function getMemId (mem)
+{
+    var retval;
+    var DYN_SARAM_TMP = prog.module("MEM").instance("DYN_SARAM");
+    var DYN_DARAM_TMP = prog.module("MEM").instance("DYN_DARAM");
+    var DYN_EXTERNAL_TMP = prog.module("MEM").instance("DYN_EXTERNAL");
+    var DYN_SRAM_TMP = prog.module("MEM").instance("DYN_SRAM");
+
+    switch (mem) {
+        case DYN_SARAM_TMP:
+            retval = MEMSARAMID;
+            break;
+
+        case DYN_DARAM_TMP:
+            retval = MEMDARAMID;
+            break;
+
+        case DYN_EXTERNAL_TMP:
+            retval = MEMEXTID;
+            break;
+
+        case DYN_SRAM_TMP:
+            retval = MEMEXT2ID;
+            break;
+
+        case MEM_NULL:
+            retval = NULLID;
+            break;
+    }
+
+    return (retval);
+}
+
+function setMemIdMask (mask, phase, segid, flag, inst)
+{
+    var maskval = (segid & SEGBITS) | (flag << FLAGBIT);
+    var b;
+
+    if (phase == DELETEPHASE) {
+        maskval = (maskval << DELETEBIT);
+        b = ~DELETEMASK;
+    }
+    else {
+        if (phase == EXECUTEPHASE) {
+            maskval = (maskval << EXECUTEBIT);
+            b = ~EXECUTEMASK;
+        }
+        else {
+            b = ~CREATEMASK;
+        }
+    }
+
+    if (mask == DATAMASK) {
+        inst.dataMask = (inst.dataMask & b) | maskval;
+    }
+    else {
+        inst.codeMask = (inst.codeMask & b) | maskval;
+    }
+}
+
+/*
+ *  ======== Module Initialization ========
+ */
+function init ()
+{
+    if (dspbridge.module("BRIDGE").BRIDGELIB) {
+        // Only generate these abstract mem segments for dynamic libs
+        // The following MEM segments are "abstract"; thus their base
+        // and length are set so as to not obstruct BIOS overlap checking
+        var dyn_daram_tmp = prog.module("MEM").create("DYN_DARAM");
+        var dyn_saram_tmp = prog.module("MEM").create("DYN_SARAM");
+        var dyn_external_tmp = prog.module("MEM").create("DYN_EXTERNAL");
+        var dyn_sram_tmp = prog.module("MEM").create("DYN_SRAM");
+    }
+}
+
+/*
+ *  ======== Module Validation ========
+ */
+function validate ()
+{
+    /* make sure nodes' uuids are unique */
+    if (1) {
+        var f = {};
+        var insts = this.instances()
+        for (var i = 0 ; i < insts.length ; i++) {
+            var a = insts[i];;
+            if (f[a.uuid] != undefined) {
+                throw ("Node " + a.name + " has same uuid as " + f[a.uuid]);
+            }
+
+            f[a.uuid] = a.name;
+        }
+    }
+
+    /* Instantiate fields not exposed to the end user. */
+    this.bRegisterObject = true;
+}

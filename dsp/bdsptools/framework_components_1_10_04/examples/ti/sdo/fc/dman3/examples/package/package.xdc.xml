@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.dman3.examples' release='' xmlns='xdc/spec'>
+    <imports name='ti.bios' version=''/>
+    <imports name='ti.sdo.fc.dman3' version=''/>
+    <imports name='ti.sdo.fc.acpy3' version=''/>
+    <imports name='ti.sdo.fc.utils' version=''/>
+    <imports name='ti.sdo.fc.utils.api' version=''/>
+    <autodoc tag='summary'>
+        <comment line='18' text='++Framework+Components%27+DMAN3+examples.'/>
+    </autodoc>
+</package>

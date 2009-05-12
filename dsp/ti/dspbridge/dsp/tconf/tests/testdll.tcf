@@ -1,0 +1,62 @@
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridgedll");
+
+
+var myNode1 = bridge.NODE.create("testNode1");
+myNode1.stack = 1024;
+myNode1.loadType = "Dynamic";
+
+print ("asas "+myNode1.name);
+
+var myNode2 = bridge.NODE.create("testNode2");
+myNode2.stack = 200;
+myNode2.loadType = "Dynamic";
+
+var myNode3 = bridge.NODE.create("testNode3");
+myNode3.loadType = "Dynamic";
+
+var pingNode = bridge.NODE.create("pingNode");
+pingNode.uuid = "12A3C3C1_D015_11D4_9F69_00C04F3A59AE";
+pingNode.name = "PING_TI";
+pingNode.nodeType = "TASKNODE";
+pingNode.priority = 1;
+pingNode.stackSize = 0x200;
+pingNode.stackSeg = 0;
+pingNode.messageDepth = 2;
+pingNode.numInputStreams = 0;
+pingNode.numOutputStreams = 0;
+pingNode.timeout = 2000;
+pingNode.createFxn = "PING_TI_create";
+pingNode.executeFxn = "PING_TI_execute";
+pingNode.deleteFxn = "PING_TI_delete";
+
+pingNode.loadType = "Dynamic";
+pingNode.splitPhases = true;
+
+/* TBD: temporarily commented out due to memory segment errors */
+if (pingNode.splitPhases) {
+    pingNode.createCodeSeg = bridge.DYN_SARAM;
+    pingNode.createDataSeg = bridge.DYN_DARAM;
+    pingNode.executeCodeSeg = bridge.DYN_SARAM;
+    pingNode.executeDataSeg = bridge.DYN_DARAM;
+    pingNode.deleteCodeSeg = bridge.DYN_EXTERNAL;
+    pingNode.deleteDataSeg = bridge.DYN_DARAM;
+
+} else {
+    pingNode.createCodeSeg = bridge.DYN_SARAM;
+    pingNode.createDataSeg = bridge.DYN_DARAM;
+}
+pingNode.createDataSeg = bridge.MEM_NULL;
+
+//myNode1.dynamic = "0";
+
+prog.gen("hohoho");
+

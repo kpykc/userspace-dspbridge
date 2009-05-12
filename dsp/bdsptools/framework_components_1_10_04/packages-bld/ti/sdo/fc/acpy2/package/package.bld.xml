@@ -1,0 +1,371 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.fc.acpy2" version="">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="mgs3/acpy2_enhancement.c"/>
+        <srcFile name="dma4/acpy2_omap_callback.c"/>
+        <srcFile name="dma4/acpy2_omap_instrumentation.c"/>
+        <srcFile name="dma4/acpy2start.s55"/>
+        <srcFile name="acpy2_init.c"/>
+        <srcFile name="mgs3/acpy2_configure.c"/>
+        <srcFile name="dma4/acpy2_complete.c"/>
+        <srcFile name="dma4/acpy2_wait.c"/>
+        <srcFile name="dma4/acpy2_omap.c"/>
+        <srcFile name="dma4/acpy2wait.s55"/>
+        <srcFile name="mgs3/acpy2_isr.s55"/>
+        <srcFile name="package/package.c"/>
+        <srcFile name="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <srcFile name="mgs3/acpy2_omap_callback.c"/>
+        <srcFile name="acpy2_exit.c"/>
+        <srcFile name="mgs3/dma.c"/>
+        <srcFile name="mgs3/acpy2_omap_instrumentation.c"/>
+        <srcFile name="mgs3/acpy2_omap_impl.c"/>
+        <srcFile name="mgs3/acpy2_wait.s55"/>
+        <srcFile name="mgs3/acpy2_reservedisrs.s55"/>
+        <srcFile name="dma4/acpy2_start.c"/>
+        <srcFile name="dma4/acpy2_configure.c"/>
+        <srcFile name="dma4/acpy2_enhancement.c"/>
+        <srcFile name="mgs3/acpy2_start.s55"/>
+        <srcFile name="mgs3/acpy2_complete.c"/>
+        <srcFile name="dma4/acpy2_isr.s55"/>
+        <srcFile name="dma4/dma.c"/>
+    </sources>
+    <configurations>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="acpy2_mgs3.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_reservedisrs.o55L.dep" src="mgs3/acpy2_reservedisrs.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_configure.o55L.dep" src="mgs3/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_isr.o55L.dep" src="mgs3/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_start.o55L.dep" src="mgs3/acpy2_start.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_omap_instrumentation.o55L.dep" src="mgs3/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_omap_impl.o55L.dep" src="mgs3/acpy2_omap_impl.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_wait.o55L.dep" src="mgs3/acpy2_wait.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_enhancement.o55L.dep" src="mgs3/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_omap_callback.o55L.dep" src="mgs3/acpy2_omap_callback.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_omap_reservephysicalchannel.o55L.dep" src="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/dma.o55L.dep" src="mgs3/dma.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/mgs3/acpy2_complete.o55L.dep" src="mgs3/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_mgs3/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="acpy2_mgs3_rtsd.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_reservedisrs.o55L.dep" src="mgs3/acpy2_reservedisrs.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_configure.o55L.dep" src="mgs3/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_isr.o55L.dep" src="mgs3/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_start.o55L.dep" src="mgs3/acpy2_start.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_omap_instrumentation.o55L.dep" src="mgs3/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_omap_impl.o55L.dep" src="mgs3/acpy2_omap_impl.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_wait.o55L.dep" src="mgs3/acpy2_wait.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_enhancement.o55L.dep" src="mgs3/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_omap_callback.o55L.dep" src="mgs3/acpy2_omap_callback.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_omap_reservephysicalchannel.o55L.dep" src="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/dma.o55L.dep" src="mgs3/dma.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/mgs3/acpy2_complete.o55L.dep" src="mgs3/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rtsd/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="acpy2_mgs3_rts.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_reservedisrs.o55L.dep" src="mgs3/acpy2_reservedisrs.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_configure.o55L.dep" src="mgs3/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_isr.o55L.dep" src="mgs3/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_start.o55L.dep" src="mgs3/acpy2_start.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_omap_instrumentation.o55L.dep" src="mgs3/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_omap_impl.o55L.dep" src="mgs3/acpy2_omap_impl.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_wait.o55L.dep" src="mgs3/acpy2_wait.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_enhancement.o55L.dep" src="mgs3/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_omap_callback.o55L.dep" src="mgs3/acpy2_omap_callback.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_omap_reservephysicalchannel.o55L.dep" src="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/dma.o55L.dep" src="mgs3/dma.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/mgs3/acpy2_complete.o55L.dep" src="mgs3/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_mgs3_rts/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="acpy2_dma4.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_complete.o55L.dep" src="dma4/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_dma4/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_start.o55L.dep" src="dma4/acpy2_start.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_isr.o55L.dep" src="dma4/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_wait.o55L.dep" src="dma4/acpy2_wait.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/dma.o55L.dep" src="dma4/dma.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2start.o55L.dep" src="dma4/acpy2start.s55"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_configure.o55L.dep" src="dma4/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_dma4/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_omap.o55L.dep" src="dma4/acpy2_omap.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_omap_instrumentation.o55L.dep" src="dma4/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2wait.o55L.dep" src="dma4/acpy2wait.s55"/>
+        <srcFile name="package/lib/acpy2_dma4/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_enhancement.o55L.dep" src="dma4/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_dma4/dma4/acpy2_omap_callback.o55L.dep" src="dma4/acpy2_omap_callback.c"/>
+        <srcFile name="acpy2_mgs3d.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_reservedisrs.o55L.dep" src="mgs3/acpy2_reservedisrs.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_configure.o55L.dep" src="mgs3/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_isr.o55L.dep" src="mgs3/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_start.o55L.dep" src="mgs3/acpy2_start.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_omap_instrumentation.o55L.dep" src="mgs3/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_omap_impl.o55L.dep" src="mgs3/acpy2_omap_impl.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_wait.o55L.dep" src="mgs3/acpy2_wait.s55"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_enhancement.o55L.dep" src="mgs3/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_omap_callback.o55L.dep" src="mgs3/acpy2_omap_callback.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_omap_reservephysicalchannel.o55L.dep" src="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/dma.o55L.dep" src="mgs3/dma.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/mgs3/acpy2_complete.o55L.dep" src="mgs3/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_mgs3d/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="acpy2_dma4_rtsd.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_complete.o55L.dep" src="dma4/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_start.o55L.dep" src="dma4/acpy2_start.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_isr.o55L.dep" src="dma4/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_wait.o55L.dep" src="dma4/acpy2_wait.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/dma.o55L.dep" src="dma4/dma.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2start.o55L.dep" src="dma4/acpy2start.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_configure.o55L.dep" src="dma4/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_omap.o55L.dep" src="dma4/acpy2_omap.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_omap_instrumentation.o55L.dep" src="dma4/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2wait.o55L.dep" src="dma4/acpy2wait.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_enhancement.o55L.dep" src="dma4/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rtsd/dma4/acpy2_omap_callback.o55L.dep" src="dma4/acpy2_omap_callback.c"/>
+        <srcFile name="acpy2_dma4_rts.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_complete.o55L.dep" src="dma4/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_start.o55L.dep" src="dma4/acpy2_start.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_isr.o55L.dep" src="dma4/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_wait.o55L.dep" src="dma4/acpy2_wait.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/dma.o55L.dep" src="dma4/dma.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2start.o55L.dep" src="dma4/acpy2start.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_configure.o55L.dep" src="dma4/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_omap.o55L.dep" src="dma4/acpy2_omap.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_omap_instrumentation.o55L.dep" src="dma4/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2wait.o55L.dep" src="dma4/acpy2wait.s55"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_enhancement.o55L.dep" src="dma4/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_dma4_rts/dma4/acpy2_omap_callback.o55L.dep" src="dma4/acpy2_omap_callback.c"/>
+        <srcFile name="acpy2_dma4d.a55L.mak" src="package.bld"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_complete.o55L.dep" src="dma4/acpy2_complete.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/package.o55L.dep" src="package/package.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_start.o55L.dep" src="dma4/acpy2_start.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_isr.o55L.dep" src="dma4/acpy2_isr.s55"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_wait.o55L.dep" src="dma4/acpy2_wait.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/dma.o55L.dep" src="dma4/dma.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2start.o55L.dep" src="dma4/acpy2start.s55"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_configure.o55L.dep" src="dma4/acpy2_configure.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/acpy2_exit.o55L.dep" src="acpy2_exit.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_omap.o55L.dep" src="dma4/acpy2_omap.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_omap_instrumentation.o55L.dep" src="dma4/acpy2_omap_instrumentation.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2wait.o55L.dep" src="dma4/acpy2wait.s55"/>
+        <srcFile name="package/lib/acpy2_dma4d/acpy2_init.o55L.dep" src="acpy2_init.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_enhancement.o55L.dep" src="dma4/acpy2_enhancement.c"/>
+        <srcFile name="package/lib/acpy2_dma4d/dma4/acpy2_omap_callback.o55L.dep" src="dma4/acpy2_omap_callback.c"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy2,src.tar.dep" src="package/rel/ti_sdo_fc_acpy2,src.inc"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy2,bld.tar.dep" src="package/rel/ti_sdo_fc_acpy2,bld.inc"/>
+        <srcFile name="package/rel/ti_sdo_fc_acpy2.tar.dep" src="package/rel/ti_sdo_fc_acpy2.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.C55_large"
+            version="ti.targets.C55_large{1,0,3.2,2"
+            platform="ti.platforms.sim55xx"
+            isa="55"
+            suffix="55L"
+            rootDir="/db/atree/library/trees/depot/cgt55-3.2.2"
+            os="undefined"
+            rts="ti.targets.rts5500">
+            <model endian="undefined"
+                codeModel="undefined"
+                dataModel="large"/>
+        </target>
+    </targets>
+    <libraries>
+    <library name="acpy2_mgs3"
+        pname="acpy2_mgs3.a55L"
+        profile="bridge_release"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_mgs3_rtsd"
+        pname="acpy2_mgs3_rtsd.a55L"
+        profile="bridge_debug"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_mgs3_rts"
+        pname="acpy2_mgs3_rts.a55L"
+        profile="bridge_release"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_dma4"
+        pname="acpy2_dma4.a55L"
+        profile="bridge_release"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_mgs3d"
+        pname="acpy2_mgs3d.a55L"
+        profile="bridge_debug"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_dma4_rtsd"
+        pname="acpy2_dma4_rtsd.a55L"
+        profile="bridge_debug"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_dma4_rts"
+        pname="acpy2_dma4_rts.a55L"
+        profile="bridge_release"
+        target="ti.targets.C55_large"/>
+    <library name="acpy2_dma4d"
+        pname="acpy2_dma4d.a55L"
+        profile="bridge_debug"
+        target="ti.targets.C55_large"/>
+    </libraries>
+    <executables>
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_fc_acpy2,src"
+        pname="ti_sdo_fc_acpy2,src.tar"
+        label="source"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.rel.dot"/>
+        <file name="mgs3/dma.c"/>
+        <file name="acpy2_dma4.a55L"/>
+        <file name="dma4/acpy2_start.c"/>
+        <file name="mgs3/acpy2_start.s55"/>
+        <file name="dma4/acpy2_omap_callback.c"/>
+        <file name="mgs3/acpy2_internal.h"/>
+        <file name="acpy2_mgs3d.a55L"/>
+        <file name="mgs3/acpy2_enhancement.c"/>
+        <file name="acpy2_mgs3.a55L"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="mgs3/acpy2_omap_callback.c"/>
+        <file name="dma4/_dma.h"/>
+        <file name="mgs3/_dmaOmaphw.h"/>
+        <file name="dma4/dma4_omap.h55"/>
+        <file name="mgs3/dma_omap.h55"/>
+        <file name="acpy2_dma4_rts.a55L"/>
+        <file name="mgs3/acpy2_omap_impl.c"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="mgs3/acpy2_omap_instrumentation.c"/>
+        <file name="dma4/acpy2_wait.c"/>
+        <file name="acpy2_omap.h"/>
+        <file name="dma4/acpy2_omap_instrumentation.c"/>
+        <file name="mgs3/acpy2_complete.c"/>
+        <file name="dbc_rts.h"/>
+        <file name="acpy2_omap_instrumentation.h"/>
+        <file name="acpy2_mgs3_rts.a55L"/>
+        <file name="acpy2_dma4_rtsd.a55L"/>
+        <file name="dma4/acpy2_omap.c"/>
+        <file name="dma4/acpy2start.s55"/>
+        <file name="dma4/acpy2_configure.c"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="dma4/_dma.h55"/>
+        <file name="dma4/acpy2wait.s55"/>
+        <file name="acpy2_exit.c"/>
+        <file name="mgs3/acpy2_wait.s55"/>
+        <file name="mgs3/acpy2_reservedisrs.s55"/>
+        <file name="dma4/idma2.h55"/>
+        <file name="dma4/acpy2_isr.s55"/>
+        <file name="dma4/dma.c"/>
+        <file name="acpy2_dma4d.a55L"/>
+        <file name="package/package.c"/>
+        <file name="package/package.bld.xml"/>
+        <file name="dma4/acpy2_enhancement.c"/>
+        <file name="acpy2_init.c"/>
+        <file name="dma4/acpy2_omap.h55"/>
+        <file name="mgs3/acpy2_isr.s55"/>
+        <file name="mgs3/_dma.h"/>
+        <file name="mgs3/acpy2_configure.c"/>
+        <file name="acpy2_mgs3_rtsd.a55L"/>
+        <file name="dma4/_dma4_omap.h"/>
+        <file name="dma4/dma24xx.h55"/>
+        <file name="dma.h"/>
+        <file name="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <file name="dma4/acpy2_complete.c"/>
+        <file name="package/package.ext.xml"/>
+    </release>
+    <release name="ti_sdo_fc_acpy2,bld"
+        pname="ti_sdo_fc_acpy2,bld.tar"
+        label="build"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.rel.dot"/>
+        <file name="mgs3/dma.c"/>
+        <file name="acpy2_dma4.a55L"/>
+        <file name="dma4/acpy2_start.c"/>
+        <file name="mgs3/acpy2_start.s55"/>
+        <file name="dma4/acpy2_omap_callback.c"/>
+        <file name="mgs3/acpy2_internal.h"/>
+        <file name="acpy2_mgs3d.a55L"/>
+        <file name="mgs3/acpy2_enhancement.c"/>
+        <file name="acpy2_mgs3.a55L"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="mgs3/acpy2_omap_callback.c"/>
+        <file name="dma4/_dma.h"/>
+        <file name="mgs3/_dmaOmaphw.h"/>
+        <file name="dma4/dma4_omap.h55"/>
+        <file name="mgs3/dma_omap.h55"/>
+        <file name="acpy2_dma4_rts.a55L"/>
+        <file name="mgs3/acpy2_omap_impl.c"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="mgs3/acpy2_omap_instrumentation.c"/>
+        <file name="dma4/acpy2_wait.c"/>
+        <file name="acpy2_omap.h"/>
+        <file name="dma4/acpy2_omap_instrumentation.c"/>
+        <file name="package.bld"/>
+        <file name="mgs3/acpy2_complete.c"/>
+        <file name="dbc_rts.h"/>
+        <file name="acpy2_omap_instrumentation.h"/>
+        <file name="acpy2_mgs3_rts.a55L"/>
+        <file name="acpy2_dma4_rtsd.a55L"/>
+        <file name="dma4/acpy2_omap.c"/>
+        <file name="dma4/acpy2start.s55"/>
+        <file name="dma4/acpy2_configure.c"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="dma4/_dma.h55"/>
+        <file name="dma4/acpy2wait.s55"/>
+        <file name="acpy2_exit.c"/>
+        <file name="mgs3/acpy2_wait.s55"/>
+        <file name="mgs3/acpy2_reservedisrs.s55"/>
+        <file name="dma4/idma2.h55"/>
+        <file name="dma4/acpy2_isr.s55"/>
+        <file name="dma4/dma.c"/>
+        <file name="acpy2_dma4d.a55L"/>
+        <file name="package/package.c"/>
+        <file name="package/package.bld.xml"/>
+        <file name="dma4/acpy2_enhancement.c"/>
+        <file name="acpy2_init.c"/>
+        <file name="dma4/acpy2_omap.h55"/>
+        <file name="mgs3/acpy2_isr.s55"/>
+        <file name="mgs3/_dma.h"/>
+        <file name="mgs3/acpy2_configure.c"/>
+        <file name="acpy2_mgs3_rtsd.a55L"/>
+        <file name="dma4/_dma4_omap.h"/>
+        <file name="dma4/dma24xx.h55"/>
+        <file name="dma.h"/>
+        <file name="mgs3/acpy2_omap_reservephysicalchannel.c"/>
+        <file name="dma4/acpy2_complete.c"/>
+        <file name="package/package.ext.xml"/>
+    </release>
+    <release name="ti_sdo_fc_acpy2"
+        pname="ti_sdo_fc_acpy2.tar"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="acpy2_dma4_rtsd.a55L"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="acpy2_dma4_rts.a55L"/>
+        <file name="acpy2_mgs3.a55L"/>
+        <file name="acpy2_dma4d.a55L"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="acpy2_mgs3_rts.a55L"/>
+        <file name="acpy2_dma4.a55L"/>
+        <file name="acpy2_mgs3d.a55L"/>
+        <file name="package/package.ext.xml"/>
+        <file name="acpy2_omap_instrumentation.h"/>
+        <file name="acpy2_mgs3_rtsd.a55L"/>
+        <file name="acpy2_omap.h"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

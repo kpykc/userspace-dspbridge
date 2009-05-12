@@ -1,0 +1,309 @@
+\hypertarget{group___d_s_p_d_m_a_n3}{
+\subsection{DMAN3 (C64P)}
+\label{group___d_s_p_d_m_a_n3}\index{DMAN3 (C64P)@{DMAN3 (C64P)}}
+}
+
+
+\subsubsection{Detailed Description}
+DMAN3 is an application interface to the 3rd generation DMA Manager. It provides routines for granting and reclaiming DMA resources used by algorithms or other non-algorithm users. This module is used by frameworks or applications which have XDAIS algorithms that implement the IDMA3 interface.
+
+\begin{Desc}
+\item[Remarks:]For additional information, please refer to the \char`\"{}Joule DMA Framework Design and Reference Guide\char`\"{} document. \end{Desc}
+
+
+\subsubsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{struct_d_m_a_n3___params}{DMAN3\_\-Params}
+\begin{CompactList}\small\item\em The module configuration structure for DMAN3 implementation. It is set at design time by the system integrator to ensure optimal sharing of DMA resources for the execution environment. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Defines: DMAN3 Status Codes}
+\begin{CompactItemize}
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_g462d3887266b42b69cf21c65e87dc99d}{DMAN3\_\-SOK}~0
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_g70d091dae946805ff49ab47b903483a7}{DMAN3\_\-EOUTOFMEMORY}~-1
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_ge81e9235f9755ac2e6a6279401c8798d}{DMAN3\_\-EFAIL}~-2
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_g097f382f6603cc69c2d998c0ce6b9dfe}{DMAN3\_\-EFREE}~-3
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_gb04511fe9f738b3a189758163e75f1d2}{DMAN3\_\-EOUTOFTCCS}~-4
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_g45977d32b34b6e98e33b6510c9164dee}{DMAN3\_\-EOUTOFPARAMS}~-5
+\end{CompactItemize}
+\subsubsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_gc5bb90e4340386e641863309330e4fb5}{DMAN3\_\-MAXDMARECS}~32
+\item 
+\#define \hyperlink{group___d_s_p_d_m_a_n3_gb4a261c271c8d0f1e9843eada6b263e8}{DMAN3\_\-MAXGROUPS}~20
+\end{CompactItemize}
+\subsubsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef Bool($\ast$) \hyperlink{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}{DMAN3\_\-Scratch\-Alloc\-Fxn} (\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg, Int mutex\-Id, \hyperlink{struct_i_a_l_g___mem_rec}{IALG\_\-Mem\-Rec} $\ast$mem\-Tab, Int num\-Recs)
+\begin{CompactList}\small\item\em Function prototype for allocating IDMA3 Object's env from shared scratch memory. Algorithms might specify a particular IDMA3 protocol that provides custom DMA services. This protocol might require extra memory for the IDMA3 object's environment. DMAN3\_\-Scratch\-Alloc\-Fxn might be used to allocate this memory. If this is NULL, then the env will be allocated from persistent memory. \item\end{CompactList}\item 
+typedef Void($\ast$) \hyperlink{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}{DMAN3\_\-Scratch\-Free\-Fxn} (Int mutex\-Id, Void $\ast$addr, Uns size)
+\begin{CompactList}\small\item\em Function prototype for freeing IDMA3 Object's env from shared scratch memory. If this is NULL then env will be freed from persistent memory. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Functions}
+\begin{CompactItemize}
+\item 
+Int \hyperlink{group___d_s_p_d_m_a_n3_ge0e5031bc5e947da1bd5d12cca1c5e00}{DMAN3\_\-grant\-Dma\-Channels} (Int group\-Id, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg\-Handle\mbox{[}$\,$\mbox{]}, \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} $\ast$dma\-Fxns\mbox{[}$\,$\mbox{]}, Int num\-Algs)
+\begin{CompactList}\small\item\em Add one or several algorithms to the DMA Manager. The DMA Manager will grant DMA resources to the algorithms as a result. This function is called when initializing XDAIS algorithm instances. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_d_m_a_n3_gc26a2a6153c50b10dc3ae9106bfa8594}{DMAN3\_\-exit} (Void)
+\begin{CompactList}\small\item\em Finalization method of the DMAN module. \item\end{CompactList}\item 
+Int \hyperlink{group___d_s_p_d_m_a_n3_gee927c5ad460e5e5a122471ccb047db1}{DMAN3\_\-create\-Channels} (Int group\-Id, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} dma\-Tab\mbox{[}$\,$\mbox{]}, Int num\-Chans)
+\begin{CompactList}\small\item\em Allocate and initialize memory for one or several channel handles. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_d_m_a_n3_gf0a672c8ba5962dabc8b319978aafd3b}{DMAN3\_\-init} (Void)
+\begin{CompactList}\small\item\em Initialization method of the DMAN3 module. \hyperlink{group___d_s_p_d_m_a_n3_gf0a672c8ba5962dabc8b319978aafd3b}{DMAN3\_\-init()} uses externally configured and provided DMAN3\_\-PARAMS to initialize DMAN3 resources (QDMA channel map, memory heap...). \item\end{CompactList}\item 
+Int \hyperlink{group___d_s_p_d_m_a_n3_g664b5e2445c2ec3a0ed9e14f8cfc1d20}{DMAN3\_\-release\-Dma\-Channels} (\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg\-Handle\mbox{[}$\,$\mbox{]}, \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} $\ast$dma\-Fxns\mbox{[}$\,$\mbox{]}, Int num\-Algs)
+\begin{CompactList}\small\item\em Remove logical channel resources from one or several algorithm instances. \item\end{CompactList}\item 
+Int \hyperlink{group___d_s_p_d_m_a_n3_g2d14c4952c1194b913ac6e8bb7f0e9d5}{DMAN3\_\-free\-Channels} (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} channel\-Tab\mbox{[}$\,$\mbox{]}, Int num\-Chans)
+\begin{CompactList}\small\item\em Free memory for array of channel handles. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Variables}
+\begin{CompactItemize}
+\item 
+far \hyperlink{struct_d_m_a_n3___params}{DMAN3\_\-Params} \hyperlink{group___d_s_p_d_m_a_n3_g553609efedb936222e4492f0ffa3d1cc}{DMAN3\_\-PARAMS}
+\begin{CompactList}\small\item\em Default module configuration structure (defined in dman3.c). \item\end{CompactList}\end{CompactItemize}
+
+
+\subsubsection{Define Documentation}
+\hypertarget{group___d_s_p_d_m_a_n3_gc5bb90e4340386e641863309330e4fb5}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_MAXDMARECS@{DMAN3\_\-MAXDMARECS}}
+\index{DMAN3_MAXDMARECS@{DMAN3\_\-MAXDMARECS}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-MAXDMARECS]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-MAXDMARECS~32}\hfill}
+\label{group___d_s_p_d_m_a_n3_gc5bb90e4340386e641863309330e4fb5}
+
+
+Maximum number of DMA handles allowed for a XDAIS algorithm. 
+
+Definition at line 45 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_gb4a261c271c8d0f1e9843eada6b263e8}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_MAXGROUPS@{DMAN3\_\-MAXGROUPS}}
+\index{DMAN3_MAXGROUPS@{DMAN3\_\-MAXGROUPS}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-MAXGROUPS]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-MAXGROUPS~20}\hfill}
+\label{group___d_s_p_d_m_a_n3_gb4a261c271c8d0f1e9843eada6b263e8}
+
+
+Maximum number of groups for sharing TCCs and parameter RAM. 
+
+Definition at line 48 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_g462d3887266b42b69cf21c65e87dc99d}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_SOK@{DMAN3\_\-SOK}}
+\index{DMAN3_SOK@{DMAN3\_\-SOK}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-SOK]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-SOK~0}\hfill}
+\label{group___d_s_p_d_m_a_n3_g462d3887266b42b69cf21c65e87dc99d}
+
+
+DMAN3 Status Code: Successful. 
+
+Definition at line 57 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_g70d091dae946805ff49ab47b903483a7}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_EOUTOFMEMORY@{DMAN3\_\-EOUTOFMEMORY}}
+\index{DMAN3_EOUTOFMEMORY@{DMAN3\_\-EOUTOFMEMORY}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-EOUTOFMEMORY]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-EOUTOFMEMORY~-1}\hfill}
+\label{group___d_s_p_d_m_a_n3_g70d091dae946805ff49ab47b903483a7}
+
+
+DMAN3 Status Code: Failed to allocate memory for the handle. 
+
+Definition at line 58 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_ge81e9235f9755ac2e6a6279401c8798d}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_EFAIL@{DMAN3\_\-EFAIL}}
+\index{DMAN3_EFAIL@{DMAN3\_\-EFAIL}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-EFAIL]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-EFAIL~-2}\hfill}
+\label{group___d_s_p_d_m_a_n3_ge81e9235f9755ac2e6a6279401c8798d}
+
+
+DMAN3 Status Code: Unspecified error. 
+
+Definition at line 60 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_g097f382f6603cc69c2d998c0ce6b9dfe}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_EFREE@{DMAN3\_\-EFREE}}
+\index{DMAN3_EFREE@{DMAN3\_\-EFREE}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-EFREE]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-EFREE~-3}\hfill}
+\label{group___d_s_p_d_m_a_n3_g097f382f6603cc69c2d998c0ce6b9dfe}
+
+
+DMAN3 Status Code: Failed to free memory. 
+
+Definition at line 61 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_gb04511fe9f738b3a189758163e75f1d2}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_EOUTOFTCCS@{DMAN3\_\-EOUTOFTCCS}}
+\index{DMAN3_EOUTOFTCCS@{DMAN3\_\-EOUTOFTCCS}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-EOUTOFTCCS]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-EOUTOFTCCS~-4}\hfill}
+\label{group___d_s_p_d_m_a_n3_gb04511fe9f738b3a189758163e75f1d2}
+
+
+DMAN3 Status Code: Insufficient number of TCCs available to create channels. 
+
+Definition at line 63 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_g45977d32b34b6e98e33b6510c9164dee}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_EOUTOFPARAMS@{DMAN3\_\-EOUTOFPARAMS}}
+\index{DMAN3_EOUTOFPARAMS@{DMAN3\_\-EOUTOFPARAMS}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-EOUTOFPARAMS]{\setlength{\rightskip}{0pt plus 5cm}\#define DMAN3\_\-EOUTOFPARAMS~-5}\hfill}
+\label{group___d_s_p_d_m_a_n3_g45977d32b34b6e98e33b6510c9164dee}
+
+
+DMAN3 Status Code: Insufficient number of Pa\-Rams available to create channels. 
+
+Definition at line 66 of file dman3.h.
+
+\subsubsection{Typedef Documentation}
+\hypertarget{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_ScratchAllocFxn@{DMAN3\_\-ScratchAllocFxn}}
+\index{DMAN3_ScratchAllocFxn@{DMAN3\_\-ScratchAllocFxn}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-ScratchAllocFxn]{\setlength{\rightskip}{0pt plus 5cm}typedef Bool($\ast$) \hyperlink{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}{DMAN3\_\-Scratch\-Alloc\-Fxn}(\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg, Int mutex\-Id, \hyperlink{struct_i_a_l_g___mem_rec}{IALG\_\-Mem\-Rec} $\ast$mem\-Tab, Int num\-Recs)}\hfill}
+\label{group___d_s_p_d_m_a_n3_gb88a4f4fc347844728e7c0d6b46c5ecf}
+
+
+Function prototype for allocating IDMA3 Object's env from shared scratch memory. Algorithms might specify a particular IDMA3 protocol that provides custom DMA services. This protocol might require extra memory for the IDMA3 object's environment. DMAN3\_\-Scratch\-Alloc\-Fxn might be used to allocate this memory. If this is NULL, then the env will be allocated from persistent memory. 
+
+
+
+Definition at line 80 of file dman3.h.\hypertarget{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_ScratchFreeFxn@{DMAN3\_\-ScratchFreeFxn}}
+\index{DMAN3_ScratchFreeFxn@{DMAN3\_\-ScratchFreeFxn}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-ScratchFreeFxn]{\setlength{\rightskip}{0pt plus 5cm}typedef Void($\ast$) \hyperlink{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}{DMAN3\_\-Scratch\-Free\-Fxn}(Int mutex\-Id, Void $\ast$addr, Uns size)}\hfill}
+\label{group___d_s_p_d_m_a_n3_g5c51dee2c06d775005a8cf4db004782f}
+
+
+Function prototype for freeing IDMA3 Object's env from shared scratch memory. If this is NULL then env will be freed from persistent memory. 
+
+
+
+Definition at line 88 of file dman3.h.
+
+\subsubsection{Function Documentation}
+\hypertarget{group___d_s_p_d_m_a_n3_ge0e5031bc5e947da1bd5d12cca1c5e00}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_grantDmaChannels@{DMAN3\_\-grantDmaChannels}}
+\index{DMAN3_grantDmaChannels@{DMAN3\_\-grantDmaChannels}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-grantDmaChannels]{\setlength{\rightskip}{0pt plus 5cm}Int DMAN3\_\-grant\-Dma\-Channels (Int {\em group\-Id}, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} {\em alg\-Handle}\mbox{[}$\,$\mbox{]}, \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} $\ast$ {\em dma\-Fxns}\mbox{[}$\,$\mbox{]}, Int {\em num\-Algs})}\hfill}
+\label{group___d_s_p_d_m_a_n3_ge0e5031bc5e947da1bd5d12cca1c5e00}
+
+
+Add one or several algorithms to the DMA Manager. The DMA Manager will grant DMA resources to the algorithms as a result. This function is called when initializing XDAIS algorithm instances. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em group\-Id}]Group number for sharing TCCs and Pa\-RAMs. Channels created with the same group number in a previous or subsequent call to this function will share the same TCCs and Pa\-Ram, as the channels created in this call, so they must be used simultaneously. The channels created in this function call, will not share TCCs and Pa\-Ram with eachother, even though they use the same group Id. When granting DMA resources for several algorithms (i.e. when num\-Algs is greater than 1) these algorithms do not share TCCs and Pa\-RAMs. If two algorithms can share TCCs and Pa\-RAMs, two calls to \hyperlink{group___d_s_p_d_m_a_n3_ge0e5031bc5e947da1bd5d12cca1c5e00}{DMAN3\_\-grant\-Dma\-Channels()} are needed. \item[\mbox{$\leftarrow$} {\em alg\-Handle\mbox{[}$\,$\mbox{]}}]Array of algorithm handles. \item[\mbox{$\leftarrow$} {\em dma\-Fxns\mbox{[}$\,$\mbox{]}}]Array of IDMA3 Interfaces associated with each algorithm handle. \item[\mbox{$\leftarrow$} {\em num\-Algs}]Number of algorithms in alg\-Handle array.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Return values:]
+\begin{description}
+\item[{\em DMAN3\_\-SOK}]Success. \item[{\em DMAN3\_\-EOUTOFMEMORY}]Failed to allocate logical handle. \item[{\em DMAN3\_\-EFAIL}]Failed to initialize handle or dma\-Fxns dma\-Init() failed. \item[{\em DMAN3\_\-EOUTOFTCCS}]Not enough TCCs available for channels. \item[{\em DMAN3\_\-EOUTOFPARAMS}]Not enough Pa\-Rams available for channels.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]group\-Id $<$ DMAN3\_\-MAXGROUPS. 
+
+Valid IALG\_\-Handle. 
+
+Valid \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} pointer. 
+
+{\tt IALG\_\-Handle-$>$fxns-$>$implementation\-Id == IDMA3\_\-Fxns-$>$implementation\-Id} 
+
+number\-Of\-Channels returned by algorithm's dma\-Get\-Channel\-Cnt and dma\-Get\-Channels is not greater than DMAN3\_\-MAXDMARECS. DMAN3 supports only DMAN3\_\-MAXDMARECS channels.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]DMAN3\_\-SOK on successful allocation of IDMA3 logical handles. \end{Desc}
+\hypertarget{group___d_s_p_d_m_a_n3_gc26a2a6153c50b10dc3ae9106bfa8594}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_exit@{DMAN3\_\-exit}}
+\index{DMAN3_exit@{DMAN3\_\-exit}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-exit]{\setlength{\rightskip}{0pt plus 5cm}Void DMAN3\_\-exit (Void)}\hfill}
+\label{group___d_s_p_d_m_a_n3_gc26a2a6153c50b10dc3ae9106bfa8594}
+
+
+Finalization method of the DMAN module. 
+
+\hypertarget{group___d_s_p_d_m_a_n3_gee927c5ad460e5e5a122471ccb047db1}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_createChannels@{DMAN3\_\-createChannels}}
+\index{DMAN3_createChannels@{DMAN3\_\-createChannels}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-createChannels]{\setlength{\rightskip}{0pt plus 5cm}Int DMAN3\_\-create\-Channels (Int {\em group\-Id}, \hyperlink{struct_i_d_m_a3___channel_rec}{IDMA3\_\-Channel\-Rec} {\em dma\-Tab}\mbox{[}$\,$\mbox{]}, Int {\em num\-Chans})}\hfill}
+\label{group___d_s_p_d_m_a_n3_gee927c5ad460e5e5a122471ccb047db1}
+
+
+Allocate and initialize memory for one or several channel handles. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em group\-Id}]Group number for sharing TCCs and Pa\-RAMs. Channels created with the same group number in a previous or subsequent call to this function will share the same TCCs and Pa\-Ram, as the channels created in this call, so they must be used simultaneously. The channels created in this function call, will not share TCCs and Pa\-Ram with eachother, even though they use the same group Id. If two channels can share TCCs and Pa\-RAMS then two calls to \hyperlink{group___d_s_p_d_m_a_n3_gee927c5ad460e5e5a122471ccb047db1}{DMAN3\_\-create\-Channels()} are needed. \item[\mbox{$\leftarrow$} {\em dma\-Tab}]Array of IDMA3 channel resource descriptors containing the parameters of the requested channels. \item[\mbox{$\leftarrow$} {\em num\-Chans}]Number of entries in dma\-Tab (ie, number of channels to create). \item[\mbox{$\rightarrow$} {\em dma\-Tab}]On success assign valid and initialized IDMA3 logical DMA handle and environment (env, env\-Size) fields.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Return values:]
+\begin{description}
+\item[{\em DMAN3\_\-SOK}]Success. \item[{\em DMAN3\_\-EOUTOFMEMORY}]Failed to allocate logical handle. \item[{\em DMAN3\_\-EFAIL}]Failed to initialize handle or dma\-Fxns dma\-Init() failed. \item[{\em DMAN3\_\-EOUTOFTCCS}]Not enough TCCs available for channels. \item[{\em DMAN3\_\-EOUTOFPARAMS}]Not enough Pa\-Rams available for channels.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]Valid dma\-Tab structure. 
+
+num\-Chans $>$= 0. 
+
+group\-Id $<$ DMAN3\_\-MAXGROUPS.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]On success, each handle in dma\-Tab\mbox{[}\mbox{]} will be set to a valid IDMA3\_\-Handle. The 'env' field of the IDMA3\_\-Handle will be set to newly allocated memory whose size is determined by the IDMA3\_\-Init\-Fxns passed in the dma\-Tab entry. On failure, the handle of each dma\-Tab\mbox{[}\mbox{]} entry will be NULL. \end{Desc}
+\hypertarget{group___d_s_p_d_m_a_n3_gf0a672c8ba5962dabc8b319978aafd3b}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_init@{DMAN3\_\-init}}
+\index{DMAN3_init@{DMAN3\_\-init}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-init]{\setlength{\rightskip}{0pt plus 5cm}Void DMAN3\_\-init (Void)}\hfill}
+\label{group___d_s_p_d_m_a_n3_gf0a672c8ba5962dabc8b319978aafd3b}
+
+
+Initialization method of the DMAN3 module. \hyperlink{group___d_s_p_d_m_a_n3_gf0a672c8ba5962dabc8b319978aafd3b}{DMAN3\_\-init()} uses externally configured and provided DMAN3\_\-PARAMS to initialize DMAN3 resources (QDMA channel map, memory heap...). 
+
+\begin{Desc}
+\item[Precondition:]DMAN3\_\-PARAMS must be initialized \end{Desc}
+\hypertarget{group___d_s_p_d_m_a_n3_g664b5e2445c2ec3a0ed9e14f8cfc1d20}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_releaseDmaChannels@{DMAN3\_\-releaseDmaChannels}}
+\index{DMAN3_releaseDmaChannels@{DMAN3\_\-releaseDmaChannels}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-releaseDmaChannels]{\setlength{\rightskip}{0pt plus 5cm}Int DMAN3\_\-release\-Dma\-Channels (\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} {\em alg\-Handle}\mbox{[}$\,$\mbox{]}, \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} $\ast$ {\em dma\-Fxns}\mbox{[}$\,$\mbox{]}, Int {\em num\-Algs})}\hfill}
+\label{group___d_s_p_d_m_a_n3_g664b5e2445c2ec3a0ed9e14f8cfc1d20}
+
+
+Remove logical channel resources from one or several algorithm instances. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em alg\-Handle\mbox{[}$\,$\mbox{]}}]Array of algorithm handles. \item[\mbox{$\leftarrow$} {\em dma\-Fxns\mbox{[}$\,$\mbox{]}}]Array of IDMA3 Interfaces associated with the algorithm handles. \item[\mbox{$\leftarrow$} {\em num\-Algs}]Number of algorithm handles in alg\-Handle\mbox{[}\mbox{]}.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]alg\-Handle is an array of valid IALG\_\-Handle 
+
+dma\-Fxns is an array of valid \hyperlink{struct_i_d_m_a3___fxns}{IDMA3\_\-Fxns} pointer 
+
+{\tt IALG\_\-Handle-$>$fxns-$>$implementation\-Id == IDMA2\_\-Fxns-$>$implementation\-Id} 
+
+number\-Of\-Channels returned by algorithm's dma\-Get\-Channel\-Cnt and dma\-Get\-Channels is $>$= 0 and not greater than DMAN3\_\-MAXDMARECS. In other words, DMAN3 supports only DMAN3\_\-MAXDMARECS channels.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]Handle and environment memory and allocated resources are freed/released. \end{Desc}
+\hypertarget{group___d_s_p_d_m_a_n3_g2d14c4952c1194b913ac6e8bb7f0e9d5}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_freeChannels@{DMAN3\_\-freeChannels}}
+\index{DMAN3_freeChannels@{DMAN3\_\-freeChannels}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-freeChannels]{\setlength{\rightskip}{0pt plus 5cm}Int DMAN3\_\-free\-Channels (\hyperlink{struct_i_d_m_a3___obj}{IDMA3\_\-Handle} {\em channel\-Tab}\mbox{[}$\,$\mbox{]}, Int {\em num\-Chans})}\hfill}
+\label{group___d_s_p_d_m_a_n3_g2d14c4952c1194b913ac6e8bb7f0e9d5}
+
+
+Free memory for array of channel handles. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[\mbox{$\leftarrow$} {\em channel\-Tab}]Array of IDMA3 handles representing logical dma channel state. \item[\mbox{$\leftarrow$} {\em num\-Chans}]Number of entries in channel\-Tab (ie, number of channels to free).\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Return values:]
+\begin{description}
+\item[{\em DMAN3\_\-SOK}]Success.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Precondition:]num\-Chans $>$= 0. 
+
+Valid IDMA3 logical channel handles or num\-Chans == 0.\end{Desc}
+\begin{Desc}
+\item[Postcondition:]'handle' and 'env' memory freed for each channel. \end{Desc}
+
+
+\subsubsection{Variable Documentation}
+\hypertarget{group___d_s_p_d_m_a_n3_g553609efedb936222e4492f0ffa3d1cc}{
+\index{DSPDMAN3@{DSPDMAN3}!DMAN3_PARAMS@{DMAN3\_\-PARAMS}}
+\index{DMAN3_PARAMS@{DMAN3\_\-PARAMS}!DSPDMAN3@{DSPDMAN3}}
+\paragraph[DMAN3\_\-PARAMS]{\setlength{\rightskip}{0pt plus 5cm}far \hyperlink{struct_d_m_a_n3___params}{DMAN3\_\-Params} \hyperlink{group___d_s_p_d_m_a_n3_g553609efedb936222e4492f0ffa3d1cc}{DMAN3\_\-PARAMS}}\hfill}
+\label{group___d_s_p_d_m_a_n3_g553609efedb936222e4492f0ffa3d1cc}
+
+
+Default module configuration structure (defined in dman3.c). 
+

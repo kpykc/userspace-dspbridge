@@ -1,0 +1,192 @@
+/*
+ *  Copyright 2007 by Texas Instruments Incorporated.
+ *
+ *  All rights reserved. Property of Texas Instruments Incorporated.
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ *
+ */
+
+/*
+ *  ======== dman.tci ========
+ */
+
+var DMAN_QID0    = 0;
+var DMAN_QID1    = 1;
+var DMAN_QID2    = 2;
+var DMAN_QID3    = 3;
+var DMAN_QID4    = 4;
+var DMAN_QID5    = 5;
+var DMAN_QID6    = 6;
+var DMAN_QID7    = 7;
+var DMAN_iDMAFxn = 8;
+var DMAN_ALG = "XDAIS_ALG";
+var DMAN_NOTUSED = -1;
+var MAXCHANS = 6;
+var NOTUSED = 999;
+
+/* TBD: iffy temporary variable.  Need to investigate proper definition. */
+var IDMA_Fxn = {};
+var DYN_DARAM = {};
+
+var $$name = "DMAN";
+
+var $$label = "Properties for DSP Bridge DMAN module";
+
+/* Global properties for DMAN object */
+var $$global = [
+        {
+            name : "OBJMEMSEG",
+            val  : prog.module("MEM").BIOSOBJSEG,
+            label: "Object Memory",
+            type : "Object",
+            test : ["isMemDataSegment"],
+        },
+        {
+            name : "CHANNEL0_ENABLE",
+            val  : false,
+            label: "Channel 0 is used by DMAN",
+            type : "Boolean",
+        },
+        {
+            name : "CHANNEL1_ENABLE",
+            val  : false,
+            label: "Channel 1 is used by DMAN",
+            type : "Boolean",
+        },
+        {
+            name : "CHANNEL2_ENABLE",
+            val  : false,
+            label: "Channel 2 is used by DMAN",
+            type : "Boolean",
+        },
+        {
+            name : "CHANNEL3_ENABLE",
+            val  : false,
+            label: "Channel 3 is used by DMAN",
+            type : "Boolean",
+        },
+        {
+            name : "CHANNEL4_ENABLE",
+            val  : true,
+            label: "Channel 4 is used by DMAN",
+            type : "Boolean",
+        },
+        {
+            name : "CHANNEL5_ENABLE",
+            val  : true,
+            label: "Channel 5 is used by DMAN",
+            type : "Boolean",
+        },
+            ];
+
+/* template files */
+var $$template =
+    {
+        asmSource : undefined,
+        asmHeader : undefined,
+        cSource   : "ti/sdo/fc/dman/dman_c.tpl",
+        cHeader   : undefined,
+        linker    : "ti/sdo/fc/dman/dman_cmd.tpl"
+    };
+
+// Properties not exposed to user, but used by other modules or in
+// generation
+var currentPointer = 0;   // Still used by NODE. Can't get rid of yet.
+
+/*
+ *  ======== getNumDMAN ========
+ *  Return the number of XDAIS nodes that use DMA
+ */
+function getNumDMAN ()
+{
+    var i;
+    var numDman = 0;
+
+    if (dspbridge.module("NODE") != null) {
+        var nodeObjs = dspbridge.module("NODE").instances();
+        
+        for (i = 0; i < nodeObjs.length; i++) {
+            if ((nodeObjs[i].nodeType == "XDAISNODE") && nodeObjs[i].usesDMA) {
+                numDman++;
+            }
+        }
+    }
+    
+    return (numDman);
+}
+
+/*
+ *  ======== getNumEnabled ========
+ *  Return the number of channels enabled for DMAN
+ */
+function getNumEnabled ()
+{
+    var numChans = 0;
+    var numEnabled = 0;
+
+    // Calculate total number of channels
+    while (this.hasOwnProperty("CHANNEL" + numChans + "_ENABLE")) {
+        numChans++;
+    }
+
+    for (var i = 0; i < numChans; i++) {
+        if (eval("this.CHANNEL" + i + "_ENABLE") == true) {
+            numEnabled++;
+        }
+    }
+
+    return (numEnabled);
+}
+
+/*
+ *  ======== Module Validation ========
+ */
+function validate ()
+{
+    /* In non Bridge application, NODE may not exist */
+    if (dspbridge.module("NODE") == null) return;
+    
+    // For each node that uses DMA, make sure the QID to channel mapping
+    // is ok (channels are enabled for DMAN).
+    var nodes = dspbridge.module("NODE").instances();
+    var numQIDs = 0;
+
+    // Count the number of queueId properties of node object
+    if (this.getNumDMAN() > 0) {
+        while (nodes[0].hasOwnProperty("queueId" + numQIDs)) {
+            numQIDs++;
+        }
+    }
+    
+    //print("dman.validate: numQIDs = " + numQIDs);
+    for (var i = 0; i < nodes.length; i++) {
+        if ((nodes[i].nodeType == "XDAISNODE") && nodes[i].usesDMA) {
+
+            // queueId must be a channel enabled for DMAN
+            for (var j = 0; j < numQIDs; j++) {
+                var chan = eval("nodes[i].queueId" + j);
+
+                // Make sure the channel is a valid number
+                if (!this.hasOwnProperty("CHANNEL" + chan + "_ENABLE")) {
+                    var err = "node[" + i + "].queueId" + j + "mapped to ";
+                    err += "invalid channel: " + chan;
+                    throw(err);
+                }
+
+                //print("node["+i+"].queueId" + j + "mapped to chan " + chan);
+
+                // Make sure the channel is enabled for DMAN
+                if (eval("this.CHANNEL" + chan + "_ENABLE") == false) {
+                    var err = "Node " + nodes[i].name + ": queueId" + j;
+                    err += " mapped to disabled channel: " + chan;
+                    throw(err);
+                }
+            }
+        }
+    }
+}
+/*
+ *  @(#) ti.sdo.fc.dman; 1,0,0,20; 5-10-2007 10:49:27; /db/atree/library/trees/fc-b12x/src/
+ */
+

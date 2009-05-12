@@ -1,0 +1,52 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== dmadevcopy.tci ========
+ *
+ */
+
+// add instance NODE.node0
+/* Rely on STRMCOPY_TI node as node0 */
+
+// add instance NODE.node1
+node1 = bridge.NODE.create("node1");
+
+node1.uuid = "7EEB2C7F_785A_11D4_A650_00C04F0C04F3";
+node1.name = "node1";
+node1.stackSize = 512;
+node1.messageDepth = 3;
+node1.numInputStreams = 1;
+node1.numOutputStreams = 1;
+node1.timeout = 1000;
+node1.createFxn = "STRMCOPY_TI_create";
+node1.executeFxn = "STRMCOPY_TI_execute";
+node1.deleteFxn = "STRMCOPY_TI_delete";
+
+// add instance of device node
+devNode = bridge.NODE.create("devNode");
+
+devNode.uuid = "7E582912_D068_11D4_B866_0060089F5833";
+devNode.name = "dmaPipe";
+devNode.nodeType = "DEVNODE";
+
+// Add instance of UDEV
+dmaPipe = bridge.UDEV.create("dmaPipe");
+dmaPipe.fxnTable = prog.extern("DPDMA_FXNS");
+dmaPipe.params = prog.extern("DPDMA_PARAMS");
+dmaPipe.deviceId = 0;
+dmaPipe.initFxn = prog.extern("DPDMA_init");
+dmaPipe.stackingDevice = false;

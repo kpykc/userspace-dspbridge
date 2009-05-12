@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.dspbridge.dsp.doffbuild" version="">
+    <units>
+        <module name="Doff"/>
+    </units>
+    <sources>
+    </sources>
+    <configurations>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="package/rel/ti_dspbridge_dsp_doffbuild.tar.dep" src="package/rel/ti_dspbridge_dsp_doffbuild.inc"/>
+    </makefiles>
+    <targets>
+    </targets>
+    <libraries>
+    </libraries>
+    <executables>
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="ti_dspbridge_dsp_doffbuild"
+        pname="ti_dspbridge_dsp_doffbuild.tar"
+        label="default"
+    >
+        <file name="package/package.xdc.xml"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.rel.dot"/>
+    </release>
+    </releases>
+</package>

@@ -1,0 +1,46 @@
+;/*
+; *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+; * 
+; *  Licensed under the Apache License, Version 2.0 (the "License");
+; *  you may not use this file except in compliance with the License.
+; *  You may obtain a copy of the License at
+; * 
+; *     http://www.apache.org/licenses/LICENSE-2.0
+; * 
+; *  Unless required by applicable law or agreed to in writing, software
+; *  distributed under the License is distributed on an "AS IS" BASIS,
+; *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; *  See the License for the specific language governing permissions and
+; *  limitations under the License.
+; */
+;
+;  ======== dynref.s64P ========
+;  Force these symbols to be linked into the base image. Dynamic nodes
+;  ping, scale, strmcopy, and dmmcopy reference these symbols.
+;
+    .ref    _LOG_printf
+    .ref    _MEM_stat
+    .ref    _NODE_wait
+    .ref    _NODE_getHeapAddr
+    .ref    _NODE_getHeapSeg
+    .ref    _NODE_getMsg
+    .ref    _NODE_getPri
+    .ref    _NODE_allocMsgBuf
+    .ref    _NODE_freeMsgBuf
+    .ref    _STRM_freeBuffer
+    .ref    _STRM_allocateBuffer
+    .ref    _STRM_idle
+    .ref    _DSKT2_createAlg
+    .ref    _DSKT2_freeAlg
+    .ref    _DSKT2_activateAlg
+    .ref    _DSKT2_deactivateAlg
+    .ref    _DSKT2_controlAlg
+    .ref    _DSKT2_QOS_getStat
+    .ref    _BPWR_registerNotify
+    .ref    _BPWR_unregisterNotify
+    .ref    _BPWR_enableExtClock
+    .ref    _BPWR_disableExtClock
+    .ref    _PWRM_setDependency
+    .ref    _PWRM_releaseDependency
+    .ref    _loadMonValues
+    

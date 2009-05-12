@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<TITLE>ti.sdo.fc.dskt2DSKT2 HEADER </TITLE>
+<HEAD>
+<LINK rel=stylesheet type=text/css href=../../../../styles.css>
+<SCRIPT>
+var link = { back:{}, down:{}, next:{}, prev:{}, up:{} }
+var cur = -1
+var curpar = null
+var index2name = [
+"DEFAULTSEG"
+,"DARAM0"
+,"DARAM1"
+,"DARAM2"
+,"SARAM0"
+,"SARAM1"
+,"SARAM2"
+,"ESDATA"
+,"IPROG"
+,"EPROG"
+,"DSKT2_HEAP"
+,"ALLOW_EXTERNAL_SCRATCH"
+,"DARAM_SCRATCH_SIZES"
+,"SARAM_SCRATCH_SIZES"
+,"debug"
+,"cacheWritebackInvalidateFxn"
+]
+var name2index = {}
+name2index["DEFAULTSEG"] = 0
+name2index["DARAM0"] = 1
+name2index["DARAM1"] = 2
+name2index["DARAM2"] = 3
+name2index["SARAM0"] = 4
+name2index["SARAM1"] = 5
+name2index["SARAM2"] = 6
+name2index["ESDATA"] = 7
+name2index["IPROG"] = 8
+name2index["EPROG"] = 9
+name2index["DSKT2_HEAP"] = 10
+name2index["ALLOW_EXTERNAL_SCRATCH"] = 11
+name2index["DARAM_SCRATCH_SIZES"] = 12
+name2index["SARAM_SCRATCH_SIZES"] = 13
+name2index["debug"] = 14
+name2index["cacheWritebackInvalidateFxn"] = 15
+link.back.data = !top.emptyHist()
+link.up.data = ['ti/sdo/fc/dskt2/package.html']
+link.down.data = ['ti/sdo/fc/dskt2/DSKT2.html', 'DEFAULTSEG']
+link.next.data = null
+link.prev.data = null
+function init() {
+for (var ln in link) {
+link[ln].elem = document.getElementById(ln)
+link[ln].elem.href = "javascript:void click('" + ln +"')"
+if (!link[ln].data) {
+link[ln].elem.className = "NavDead"
+}
+}
+if (top.curGotoDname) {
+doGotoDecl()
+}
+document.onkeyup = arrowHandler
+}
+function arrowHandler( evt ) {
+evt = (evt) ? evt : ((window.event) ? window.event : null)
+if (evt) {
+switch (evt.keyCode) {
+case 38:
+click("up")
+break
+case 40:
+click("down")
+break
+case 39:
+click("next")
+break
+case 37:
+click("prev")
+break
+}
+}
+}
+function click( lid ) {
+link[lid].elem.blur()
+if (!link[lid].data) {
+return false
+}
+if (curpar) {
+curpar.style.fontWeight = "normal"
+curpar = null
+}
+if (lid == "back") {
+top.goBack()
+}
+else {
+top.goFwd.apply(null, link[lid].data)
+}
+return false
+}
+function doGotoDecl() {
+cur = name2index[top.curGotoDname]
+top.curGotoDname = null
+moveToCur()
+}
+function mouseout( lid ) {
+link[lid].elem.style.textDecoration = "none"
+}
+function mouseover( lid ) {
+if (link[lid].data) {
+link[lid].elem.style.textDecoration = "underline"
+}
+}
+function moveToCur() {
+top.frames.body.document.getElementById("__decl__" + cur).scrollIntoView()
+curpar = top.frames.body.document.getElementById("__decl__" + cur + "-P")
+curpar.style.fontWeight = "bold"
+link.down.data = null
+link.up.data = ['ti/sdo/fc/dskt2/DSKT2.html']
+if (cur + 1 < index2name.length) {
+link.next.data = ['ti/sdo/fc/dskt2/DSKT2.html']
+link.next.data.push(index2name[cur + 1])
+}
+else {
+link.next.data = null
+}
+if (cur > 0) {
+link.prev.data = ['ti/sdo/fc/dskt2/DSKT2.html']
+link.prev.data.push(index2name[cur - 1])
+}
+else {
+link.prev.data = null
+}
+for (var ln in link) {
+link[ln].elem.className = link[ln].data ? "Nav" : "NavDead"
+}
+return false
+}
+</SCRIPT>
+<SCRIPT>function goFwd(to, dname, nosave) {    if (self != top && top.goFwd) {        return (top.goFwd(to, dname, nosave));    }    location.href = "../../../../" + to + (dname?("#"+dname):"");    return (false);}</SCRIPT>
+</HEAD>
+<BODY class=Hdr onLoad="init()">
+<P class=Hdr><SPAN class=Keyword>metaonly module</SPAN><SPAN class=Code>&nbsp;ti.sdo.fc.dskt2.DSKT2</SPAN></P>
+<P class=Nav>
+<A class=Nav onclick="return click(this.id)" onmouseover="mouseover(this.id)" onmouseout="mouseout(this.id)"
+ id=back name=back>BACK</A>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<A class=Nav onclick="return click(this.id)" onmouseover="mouseover(this.id)" onmouseout="mouseout(this.id)"
+ id=down name=down>DOWN</A>
+<A class=Nav onclick="return click(this.id)" onmouseover="mouseover(this.id)" onmouseout="mouseout(this.id)"
+ id=next name=next>NEXT</A>
+<A class=Nav onclick="return click(this.id)" onmouseover="mouseover(this.id)" onmouseout="mouseout(this.id)"
+ id=prev name=prev>PREV</A>
+<A class=Nav onclick="return click(this.id)" onmouseover="mouseover(this.id)" onmouseout="mouseout(this.id)"
+ id=up name=up>UP</A>
+&nbsp;&nbsp;</P>
+</BODY>
+</HTML>

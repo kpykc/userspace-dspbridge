@@ -1,0 +1,542 @@
+*  ======== dma4/acpy2isr.s55 ========
+*  This file contains the queueing mechanism used for dma jobs, the
+*  associated fxns to manage the queue and the programming of the OMAP
+*  (C55x DMA4) dma device.
+*
+
+
+ .if (!$isdefed("DMA_OPT"))
+DMA_OPT .equ 0		; if not defined
+ .endif
+
+ .if DMA_OPT
+
+    .title "acpy2isr.s55"
+    
+    .model mem=large
+    .c54cm_off
+    .cpl_on
+    .mmregs
+
+;;;    .include hwi2420.h55
+    .include hwi.h55
+    
+    .include "_dma.h55"
+    .include "dma4_omap.h55"
+
+    .noremark 5573	; not relevant since all code within an ISR
+
+  .if (!$isdefed("_INSTR_BANDWIDTH"))
+_INSTR_BANDWIDTH .equ 0		; if not defined
+  .endif
+ 
+	.def	_DMA_isr		; entry point to ISR
+	
+	.ref	_DMAN_irq		; (Int)
+	.ref	_DMAN_enabledMask	; (long)
+	.ref	__DMA_jobQueue		; (_DMA_QueueObj [])
+	.ref	__DMA_channel		; (Int [])
+
+  .if _INSTR_BANDWIDTH
+        .ref        _ACPY2_OMAP_updateChannelStats
+  .endif
+
+_DMA_QUEUELEN   .set 16
+
+
+* DMA4_Regs *DMA4_dmaRegs = (DMA4_Regs *)0x7e6000;
+_DMA4_REGS	.set 0x7e6000   ; address of DMA register struct
+
+ACPY2_callbackPtr    .usect    ".bss:ACPY_internal",2,1  ; &IDMA2_Obj.cbFxn
+
+*
+*  ======== DMA_isr ========
+*
+* extern interrupt Void DMA_isr();
+*interrupt Void DMA_isr()
+
+    .sect    ".text:ACPY_internal"
+    .align 4
+
+_DMA_isr:
+
+*{
+*    volatile LgUns  dummy;
+*    _DMA_Job       *job;
+*    _DMA_Queue      jobQ;
+*    DMA4_ChnlRegs  *regs;
+*    _DMA_Handle     handle;
+*    IDMA2_AdrPtr    src;	// 32-bit pointer
+*    IDMA2_AdrPtr    dst;	// 32-bit pointer
+*    Uns             cnt;
+*    Uns             channelNum = 0;
+*    Int             channelIdx = 0; /* Channel index in _DMA_channel */
+*    LgUns           enabledMask = DMAN_enabledMask;
+
+*
+* Note: ST0, ST1, and ST2 are automatically saved and restored by the
+* Automatic Context Switch mechanism of an ISR.
+* However, the 9 DP bits of ST0 are not restored.
+*
+	PSHBOTH	XAR0
+	||BCLR	FRCT
+   .noremark 5601    
+	MOV	#0xf000,mmap(ST2_55)    ; Reset RDM and all circ modes, set ARMS_ON
+   .arms_on	
+   .remark 5601    
+	PSH	dbl(AC0)
+	||BCLR	C54CM
+	PSH	mmap(AC0G)
+
+*    /* Make sure this is one of the DMAN channels */
+*    dummy = DMA4_dmaRegs->irqStatus[DMAN_irq];
+*    if (!(dummy & DMAN_enabledMask)) {
+*        /* Someone else using DMAN irq? */
+*        return;
+*    }
+
+	AMOV	#(_DMA4_REGS+DMA4_Regs.irqStatus),XAR0
+	MOV	*(_DMAN_irq) << #1,AC0
+	ADD	AC0, AR0			; XAR0 = &DMA4_dmaRegs->irqStatus[DMAN_irq]
+	||PSH	dbl(AC1)
+	PSH	mmap(AC1G)
+	PSH	T0,T1
+	||BCLR	C16
+	MOV	dbl(*(_DMAN_enabledMask)), AC1	; AC1 = enabledMask
+	PSHBOTH	XAR1
+	||BCLR	M40
+	MOV	dbl(*AR0), AC0			; AC0 = dummy  (Pipe 4 just Ok for AR0 from ADD)
+	AND	AC1, AC0			; AC0 = dummy & DMAN_enabledMask
+	||BSET	SXMD
+
+;;;	AND	#0x791f, mmap(ST1_55)    ; Turn off BRAF, M40, SATD, C16, FRCT, C54CM
+*                                        ; Don't touch XF, HM, ASM    
+	BCLR	SATD
+
+	BCC	DMA_isrExit, AC0 == #0		; Pipe 1 just Ok for AC0 from AND
+	||BSET	CPL
+	
+*    /*
+*     *  Find out which channel caused the interrupt and get its index
+*     *  among channels enabled for DMAN.
+*     */
+*    while (!((dummy & 0x1) && (enabledMask & 0x1))) {
+*        if (enabledMask & 0x1) {
+*            channelIdx++;
+*        }
+*        enabledMask = enabledMask >> 1;
+*        dummy = dummy >> 1;
+*        channelNum++;
+*    }
+
+*
+* Set up ST1 in C mode (needed for MPY)
+*
+;;;	AND	#0x791f, mmap(ST1_55)    ; Turn off BRAF, M40, SATD, C16, FRCT, C54CM
+;;;*                                     ; Don't touch XF, HM, ASM    
+;;;	OR	#0x4900, mmap(ST1_55)    ; Turn on CPL, INTM, SXMD 
+*
+* Use a binary search to determine the lowest bit set in AC0.
+* So regardless of which is lowest bit, this determination 
+* always takes the same number of ticks.
+*
+	PSH	dbl(AC2)
+	||MOV	#0, AR1
+	PSH	mmap(AC2G)
+
+* Determine if lowest bit set is in low word or high word
+	AND	#0xffff, AC0, AC2
+	XCCPART	AC2 == #0
+	 ||BSET	#4, AR1		; AR1 = 16
+	XCCPART	AC2 == #0
+	 ||SFTL	AC0, #-16, AC0
+
+* Determine if lowest bit set is in low byte or high byte
+	AND	#0x00ff, AC0, AC2
+	XCCPART	AC2 == #0
+	 ||ADD	#8, AR1
+	XCCPART	AC2 == #0
+	 ||SFTL	AC0, #-8, AC0
+
+* Determine if lowest bit set is in low nibble or high nibble
+	AND	#0x000f, AC0, AC2
+	XCCPART	AC2 == #0
+	 ||ADD	#4, AR1
+	XCCPART	AC2 == #0
+	 ||SFTL	AC0, #-4, AC0
+
+* Check low or high half of 4 bits
+	AND	#0x0003, AC0, AC2
+	XCCPART	AC2 == #0
+	 ||ADD	#2, AR1
+	XCCPART	AC2 == #0
+	 ||SFTL	AC0, #-2, AC0
+
+* Check low or high bit of 2 bits
+	PSHBOTH	XAR2
+	||AND	#0x0001, AC0
+	XCCPART	AC0 == #0
+	 ||ADD	#1, AR1
+
+	PSHBOTH	XAR7
+	||XOR	AC0			; AC0 = 0
+
+* Now determine channelIdx
+
+	BSET	AR1, AC0		; AC0 = 1 << channelNum 
+	PSHBOTH	XAR3
+	||SUB	#1, AC0			; AC0 = (1 << channelNum) - 1
+	
+* Note T0 also needed for channelIdx for _INSTR_BANDWIDTH
+	BCNT	AC0, AC1, TC1, T0	; T0 = channelIdx 
+	
+*    jobQ = &(_DMA_jobQueue[channelIdx]);
+
+	AMOV	#(__DMA_jobQueue), XAR7
+	MOV	T0, HI(AC1)		; AC1.Hi = channelIdx
+	MPYK	#DMA_A_JOBQUEUESIZE, AC1, AC1
+	ADD	AC1, AR7		; XAR7 = jobQ = &(_DMA_jobQueue[channelIdx]);
+
+*    regs = &(DMA4_dmaRegs->channelRegs[channelNum]);
+
+	||MOV	AR1, HI(AC1)
+	MPYK	#DMA4_ChnlRegsSize, AC1, AC1
+	AMOV	#(_DMA4_REGS+DMA4_Regs.channelRegs), XAR2
+	ADD	AC1, AR2		; XAR2 = regs = &(DMA4_dmaRegs->channelRegs[channelNum]); (Pipe 4 for AR2 just Ok for BTSTSET)
+
+ 	||PSHBOTH	XAR4
+
+*    regs->csr |= DMA4_CICR_BLOCKIE;
+*    /* Clear the status bit by writing a 1 to it */
+*    DMA4_dmaRegs->irqStatus[DMAN_irq] |= (1 << channelNum);
+
+* Note: regs->csr MUST be written before DMA4_dmaRegs->irqStatus[DMAN_irq]!
+
+	MOV	dbl(*AR0),AC0	; AC0 = DMA4_dmaRegs->irqStatus[DMAN_irq]
+ .if (DMA_JobQueue.curHandle == 0)
+	MOV	dbl(*AR7), XAR3  ; XAR3 = jobQ->curHandle
+ .else
+	MOV	dbl(*AR7(short(DMA_JobQueue.curHandle))), XAR3  ; XAR3 = jobQ->curHandle
+ .endif
+	BSET	AR1, AC0	; AC0 = DMA4_dmaRegs->irqStatus[DMAN_irq] = (1 << channelNum)
+
+	BTSTSET	#DMA4_CICR_BLOCKIE_SHIFT, *AR2(short(DMA4_ChnlRegs.csrX+1)), TC1	; update low word, don't care about TC1 (Pipe 4 just Ok for AR2 from ADD)
+
+*    /* Decrement job count for both the logical channel and IDMA2 channel */
+*    jobQ->reqPending--;
+*    jobQ->curHandle->numJobs--;
+*    /* If the callback function is non-null, call it. */
+*    if ((jobQ->curHandle)->cbFxn) {
+*        ((jobQ->curHandle)->cbFxn)((jobQ->curHandle)->cbArg);
+*    }
+
+    .noremark 5571	; don't care about CARRY bit corruption
+	SUB	#1, *AR7(short(DMA_JobQueue.reqPending))
+
+	MOV	AC0, dbl(*AR0)	; DMA4_dmaRegs->irqStatus[DMAN_irq] |= (1 << channelNum);
+* Note: AR0 is now available
+
+  .if (_DMA_Obj.numJobs == 0)
+	SUB	#1, *AR3			  ; jobQ->curHandle->numJobs--; (Pipe 4 Ok for AR3 from MOV)
+  .else
+	SUB	#1, *AR3(short(_DMA_Obj.numJobs)) ; jobQ->curHandle->numJobs--;
+  .endif
+    .remark 5571
+
+*
+* Current state of registers:
+*    AR7   jobQ
+*
+
+*    /* Pull out the next job from the queue if any */
+*    job = (jobQ->readPtr != jobQ->writePtr) ? jobQ->readPtr : NULL;
+
+	MOV	dbl(*AR7(short(DMA_JobQueue.readPtr))), XAR0	; AC1 = jobQ->readPtr
+	XOR	*AR7(short(DMA_JobQueue.writePtr+1)), AR0, AC0         ; just check the lows since the high parts are guaranteed to be the same
+
+*    if (!job) {
+  .if _INSTR_BANDWIDTH
+*      ACPY2_OMAP_updateChannelStats (NULL, channelIdx);  // Case 1
+  .endif ; if _INSTR_BANDWIDTH
+*    }
+*    else {
+    
+
+  .if _INSTR_BANDWIDTH
+  	XCCPART	AC0 == #0
+	 ||MOV	AC0, XAR0
+  .endif
+  
+	MOV	#2, T0				; T0 = 2
+  
+	BCC	LABEL_AFTER_NEXT_JOB, AC0 == #0	; (Pipe 1 just Ok for AC0 from XOR)
+
+*        //DMA_load(job->handle, job->src, job->dst, job->cnt);
+*        handle = job->handle;
+
+	MOV	dbl(*AR0(short(DMA_Job.handle))), XAR1	; XAR1 = handle (Pipe 4 Ok for AR0 from MOV)
+
+*        src = job->src;
+*        dst = job->dst;
+*        cnt = job->cnt;
+*
+*        jobQ->readPtr = jobQ->readPtr->nextJob;
+*        /* Update the current handle */
+*        jobQ->curHandle = handle;
+
+ .if (DMA_JobQueue.curHandle == 0)
+	MOV	XAR1, dbl(*AR7)	                                ; jobQ->curHandle = handle
+ .else
+	MOV	XAR1, dbl(*AR7(short(DMA_JobQueue.curHandle)))	; jobQ->curHandle = handle
+ .endif
+	AMOV	#__DMA_channel, XAR4
+	MOV	dbl(*AR0(DMA_Job.nextJob)), AC1	                ; AC1 = &job->nextJob
+
+	AADD	#_DMA_Obj.channel, AR1	; AR1 = &handle->channel (Pipe 4 just Ok for AR1 from MOV)
+	ADD	*(AR1+T0), AR4		; AR4 = &_DMA_channel[handle->channel]
+	MOV	AC1, dbl(*AR7(short(DMA_JobQueue.readPtr)))	; jobQ->readPtr = jobQ->readPtr->nextJob
+*					; AR1 = &handle->csdp
+* Note: AR7 is now available for re-use
+
+*        regs = &(DMA4_dmaRegs->channelRegs[_DMA_channel[handle->channel]]);
+
+	AMOV	#(_DMA4_REGS+DMA4_Regs.channelRegs), XAR2
+      
+	MOV	*AR4 << #16, AC2	; AC2.Hi = _DMA_channel[handle->channel] (Pipe 2 of 4 for AR4 from ADD)
+	MPYK	#DMA4_ChnlRegsSize,AC2
+	ADD	AC2, AR2		; XAR2 = regs = &(DMA4_dmaRegs->channelRegs[_DMA_channel[handle->channel]])
+
+* Current registers in use:
+*   AR0   _DMA_Job       *job;
+*   AR1   _DMA_Obj       &handle->csdp
+*   AR2   DMA4_ChnlRegs  *regs;  (Pipe needs 3)
+
+*        /* set CSDP w/ port values */
+*        /*
+*         *  Bits 21:18 - 21 Src endianess (0 LE, 1 BE)
+*         *               20 Src endianess lock (0 adapt, 1 lock)
+*         *               19 Dst endianess (0 LE, 1 BE)
+*         *               18 Dst endianess lock (0 adapt, 1 lock)
+*         *
+*         *  Bits 15:14 - Dst burst enable (10 -> 32 bytes)
+*         *       13    - Dst pack (1 -> packed)
+*         *       8:7   - Src burst enable (10 -> 32 bytes)
+*         *       6     - Src pack (1 -> packed)
+*         *
+*         *  CSDP_SRCDSTPKBEN_ENA = 0xa140
+*         */
+*        regs->csdp = handle->csdp; // | DMA4_CSDP_SRCDSTPKBEN_ENA;
+*        /* set source and destination (byte) addr */
+*        regs->cssa = (LgUns)src;	(32-bit)
+*        regs->cdsa = (LgUns)dst;	(32-bit)
+*        regs->cen = cnt;		(32-bit (but high always=0))
+*        regs->cfn = handle->cfn;	(16-bit)
+	
+	MOV	dbl(*AR1+), AC2			; AC2 = handle->csdp
+*						; AR1 = &handle->ccr
+	MOV	*(AR0+T0), T1			; T1 = job->cnt
+*						; AR0 = &job->src
+
+	MOV	dbl(*AR0+), AC1			; AC1 = job->src (32-bit pointer)
+*						; AR0 = &job->dst
+	MOV	dbl(*AR0), AC0			; AC0 = job->dst (32-bit pointer)
+	AMAR	*AR2(DMA4_ChnlRegs.csdp), XAR4	; AR4 = &regs->csdp (Pipe 4 just Ok for AR2 from ADD)
+	MOV	AC2,dbl(*AR4+)				; regs->csdp = hancdle->csdp 
+*						; AR4 = &regs->cen.Hi
+	MOV	dbl(*AR1+), AC2			; AC2.Hi = handle->ccr, AC2.Lo = handle->cfn
+*						; AR1 = &handle->csei
+	||AADD	#1,AR4				; AR4 = &regs->cen.Lo
+	MOV	T1,*(AR4+T0)			; regs->cen = cnt; (store .Lo only)
+	MOV	AC2, *AR4+		        	; regs->cfn = handle->cfn (store .Lo only)
+*						; AR4 = &regs->cssa.Hi
+	MOV	AC1, dbl(*AR4+)				; regs->cssa = src
+*						; AR4 = &regs->cdsa.Hi
+	MOV	AC0, dbl(*AR4+)				; regs->cdsa = dst
+*						; AR4 = &regs->csei.Hi
+* Note: AR0 is now available for re-use
+
+*        regs->csei = handle->csei;	// convert signed int to unsigned long (16-bit)
+*        regs->csfi = handle->csfi;	// convert signed int to unsigned long (32-bit)
+
+	AADD	#1, AR4				; AR4 = &regs->csei.Lo
+	||MOV	*AR1+, AC0			; AC0 = handle->csei
+*						; AR1 = &handle->csfi
+	MOV	AC0, *AR4+			; regs->csei = handle->csei (convert signed in to unsigned long)
+*						; AR4 = &regs->csfi
+	||MOV	*AR1+, AC0			; AC0 = handle->csfi (sign-extension is required!)
+*						; AR1 = &handle->cdei
+	MOV	AC0, dbl(*AR4+)			; regs->csfi = handle->csfi (convert signed in to unsigned long)
+*						; AR4 = &regs->cdei
+
+*        regs->cdei = handle->cdei;	// convert signed int to unsigned long (16-bit)
+*        regs->cdfi = handle->cdfi;	// convert signed int to unsigned long (32-bit)
+
+	AADD	#1, AR4				; AR4 = &regs->cdei.Lo
+	||MOV	*AR1+, AC0			; AC0 = handle->cdei
+*						; AR1 = &handle->cdfi
+	MOV	AC0, *AR4+			; regs->cdei = handle->cdei (convert signed in to unsigned long)
+*						; AR4 = &regs->cdfi
+	||MOV	*AR1, AC0			; AC0 = handle->cdfi (sign-extension is required!)
+	MOV	AC0, dbl(*AR4)			; regs->cdfi = handle->cdfi (convert signed in to unsigned long)
+
+*        /* Clear the old amode before setting new value */
+*        regs->ccr &= ~DMA4_CCR_AMODE_MASK;
+*        regs->ccr |= handle->ccr;
+*        /* Enable this dma channnel */
+*        regs->ccr |= DMA4_CCR_ENABLE;
+
+* Note: ccr is the first element of DMA4_ChnlRegs
+* I don't know if there are special rules on writing to it.
+* So for now, make all writes match the method of the C program.
+
+	MOV	*+AR2(#1), AC1	; AC1 = regs->ccr.Lo 
+*					; AR2 = &regs->ccr.Lo   
+	AND	#0x0fff, AC1		; AC1 = regs->ccr.Lo & ~DMA4_CCR_AMODE_MASK
+	OR	AC2, #-16, AC1		; AC1 = (regs->ccr.Lo & ~DMA4_CCR_AMODE_MASK) | handle->ccr
+	BSET	#DMA4_CCR_ENABLE_SHIFT, AC1	; regs->ccr |= DMA4_CCR_ENABLE
+  .if _INSTR_BANDWIDTH
+	MOV	AC1, *AR2		; regs->ccr.Lo = (regs->ccr & ~DMA4_CCR_AMODE_MASK) | handle->ccr
+	||MOV	T1, T0			; T0 = cnt
+  .else
+	MOV	AC1, *AR2		; regs->ccr.Lo = (regs->ccr & ~DMA4_CCR_AMODE_MASK) | handle->ccr
+  .endif
+
+  .if _INSTR_BANDWIDTH
+*        ACPY2_OMAP_updateChannelStats (handle, cnt);       // Case 2
+
+	AMAR	*AR1(-_DMA_Obj.cdei), XAR0	; XAR0 = handle
+	
+    .align 4
+LABEL_AFTER_NEXT_JOB:
+
+*
+* The following registers must be preserved by any C-callable 
+* routine, so they do not need to be saved and restored here.
+*     XAR5, XAR6, XAR7, T2, T3, RETA, CFCT, XDP,
+*     MDP, MDP05, MDP67
+*  The following registers have already been saved in the ISR:
+*     XAR0, XAR1, XAR2, XAR3, XAR7, AC0, AC1, AC2, T0, T1
+*  The following registers are saved by Automatic Context Switch
+*     ST0_55, ST1_55, ST2_55
+*  The following registers will not be modified by our own routines:
+*     TRN0, TRN1, XCDP, 
+*     BK03, BK47, BKC,
+*     BSA01, BSA23, BSA45, BSA67, BSAC,
+*     BRS1, BRC0, BRC1, 
+*     RSA0H, RSA0L, REA0H, REA0L,
+*     RSA1H, RSA1L, REA1H, REA1L
+*  Since SATA and SMUL are neither used nor modified by my own routine,
+*  ST3 does not need to be saved and modified and later restored,
+*
+*  The status register bits have already been set up into C mode.
+*
+*  So the following registers do need to be saved and restored:
+*     CSR, RPTC, AC3
+*
+	PSH	mmap(@RPTC)
+	PSH	dbl(AC3)
+	PSH	mmap(AC3G)
+	PSH	mmap(@CSR_L)
+* Align stack on even
+	MOV	SP, AR1
+	BTSTCLR	#0,mmap(SP),TC1      ; align stack on even (ignore TC1)
+	AADD	#-1,SP
+	PSH	AR1
+	
+	CALL	_ACPY2_OMAP_updateChannelStats 	; (handle, cnt);       // Case 2
+	
+; restore stack (needed because of alignment)
+	POP	mmap(SP)              ; restore stack
+	POP	mmap(@CSR_L)
+	POP	mmap(AC3G)
+	POP	dbl(AC3)
+	POP	mmap(@RPTC)
+	
+  .else
+    .align 4
+LABEL_AFTER_NEXT_JOB:
+  .endif ; if _INSTR_BANDWIDTH
+*    }
+
+	MOV	dbl(*+AR3(_DMA_Obj.cbFxn)), AC1	  ; AC1 = jobQ->curHandle->cbFxn 
+*                                                 ; AR3 = &jobQ->curHandle->cbFxn	
+  .noremark 5669	; CPU_92: This inst may not execute correctly due to preceeding bus access
+	POPBOTH	XAR4
+  .remark 5669
+	BCC	DO_CALLBACK, AC1 != #0            ; (Pipe 1 just Ok for AC1 from MOV)
+
+	POPBOTH	XAR3
+	POPBOTH	XAR7
+	POPBOTH	XAR2
+	POP	mmap(AC2G)
+	POP	dbl(AC2)
+
+DMA_isrExit:
+	POPBOTH	XAR1
+	POP	T0,T1
+	POP	mmap(AC1G)
+	POP	dbl(AC1)
+	POP	mmap(AC0G)
+	POP	dbl(AC0)
+	POPBOTH	XAR0
+     .noremark 5674
+	RETI			; Return from interrupt and enable interrupts
+     .remark 5674
+*}
+
+
+
+
+    .sect    ".text:ACPY_isr"
+    
+    .align 4
+DO_CALLBACK:    
+*
+* Temporarily save AR3 in data-space (i.e. ACPY2_callbackPtr), so that
+* it won't be overwritten when the registers are restored to their
+* original values to allow for HWI_enter.
+*
+	MOV	XAR3, dbl(*(#ACPY2_callbackPtr))        ; ACPY2_callbackPtr = &jobQ->curHandle->cbFxn
+
+	POPBOTH	XAR3
+	POPBOTH	XAR7
+	POPBOTH	XAR2
+	POP	mmap(AC2G)
+	POP	dbl(AC2)
+
+	POPBOTH	XAR1
+	POP	T0,T1
+	POP	mmap(AC1G)
+	POP	dbl(AC1)
+	POP	mmap(AC0G)
+	POP	dbl(AC0)
+	POPBOTH	XAR0
+	
+	HWI_enter C55_AR_DR_SAVE_BY_CALLER_MASK, \
+	          C55_ACC_SAVE_BY_CALLER_MASK,   \
+	          C55_MISC1_SAVE_BY_CALLER_MASK, \
+	          C55_MISC2_SAVE_BY_CALLER_MASK, \
+	          C55_MISC3_SAVE_BY_CALLER_MASK, \
+	          0xffff, 0xffff
+
+	MOV	dbl(*(#ACPY2_callbackPtr)), XAR3 ; (Pipe 0 of 4 for AR3 for MOV)
+	MOV	dbl(*AR3+), AC1    ; AC1 = jobQ->curHandle->cbFxn;   (callback function)
+*                                  ; AR3 = &jobQ->curHandle->cbArg
+  .if   (_DMA_Obj.cbArg == (_DMA_Obj.cbFxn+2))
+	MOV	dbl(*AR3), XAR0                                               ; argument for callback function
+  .else
+	MOV	dbl(*AR3(short(#_DMA_Obj.cbArg-(_DMA_Obj.cbFxn+2)))), XAR0    ; argument for callback function
+  .endif
+  
+	CALL	AC1			; Perform callback function
+
+	HWI_exit  C55_AR_DR_SAVE_BY_CALLER_MASK, \
+	          C55_ACC_SAVE_BY_CALLER_MASK,   \
+	          C55_MISC1_SAVE_BY_CALLER_MASK, \
+	          C55_MISC2_SAVE_BY_CALLER_MASK, \
+	          C55_MISC3_SAVE_BY_CALLER_MASK, \
+	          0xffff, 0xffff
+
+
+ .endif ; if DMA_OPT
+ 	.end

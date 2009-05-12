@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.acpy3' release='1, 0, 0' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='12' text='++Framework+Components%27+algorithm+copy+library+%28includes+DMA+optimization%29%2C'/>
+        <comment line='13' text='++for+the+ACPY3+interface.'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='15' text='++This+package+provides+the+ACPY3+copy+services+for+xDAIS+algorithms.'/>
+    </autodoc>
+    <module name='ACPY3' hostonly='1'>
+        <autodoc tag='summary'>
+            <comment line='12' text='++Joule+ACPY3+library'/>
+        </autodoc>
+        <config name='debug' line='25' hostonly='1' type='K%21Bool%21%24' code='b' init='%24Kfalse'>
+            <autodoc tag='summary'>
+                <comment line='19' text='++Enable+the+debug+profile+of+the+ACPY3+library.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='21' text='++This+will+likely+result+in+a+larger+and+slower+library+being+linked+in%2C'/>
+                <comment line='22' text='++but+it+will+provide+extra+parameter+checking+and+debug+trace'/>
+                <comment line='23' text='++statements+dropped+in+the+BIOS+SYS+trace+buffer.'/>
+            </autodoc>
+        </config>
+    </module>
+</package>

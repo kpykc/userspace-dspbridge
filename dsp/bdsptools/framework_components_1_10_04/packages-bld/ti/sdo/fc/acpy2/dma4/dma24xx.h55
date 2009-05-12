@@ -1,0 +1,34 @@
+;  ======== dma4/dma24xx.h55 ========
+;  Static configuration of _DMA_jobQueue, _DMA_channel
+;
+
+
+    .if ($isdefed("DMA24XX_") = 0)  ; prevent multiple includes
+DMA24XX_       .set    1
+
+        .include cinit.h55
+        .include chk.h55
+        .include gbl.h55
+        .include std.h55    
+
+dmaAlign    .set    2
+
+DMA_JobQueue            .struct
+curHandle       DataPtr         1               ; Handle to IDMA2 channel
+reqPending      Int             1               ;
+len             Int             1               ; queue size
+readPtr         DataPtr         1               ; Next DMA job to process
+writePtr        DataPtr         1               ; Location to write next job
+endPad          .align          dmaAlign
+DMA_A_JOBQUEUESIZE      .endstruct
+
+DMA_Job                 .struct
+cnt             Int             1               ; Elems per frame
+src             DataPtr         1               ; DMA source buffer
+dst             DataPtr         1               ; DMA destination buffer
+handle          DataPtr         1               ; IDMA2 handle owner of job
+nextJob         DataPtr         1               ; pointer to next job in buffer (last points to first)
+endPad          .align          dmaAlign
+DMA_A_JOBSIZE           .endstruct
+
+    .endif              ; if DMA24XX_ is not defined

@@ -1,0 +1,148 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== dynbase.tcf ========
+ */
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+var fcPackage = true ;
+
+if (chipType != "2430" && chipType != "3430") {
+    fcPackage = false ;
+}
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge", fcPackage);
+
+load(utils.findFile('assert.tci'));  // load assert support
+
+// If FC is outside the bridge, the below configuration is applicable
+if ( !fcPackage ) {
+    bridgeutils.addFcConfig();
+}
+
+utils.importFile("dynbase.tci");
+
+/* Board dependent properties */
+if (chipType != "2430" && chipType != "3430") {
+    var daramDynSize = 0x2700 ;
+    var saramDynSize = 0x3800 ;
+
+    /* Reduce the size of SARAM to make room for dynamic loading region */
+    bridge.SARAM.len = bridge.SARAM.len - saramDynSize;
+
+    /* Reduce the size of DARAM to make room for dynamic loading region */
+    bridge.DARAM.len = bridge.DARAM.len - daramDynSize;
+
+    bridge.DARAM.heapSize = 0x2800;
+    
+    if (chipType != "v1035") {
+        bridge.TIOMAP1510SHM.dynSramMemSize = 0x2000;
+        bridge.TIOMAP1510SHM.dynSramMemBase = 0x7D000;
+    }
+    
+    /* Create SARAM_DYN for dynamic loading */
+    saramdyn = bridge.MEM.create("SARAM_DYN");
+    saramdyn.createHeap = 0;
+    saramdyn.base = bridge.SARAM.base + bridge.SARAM.len;
+    saramdyn.len = saramDynSize;
+    saramdyn.space = "code/data";
+    saramdyn.dynamicLoading = true;
+
+    /* Create DARAM_DYN for dynamic loading */
+    daramdyn = bridge.MEM.create("DARAM_DYN");
+    daramdyn.createHeap = 0;
+    daramdyn.base = bridge.DARAM.base + bridge.DARAM.len;
+    daramdyn.len = daramDynSize;
+    daramdyn.space = "code/data";
+    daramdyn.dynamicLoading = true;
+
+    /* Map dynamic loading memory regions to abstract types */
+    bridge.PROC.DYNDARAMSEG = daramdyn;
+    bridge.PROC.DYNSARAMSEG = saramdyn;
+
+    // disables the Bios timer since it is not used, also when using PM
+    // it may prevent the device from going into IDLE
+    bridge.PRD.USECLK = false;
+    bridge.CLK.ENABLECLK = false;
+}
+else {
+    /**** Create a heap specifically for message frames ****/
+
+    /* Set a size that is a multiple of message frame size */
+    var msgFrameHeapSize = 24 * 100; /* 24 bytes/frame * 100 frames */
+
+    /* Reduce size of L1DSRAM region */
+    bridge.L1DSRAM.len = bridge.L1DSRAM.len - msgFrameHeapSize;
+
+    /* Reduce size of L1DSRAM heap */
+    bridge.L1DSRAM.heapSize = bridge.L1DSRAM.len;
+
+    /* Create a new BIOS segment */
+    MSGFRAMESEG = prog.module("MEM").create("MSGFRAMESEG");
+    MSGFRAMESEG.createHeap = true;
+
+    /* Set the base address */
+    MSGFRAMESEG.base = bridge.L1DSRAM.base + bridge.L1DSRAM.len;
+
+    /* Set the size */
+    MSGFRAMESEG.len = msgFrameHeapSize;
+    MSGFRAMESEG.heapSize = MSGFRAMESEG.len;
+
+    /* Assign the msg frame segment */
+    bridge.NODE.MSGFRAMESEG = MSGFRAMESEG;
+
+    bridge.TIOMAP3430SHM.EXTCODESIZE = 0x150000;
+
+}
+
+// nd: we don't use that now because of a RTSC issue which should be fixed
+// soon. basically in some cases RTSC will ignore the "tcopts" and thus the
+// power management is not enabled into the base image (see *.tcf)
+//if (environment["config.powerManagement"] == 1) {
+
+var bPowerManagement = true ;
+if ((bPowerManagement) && (chipType != "v1030") && (chipType != "v1035") ){
+    print ("Enabling power management...");
+    bridgeutils.enablePowerManagement(prog);
+}
+
+var bLoadMonitor = true ;
+if ((bLoadMonitor) && (chipType != "v1030") && (chipType != "v1035") ) {
+    print ("Enabling PWRM Load Monitor...");
+    bridgeutils.enablePWRMLoadMonitor(prog);
+}
+
+bridge.PROC.DYNEXTSEG = bridge.DYNEXTMEM;
+
+/* Set board frequency (MHz) */
+bridge.GBL.CLKOUT = 180;
+
+// If FC is outside the bridge, the below configuration is applicable
+if ( !fcPackage ) {
+bridgeutils.addFcConfig();
+}
+
+assert.check();
+
+prog.gen();

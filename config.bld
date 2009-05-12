@@ -1,0 +1,239 @@
+/*
+ *  ======== config.bld ========
+ *  This script is run prior to all build scripts.  It initializes the
+ *  rootDir configuration parameter of all supported targets.
+ */
+
+print("Using dsp project-specific config.bld");
+
+var tiTargets = xdc.loadPackage('ti.targets');
+var os = environment["xdc.hostOS"];
+var depot = "c:/mytools";
+var c55CodeGenVersion = "";
+var c6xCodeGenVersion = "";
+var fcDir = "";
+var fcInside = "";
+var dbs_cgtools_dir_c64 = "";
+var loadMonitor = "";
+var scaling = "";
+var ipc = "";
+for (x = 0; x < arguments.length; x++) {
+    if (arguments[x].match(/^DEPOT=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+        depot = arguments[x].split("=")[1];
+        print("setting DEPOT = " + depot);
+    }
+    else if (arguments[x].match(/^CGT55_VER=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+        c55CodeGenVersion = arguments[x].split("=")[1];
+        print("setting c55CodeGenVersion = " + c55CodeGenVersion);
+    }
+    else if (arguments[x].match(/^CGT6X_VER=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+        c6xCodeGenVersion = arguments[x].split("=")[1];
+        print("setting c6xCodeGenVersion = " + c6xCodeGenVersion);
+    }
+    else if (arguments[x].match(/^FC_DIR=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+	fcDir = arguments[x].split("=")[1];
+        print("setting framework components directory = " + fcDir);
+    }
+    else if (arguments[x].match(/^FC_PACKAGE=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+    	fcInside = arguments[x].split("=")[1];
+        print("setting fcInside variable as = " + fcInside);
+    }
+    else if (arguments[x].match(/^DBS_CGTOOLS_DIR_C64=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+    	dbs_cgtools_dir_c64  = arguments[x].split("=")[1];
+        print("setting dbs_cgtools_dir_c64  variable as = " + dbs_cgtools_dir_c64 );
+    }
+    else if (arguments[x].match(/^L_MONITOR=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+    	loadMonitor = arguments[x].split("=")[1];
+        print("setting loadMonitor variable as = " + loadMonitor);
+    }    
+    else if (arguments[x].match(/^SCALING=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+    	scaling = arguments[x].split("=")[1];
+        print("setting scaling variable as = " + scaling);
+    }    
+    else if (arguments[x].match(/^IPC=/) ) {
+        // [1] operation is used on the return value of split(), which is an 
+        // array. 
+    	ipc = arguments[x].split("=")[1];
+        print("setting ipc variable as = " + ipc);
+    }
+}
+
+if ((os != "Windows") && (os != "Linux")) {
+    throw "Unsupported OS!";
+}
+
+var vcoreOpts = " -vcore:2.x -vcore:3.x";
+var AOPTS = vcoreOpts;
+
+/*
+ * -pds=452: Suppress long long non-standard type.
+ * -pds=238: Suppress controlling expression is constant.
+ */ 
+var pdsOpts = " -pds=452 -pds=238";
+
+/* 
+ * Set rootDir of CG tools 
+ * Note: if the CGT version is not passed by top level makefile for a platform
+ * that we are building for, then XDC will throw an exception since the rootDir
+ * for this platform will be undefined.
+ */
+if (c55CodeGenVersion != "") {
+    tiTargets.C55.rootDir = depot + "/cgt55-" + c55CodeGenVersion;
+}
+
+if (c6xCodeGenVersion != "") {
+    tiTargets.C64P.rootDir = depot + "/cgt6x-" + c6xCodeGenVersion;
+}
+
+/* Set SABIOS_DIR via xdc */
+SABIOS_DIR = xdc.getPackageBase('ti.bios');
+
+/*
+ *  Link with -w option to give warning if an output section has no
+ *  SECTIONS specification.
+ */
+var linkerOpts = "-i " + SABIOS_DIR + "lib";
+
+tiTargets.C55_large.profiles["debug"] = {
+    linkOpts: linkerOpts,
+};
+tiTargets.C55_large.profiles["release"] = {
+    linkOpts: linkerOpts,
+};
+
+tiTargets.C64P.profiles["debug"] = {
+    linkOpts: linkerOpts,
+};
+tiTargets.C64P.profiles["release"] = {
+    linkOpts: linkerOpts,
+};
+
+/* 
+ * define some interesting profiles (profTail is the map between the profile
+ * and the tail appended to the library name).
+ */
+var profTail = new Array();
+
+/*
+ * -gw:    dwarf debug symbols
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C55_large.profiles["bridge_debug"] = {
+    compileOpts: {
+        copts: "-pdr -gw -pden" + vcoreOpts + pdsOpts,
+        defs:  "-D_DBG_ -DDBC_ASSERTS=1",
+        aopts: "-gw" + AOPTS,
+    },
+    linkOpts: linkerOpts,
+
+};
+profTail["bridge_debug"] = "d";
+
+/* no support for inst variant for now */
+if (0) {
+/*
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C55_large.profiles["bridge_inst"] = {
+    compileOpts: {
+        copts: "-pdr -pden" + vcoreOpts + pdsOpts,
+        defs:  "-D_INST_ -DDBC_ASSERTS=0",
+        aopts: AOPTS,
+    },
+    linkOpts: linkerOpts,
+};
+profTail["bridge_inst"] = "i";
+}
+
+/*
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C55_large.profiles["bridge_release"] = {
+    compileOpts: {
+        copts: "-pdr -pden" + vcoreOpts + pdsOpts,
+        defs:  "-DDBC_ASSERTS=0",
+        aopts: AOPTS,
+    },
+    linkOpts: linkerOpts,
+};
+profTail["bridge_release"] = "";
+
+/* Prevent inclusion of C runtime support library into DLL builds */
+tiTargets.C55_large.lnkOpts.suffix =
+    "-m $(XDCCFGDIR)/$@.map "; // -l $(rootDir)/lib/rts55x.lib";
+
+/*
+ * -g:    dwarf debug symbols (v5.3.0b4)
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C64P.profiles["bridge_debug"] = {
+    compileOpts: {
+        copts: "-pdr -g -pden"  + pdsOpts,
+        defs:  "-D_DBG_ -DDBC_ASSERTS=1 -D_TI_NODEHEAP -DIDMA3_USEFULLPACKAGEPATH",
+        aopts: "-g",
+    },
+    linkOpts: linkerOpts,
+
+};
+profTail["bridge_debug"] = "d";
+
+/* no support for inst variant for now */
+if (0) {
+/*
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C64P.profiles["bridge_inst"] = {
+    compileOpts: {
+        copts: "-pdr -pden" + pdsOpts,
+        defs:  "-D_INST_ -DDBC_ASSERTS=0 -D_TI_NODEHEAP -DIDMA3_USEFULLPACKAGEPATH",
+    },
+    linkOpts: linkerOpts,
+};
+profTail["bridge_inst"] = "i";
+}
+
+/*s
+ * -pdr:   display diagnostic remarks
+ * -pden:  display diagnostic's numeric Id (useful for identifying diagnostics)
+ */
+tiTargets.C64P.profiles["bridge_release"] = {
+    compileOpts: {
+        copts: "-pdr -pden" + pdsOpts,
+        defs:  "-DDBC_ASSERTS=0 -D_TI_NODEHEAP -DIDMA3_USEFULLPACKAGEPATH",
+    },
+    linkOpts: linkerOpts,
+};
+profTail["bridge_release"] = "";
+
+/* Prevent inclusion of C runtime support library into DLL builds */
+tiTargets.C64P.lnkOpts.suffix =
+    "-m $(XDCCFGDIR)/$@.map "; // -l $(rootDir)/lib/rts64plus.lib";
+
+/* 
+ * The following part is now commented out since this configuration is done
+ * in the top level makefile. The goal is to be able to select from the command
+ * only a subset of the targets that we want to build for.  
+ */
+/* Build C55_large and Joule (C64P). */
+/* Build.useTargets = "ti.targets.C55_large;ti.targets.C64P"; */

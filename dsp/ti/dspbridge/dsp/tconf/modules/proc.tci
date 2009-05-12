@@ -1,0 +1,376 @@
+/*
+ *  ======== proc.tci ========
+ *
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var MEM_NULL = prog.module("MEM").instance("MEM_NULL");
+var SHMMEM = prog.module("MEM").instance("SHMMEM");
+var SHM = bridgeutils.getSHM();
+var ADDRESSMASK = SHM.ADDRESSMASK;
+
+var $$name = "PROC";
+
+var $$label = "Properties for DSP Bridge PROC module";
+
+/* Global properties for PROC object */
+var $$global = [
+        {
+            /* TBD: Why aren't DYNM objects configured in DYNM module? */
+            name : "DYNDARAMSEG",
+            val  : MEM_NULL,
+            label: "Map DYN_DARAM to segment",
+            type : "Object",
+            test : ["setDynDARAMSeg"],
+        },
+        {
+            name : "DYNSARAMSEG",
+            val  : MEM_NULL,
+            label: "Map DYN_SARAM to segment",
+            type : "Object",
+            test : ["setDynSARAMSeg"],
+        },
+        {
+            name : "DYNEXTSEG",
+            val  : MEM_NULL,
+            label: "Map DYN_EXTERNAL to segment",
+            type : "Object",
+            test : ["setDynEXTSeg"],
+        },
+        {
+            name : "DYNSRAMSEG",
+            val  : MEM_NULL,
+            label: "Map DYN_SRAM to segment",
+            type : "Object",
+            //test :["setDynSRAMSeg"],
+        },
+            ];
+
+/* Per instance properties */
+var $$instance = [
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uiProcessorID",
+            val  : "12345678_1234_1234_1234_12345678ABCD",
+            label: "Processor DSP_UUID",
+            type : "String",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "cbStruct",
+            val  : 1024,
+            label: "Processor data structure size",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uProcessorFamily",
+            val  : 6000,
+            label: "Processor family",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uProcessorType",
+            val  : 64,
+            label: "Processor type",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uClockRate",
+            val  : 60,
+            label: "Clock rate",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uInternalMemSize",
+            val  : 0x0,
+            label: "Internal memory size",
+            type : "Hexadecimal",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "ulExternalMemSize",
+            val  : 0x0,
+            label: "External memory size",
+            type : "Hexadecimal",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "uUserID",
+            val  : 888,
+            label: "User ID",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "tyRunningRTOS",
+            val  : 3,
+            label: "Running RTOS",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "nNodeMinPriority",
+            val  : 1,
+            label: "Node minimum priority",
+            type : "Integer",
+        },
+        {
+            /* TBD: Enter arbitrary value since property is not exposed
+               to the user and may not be used in DSP Bridge source code? */
+            name : "nNodeMaxPriority",
+            val  : 15,
+            label: "Node maximum priority",
+            type : "Integer",
+        },
+            /* DSP-MMU TLB 0 */
+        {
+            name : "physicalEntry0",
+            val  : 0x0,
+            label: "TLB 0: Shared Memory GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry0",
+            val  : (SHMMEM.base & ADDRESSMASK),
+            label: "TLB 0: Shared Memory DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 1 */
+        {
+            name : "physicalEntry1",
+            val  : 0x0,
+            label: "TLB 1: LCD Framebuffer GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry1",
+            val  : (SHMMEM.base & ADDRESSMASK) + 0x80000,
+            label: "TLB 1: LCD Framebuffer DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 2 */
+        {
+            name : "physicalEntry2",
+            val  : 0x0,
+            label: "TLB 2: SRAM GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry2",
+            val  : 0x68000, //(SHMMEM.base & ADDRESSMASK) + 0x100000,
+            label: "TLB 2: SRAM DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 3 */
+        {
+            name : "physicalEntry3",
+            val  : 0x0,
+            label: "TLB 3: GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry3",
+            val  : (SHMMEM.base & ADDRESSMASK) + 0x180000,
+            label: "TLB 3: DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 4 */
+        {
+            name : "physicalEntry4",
+            val  : 0x0,
+            label: "TLB 4: GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry4",
+            val  : (SHMMEM.base & ADDRESSMASK) + 0x200000,
+            label: "TLB 4: DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 5 */
+        {
+            name : "physicalEntry5",
+            val  : 0x0,
+            label: "TLB 5: GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry5",
+            val  : (SHMMEM.base & ADDRESSMASK) + 0x280000,
+            label: "TLB 5: DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+            /* DSP-MMU TLB 6 */
+        {
+            name : "physicalEntry6",
+            val  : 0x0,
+            label: "TLB 6: GPP Physical Base Address (byte)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "virtualEntry6",
+            val  : (SHMMEM.base & ADDRESSMASK) + 0x300000,
+            label: "TLB 6: DSP Virtual Base Address (word)",
+            type : "Hexadecimal",
+        },
+        {
+            /* TBD: Another property of the same name exists in node.cdb (?),
+               should we remove on of these properties? */
+            name : "bRegisterObject",
+            val  : true,
+            label: "Register in DCD database",
+            type : "Boolean",
+        },
+            ];
+
+var $$template = 
+    {
+        asmSource : "ti/dspbridge/dsp/tconf/modules/proc_asm.tpl",
+        linker    : "ti/dspbridge/dsp/tconf/modules/proc_cmd.tpl",
+    };
+
+/*
+ *  ======== Test Functions ========
+ *  TBD: Understand the purpose of these set DARAM/SARAM/EXT/SRAM segment
+ *  functions.
+ */
+function setDynDARAMSeg (text, val)
+{
+    var dynm = dspbridge.module("DYNM");
+            
+    if (val.dynamicLoading || (val == MEM_NULL)) {
+        if (this.internalMem(val)) {
+            var dynm_0 = dynm.instance("DYNM_0");
+            var dynm_1 = dynm.instance("DYNM_1");
+
+            if ( (dynm_1.memSeg != val) || (val == MEM_NULL) ) {
+                dynm_0.memSeg = val;
+                dynm_0.base = val.base;
+                dynm_0.len = val.len;
+                dynm_0.memType = dynm.getMemType(val);
+            }
+            else {
+                throw (val.name + " segment already mapped to DYN_SARAM");
+            }
+        } else {
+            throw (val.name + " segment is not an internal memory segment");
+        }
+    } else {
+        throw (val.name + " segment not reserved for Dynamic Loading");
+    }
+}
+
+function setDynSARAMSeg (text, val)
+{
+    var dynm = dspbridge.module("DYNM");
+
+    if (val.dynamicLoading || (val == MEM_NULL)) {
+        if (this.internalMem(val)) {
+            var dynm_0 = dynm.instance("DYNM_0");
+            var dynm_1 = dynm.instance("DYNM_1");
+
+            if ( (dynm_0.memSeg != val) || (val == MEM_NULL) ) {
+                dynm_1.memSeg = val;
+                dynm_1.base = val.base;
+                dynm_1.len = val.len;
+                dynm_1.memType = dynm.getMemType(val);
+            }
+            else {
+                throw (val.name + " segment already mapped to DYN_DARAM");
+            }
+        } else {
+            throw (val.name + " segment is not an internal memory segment");
+        }
+    } else {
+        throw (val.name + " segment not reserved for Dynamic Loading");
+    }
+}
+
+function setDynEXTSeg (text, val)
+{
+    var dynm = dspbridge.module("DYNM");
+            
+    if (val.dynamicLoading || (val == MEM_NULL)) {
+        if (!this.internalMem(val) || (val == MEM_NULL)) {
+            var dynm_2 = dynm.instance("DYNM_2");
+            var dynm_3 = dynm.instance("DYNM_3");
+
+            if ( (dynm_3.memSeg != val) || (val == MEM_NULL) ) {
+                dynm_2.memSeg = val;
+                dynm_2.base = val.base;
+                dynm_2.len = val.len;
+                dynm_2.memType = dynm.getMemType(val);
+            }
+            else {
+                throw (val.name + " segment already mapped to DYN_SRAM");
+            }
+        } else {
+            throw (val.name + " segment is not in external memory");
+        }
+    } else {
+        throw (val.name + " segment not reserved for Dynamic Loading");
+    }
+}
+
+function setDynSRAMSeg (text, val)
+{
+    var dynm = dspbridge.module("DYNM");
+            
+    if (val.dynamicLoading || (val == MEM_NULL)) {
+        if (!this.internalMem(val) || (val == MEM_NULL)) {
+            var dynm_2 = dynm.instance("DYNM_2");
+            var dynm_3 = dynm.instance("DYNM_3");
+
+            if ( (dynm_2.memSeg != val) || (val == MEM_NULL) ) {
+                dynm_3.memSeg = val;
+                dynm_3.base = val.base;
+                dynm_3.len = val.len;
+                dynm_3.memType = dynm.getMemType(val);
+            }
+            else {
+                throw (val.name + " segment already mapped to DYN_EXTERNAL");
+            }
+        } else {
+            throw (val.name + " segment is an internal memory segment");
+        }
+    } else {
+        throw (val.name + " segment not reserved for Dynamic Loading");
+    }
+}
+
+function internalMem (val)
+{
+    var retval;
+    var proc_tmp = this.instance("PROC_default");
+    retval = (val.base < proc_tmp.ulInternalMemSize) ? 1 : 0;
+    return (retval);
+}
+
+/*
+ *  ======== Module Initialization ========
+ */
+function init ()
+{
+    var proc_default_tmp = this.create("PROC_default");
+    proc_default_tmp.uiProcessorID = "93FA56D0_6FE5_11D4_B747_006008BDB66F";
+    proc_default_tmp.uProcessorFamily = 6000;
+    proc_default_tmp.uClockRate = 100;
+    proc_default_tmp.ulInternalMemSize = 0x0001c000;
+    proc_default_tmp.ulExternalMemSize = 0x00100000;
+    proc_default_tmp.uUserID = 0;
+}

@@ -1,0 +1,31 @@
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = "1510";
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+bridge.enableInst = true;
+
+//bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+
+print("Initial SHMMEM size and I/O buffer size:");
+print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP1510SHM.SHAREDMEMSIZE));
+print("MAXBUFSIZE: " + utils.toHex(bridge.TIOMAP1510SHM.MAXBUFSIZE));
+
+bridge.TIOMAP1510SHM.SETMAXBUFSIZE = true;
+bridge.TIOMAP1510SHM.MAXBUFSIZE = 0x1000;
+//bridge.TIOMAP1510SHM.SETMAXBUFSIZE = false;
+
+// This will not get updated until the finalize() function gets called.
+//print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP1510SHM.SHAREDMEMSIZE));
+
+//print("MAXMESSAGES: " + bridge.TIOMAP1510SHM.MAXMESSAGES);
+
+prog.gen("shm1510test");
+
+print("...after setting MAXBUFSIZE and generation...");
+
+print("SHAREDMEMSIZE: " + utils.toHex(bridge.TIOMAP1510SHM.SHAREDMEMSIZE));
+print("MAXBUFSIZE: " + utils.toHex(bridge.TIOMAP1510SHM.MAXBUFSIZE));

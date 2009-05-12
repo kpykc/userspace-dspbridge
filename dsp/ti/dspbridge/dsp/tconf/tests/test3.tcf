@@ -1,0 +1,8 @@
+var test = [];
+
+test.push("nico");
+test.push("ken");
+
+print (test);
+
+print (test.length);

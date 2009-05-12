@@ -1,0 +1,12 @@
+/*
+ *  ======== dcdr.tci ========
+ */
+var $$name =  "DCDR";
+
+var $$label = "Properties for DSP Bridge Dynamic Configuration Database";
+
+var $$template =
+    {
+        linker    : "ti/dspbridge/dsp/tconf/modules/dcdr_cmd.tpl",
+    };
+

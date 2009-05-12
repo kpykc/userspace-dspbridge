@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.xdais" version="1, 2.0, 0, 0">
+    <units>
+    </units>
+    <sources>
+    </sources>
+    <configurations>
+    </configurations>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="package/rel/ti_xdais.tar.dep" src="package/rel/ti_xdais.inc"/>
+    </makefiles>
+    <targets>
+    </targets>
+    <libraries>
+    </libraries>
+    <executables>
+    </executables>
+    <releases relDir="package/rel/">
+    <release name="ti_xdais"
+        pname="ti_xdais.tar"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="./doc/spra789a.zip"/>
+        <file name="package/package.ext.xml"/>
+        <file name="./doc/spra789a.pdf"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="./idma2.h"/>
+        <file name="./doc/spra929a.pdf"/>
+        <file name="./acpy2.h"/>
+        <file name="./doc/spra445.pdf"/>
+        <file name="package/package.rel.dot"/>
+        <file name="./ialg.h"/>
+        <file name="package/package.xdc.xml"/>
+        <file name="./doc/spru361e.pdf"/>
+        <file name="./doc/spra790.pdf"/>
+        <file name="./doc/dsp_algorithm_standard.html"/>
+        <file name="./doc/spru424c.pdf"/>
+        <file name="./acpy.h"/>
+        <file name="./idma3.h"/>
+        <file name="./doc/logocorp.gif"/>
+        <file name="./doc/spra580b.pdf"/>
+        <file name="./idma.h"/>
+        <file name="./xdas.h"/>
+        <file name="./doc/spra577b.pdf"/>
+        <file name="./doc/spru352e.pdf"/>
+        <file name="package/package.cfg.inc"/>
+        <file name="./doc/spru360c.pdf"/>
+        <file name="./doc/spra579c.pdf"/>
+        <file name="package/package.bld.xml"/>
+        <file name="./doc/spra581c.pdf"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

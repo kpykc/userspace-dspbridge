@@ -1,0 +1,38 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== cnxdiag.tci ========
+ */
+
+
+// add instance LOG.trace
+trace = bridge.LOG.create("trace");
+trace.bufLen = 256;
+
+
+// Create a new node
+node0 = bridge.NODE.create("node0");
+
+node0.uuid = "7EEB2C7E_785A_11D4_A650_00C04F0C04F3";
+node0.name = "node0";
+node0.stackSize = 512;
+node0.messageDepth = 3;
+node0.numInputStreams = 0;
+node0.createFxn = "cnxdiagCreate";
+node0.executeFxn = "cnxdiagExecute";
+node0.deleteFxn = "cnxdiagDelete";
+

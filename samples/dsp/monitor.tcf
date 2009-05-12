@@ -1,0 +1,118 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== monitor.tcf ========
+ *
+ */
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+load(utils.findFile('assert.tci'));	 // load assert support
+
+var fcPackage = true ;
+
+/* load the platform */
+print ("chipType is " + chipType);
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge", fcPackage);
+
+// If FC is outside the bridge, the below configuration is applicable
+if ( !fcPackage ) {
+bridgeutils.addFcConfig();
+}
+
+/* Board dependent properties */
+if (chipType != "2430" && chipType != "3430") {
+
+    // Reduce the size of SARAM to make room for dynamic loading region
+    bridge.SARAM.base = 0x8008;
+    bridge.SARAM.len = 0x7ff8;
+
+    // Reduce the size of DARAM to make room for dynamic loading region
+    bridge.DARAM.base = 0x100;
+    bridge.DARAM.len = 0x5F00;
+    bridge.DARAM.heapSize = 0x3000;
+
+    bridge.TIOMAP1510SHM.dynSramMemSize = 0x2000;
+    bridge.TIOMAP1510SHM.dynSramMemBase = 0x7D000;
+
+    // Create SARAM_DYN for dynamic loading
+    saramdyn = bridge.MEM.create("SARAM_DYN");
+    saramdyn.createHeap = 0;
+    saramdyn.base = 0x10000;
+    saramdyn.len = 0x3800;
+    saramdyn.space = "code/data";
+    saramdyn.dynamicLoading = true;
+
+    // Create DARAM_DYN for dynamic loading
+    daramdyn = bridge.MEM.create("DARAM_DYN");
+    daramdyn.createHeap = 0;
+    daramdyn.base = 0x6000;
+    daramdyn.len = 0x2000;
+    daramdyn.space = "code/data";
+    daramdyn.dynamicLoading = true;
+
+    // Map dynamic loading memory regions to abstract types
+    bridge.PROC.DYNDARAMSEG = daramdyn;
+    bridge.PROC.DYNSARAMSEG = saramdyn;
+
+}
+
+// Map dynamic loading memory regions to abstract types
+bridge.PROC.DYNEXTSEG = bridge.DYNEXTMEM;
+
+bridge.SYS.PUTCFXN = prog.extern("USR_doPutcNotifyGPP");
+bridge.SYS.TRACESIZE = 0x2000;
+
+var bPowerManagement = true ;
+if ((bPowerManagement) && (chipType != "v1030") && (chipType != "v1035") ) {
+    print ("Enabling power management...");
+    bridgeutils.enablePowerManagement(prog);
+}
+
+var bLoadMonitor = true ;
+if ((bLoadMonitor) && (chipType != "v1030") && (chipType != "v1035") ) {
+    print ("Enabling PWRM Load Monitor...");
+    bridgeutils.enablePWRMLoadMonitor(prog);
+}
+
+/*  Load the THRLOAD module configuration file  */
+if ((chipType == "24xx") || (chipType == "2430") || (chipType == "3430") || (chipType == "v1035") ) {
+    bridgeutils.enableQOS(prog);
+}
+
+/*
+ * Do you want to link in the Bridge debug variant libs?
+ */
+bridge.BRIDGE.enableDebug = false;
+
+/* Set board frequency (MHz) */
+bridge.GBL.CLKOUT = 180;
+
+// add instance LOG.trace
+trace = bridge.LOG.create("trace");
+trace.bufLen = 32;
+
+// check any and all asserts added in the script above
+assert.check();
+
+/* generate the configuration files */
+prog.gen();

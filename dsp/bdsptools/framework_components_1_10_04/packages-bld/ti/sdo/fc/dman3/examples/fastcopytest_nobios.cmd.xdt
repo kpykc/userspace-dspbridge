@@ -1,0 +1,30 @@
+%%{
+/*
+ *  Copyright 2007 by Texas Instruments Incorporated.
+ *
+ *  All rights reserved. Property of Texas Instruments Incorporated.
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ * 
+ */
+
+%%}
+%%{
+    var rtsLib = this.build.target.rootDir + "/lib";
+    var chipType = prog.build.cfgArgs.chipType;
+%%}
+
+/* RTS library search path */
+-i"`rtsLib`"
+
+%if (chipType == "2430") {
+"fastcopytest_2430_nobios.cmd"
+%} else {
+"fastcopytest_nobios.cmd"
+%}
+%%{
+/*
+ * @(#) ti.sdo.fc.dman3.examples; 1,0,0,36; 5-10-2007 10:49:53; /db/atree/library/trees/fc-b12x/src/
+ */
+
+%%}

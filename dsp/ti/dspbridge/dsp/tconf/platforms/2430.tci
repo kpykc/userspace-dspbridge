@@ -1,0 +1,71 @@
+
+/* Load "base" platform file, since most c64P devices have the same 
+   properties
+*/
+var file = "ti/dspbridge/dsp/tconf/platforms/c64P.tci";
+var filename = utils.findFile(file);
+
+if (filename == null) {
+    throw "Cannot find platform file: " + file;
+}
+
+var plat = utils.loadCapsule(filename);
+
+function setupBIOS () 
+{
+    /*
+     * Setup platform-specific memory map, CLK rate, etc.
+     */
+    var mem_ext = [];
+
+    mem_ext[0] = {
+        comment: "This memory segment is used for External program",
+        name: "EXTMEM",
+        base: 0x20000000,
+        len:  0x10000,
+        space: "code/data"
+    };
+
+    /* Specify the L2 memory setting */
+    var device_regs = {
+        l2Mode: "0k"
+    };
+
+    var params = {
+        clockRate: 330,
+        catalogName: "ti.catalog.c6000",
+        deviceName: "2430",
+        regs: device_regs,
+        mem: mem_ext
+    };
+
+    /*
+     * Customize generic platform with parameters specified above.
+     */
+    utils.loadPlatform("ti.platforms.generic", params);    
+
+    // memory config
+    bios.enableMemoryHeaps(prog);
+    bios.enableTskManager(prog);
+    var EXTMEM = prog.module("MEM").instance("EXTMEM");
+    EXTMEM.createHeap = true;
+    EXTMEM.heapSize = 0x10;
+    EXTMEM.space = "code/data";
+    
+    bios.setMemCodeSections(prog, EXTMEM);
+    bios.setMemDataNoHeapSections(prog, EXTMEM);
+    bios.setMemDataHeapSections(prog, EXTMEM);
+    
+    // Remove IRAM
+    prog.module("MEM").instance("IRAM").destroy();
+}
+
+function setupBRIDGE (dll) 
+{
+    plat.setupBRIDGE("2430", dll);
+
+    if (dll == false) {
+        dspbridge.module("TIOMAP2430SHM").EXTDYNSIZE = 0x10000;
+        dspbridge.module("TIOMAP2430SHM").EXTHEAPSIZE = 0x8000;
+    }
+}

@@ -1,0 +1,6 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.utils.api' release='' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='12' text='++Framework+Components%27+utility+API+services.'/>
+    </autodoc>
+</package>

@@ -1,0 +1,48 @@
+%/*
+% *! ============================================================
+% *! Copyright 2004 by Texas Instruments Incorporated.
+% *! All rights reserved. Property of Texas Instruments Incorporated.
+% *! Restricted rights to use, duplicate or disclose this code are
+% *! granted through contract.
+% *! ============================================================
+% */
+%%{
+    /* TODO:  add support for debug/inst builds */
+    var lib = (new java.io.File(this.packageBase)).getCanonicalPath() +
+        "/exports/lib";
+%%}
+/* bridge library search path */
+-i"`lib`"
+
+/* Add BIOS support */
+%%{
+    /* note this may need removed when SABIOS becomes a proper package */
+
+    var rtsLib = prog.build.target.rootDir + "/lib";
+    var biosCmd = environment["config.programName"] + "cfg.cmd";
+
+    /* note that the path to the BIOS lib files must be specified outside of
+     * this file.
+     */
+%%}
+
+/* RTS library search paths */
+-i"`rtsLib`"
+
+/* FC components */
+%%{
+    var dskt2 = xdc.loadPackage("ti.sdo.fc.dskt2");    
+    var acpy3 = xdc.loadPackage("ti.sdo.fc.acpy3");    
+    var dman3 = xdc.loadPackage("ti.sdo.fc.dman3");    
+    var acpy2 = xdc.loadPackage("ti.sdo.fc.acpy2");    
+    var dman  = xdc.loadPackage("ti.sdo.fc.dman");    
+%%}
+-i"`new java.io.File(dskt2.packageBase).getCanonicalPath()`"
+-i"`new java.io.File(acpy3.packageBase).getCanonicalPath()`"
+-i"`new java.io.File(dman3.packageBase).getCanonicalPath()`"
+-i"`new java.io.File(acpy2.packageBase).getCanonicalPath()`"
+-i"`new java.io.File(dman.packageBase).getCanonicalPath()`"
+
+
+/* include the BIOS generated linker command file */
+"`biosCmd`"

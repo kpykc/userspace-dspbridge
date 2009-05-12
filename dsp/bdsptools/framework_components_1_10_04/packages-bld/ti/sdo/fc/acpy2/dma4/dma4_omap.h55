@@ -1,0 +1,147 @@
+*
+*  ======== dma4/dma4_omap.h55 ========
+*  This file contains object declarations used by the acpy library. 
+*
+
+ .if !$isdefed("DMA4_OMAP_H55_")
+DMA4_OMAP_H55_  .equ 1
+
+
+* DMA IRQ line numbers 
+DMA4_IRQL0              .set 0
+DMA4_IRQL1              .set 1
+DMA4_IRQL2              .set 2
+DMA4_IRQL3              .set 3
+
+* Corresponding interrupt mapping 
+DMA4_IRQ0INT            .set 18          ; HWI_INT18 
+DMA4_IRQ1INT            .set 9           ; HWI_INT9 
+DMA4_IRQ2INT            .set 20          ; HWI_INT20 
+DMA4_IRQ3INT            .set 21          ; HWI_INT21 
+
+* Mask used to enable interrupt in ier0 or ier1 
+* #define DMA4_ier1Mask(intNum)  (((intNum) > 15) ? (1 << ((intNum - 16))) : 0)
+* #define DMA4_ier0Mask(intNum)  (((intNum) < 16) ? (1 << ((intNum))) : 0)
+
+*
+*  DMA4_CCR - Channel control register
+*  Bits:
+*    6         - prio (1 = high priority, 0 = low priority)
+*    7         - enable (1 = logical channel is enabled, 0 = disabled)
+*    13:12     - src_amode (00: constant address, 01: post-increment,
+*                          10: single index, 11: double index)
+*    15:14     - dst_amode
+*
+DMA4_CCR_ENABLE       .set 0x80  ; channel enable 
+DMA4_CCR_HIGHPRIO     .set 0x40  ; Set high priority 
+
+DMA4_CCR_ENABLE_SHIFT .set 7     ; bit number for channel enable 
+
+* Source and addressing modes 
+DMA4_CCR_AMODE_MASK        .set 0xf000
+DMA4_CCR_SRC_AMODE_CONST   .set 0x0000   ; constant 
+DMA4_CCR_SRC_AMODE_PINC    .set 0x1000   ; post-increment 
+DMA4_CCR_SRC_AMODE_SNDX    .set 0x2000   ; single index 
+DMA4_CCR_SRC_AMODE_DNDX    .set 0x3000   ; double index 
+DMA4_CCR_DST_AMODE_CONST   .set 0x0000
+DMA4_CCR_DST_AMODE_PINC    .set 0x4000    
+DMA4_CCR_DST_AMODE_SNDX    .set 0x8000
+DMA4_CCR_DST_AMODE_DNDX    .set 0xc000
+DMA4_CCR_AMODEAUTOINC      .set 0x5000   ; src and dst post-increment 
+
+*
+*  DMA4_CICR - Channel interrupt control register
+*  Bits:
+*    5         - Block_ie (enables end of block interrupt)
+*
+DMA4_CICR_BLOCKIE_SHIFT     .set 5
+DMA4_CICR_BLOCKIE           .set (1 << 5)
+
+
+*
+*  DMA4_CSR - Channel status register
+*  Bits:
+*    1         - Drop (synchronization event drop occurred during transfer
+*    5         - Block (end of block event - read 1 --> end of block
+*                                            write 1 --> reset status bit)
+*
+DMA4_CSR_DROP         .set (1 << 0)
+DMA4_CSR_BLOCK        .set (1 << 5)
+
+*
+*  DMA4_CSDP - Channel source destination parameters
+*  Bits:
+*    1:0       - Data_type 00 = 8-bit, 01 = 16-bit, 10 = 32-bit, 11 = undef.
+*    6         - src_packed (1 = packed, 0 = not packed)
+*    8:7       - src_burst_en (00: single access, 01: 16-bytes, 10 32-bytes,
+*                              11: 64-bytes)
+*    13        - dst_packed
+*    15:14     - dst_burst_en
+*    18        - dst endianism lock (0 = adapt, 1 = lock)
+*    19        - dst endianness (0 = little endian, 1 = big endian)
+*    20        - src endianism lock (0 = adapt, 1 = lock)
+*    21        - src endianness (0 = little endian, 1 = big endian)
+*
+DMA4_CSDP_SRCPACK_ENA       .set 0x0040
+DMA4_CSDP_SRCBEN_ENA        .set 0x0100
+DMA4_CSDP_DSTPACK_ENA       .set 0x2000
+DMA4_CSDP_DSTBEN_ENA        .set 0x8000
+DMA4_CSDP_SRCDSTPKBEN_ENA   .set 0xa140
+DMA4_CSDP_SRCDSTPKBEN_MASK  .set 0xe1c0  ; Bits 6:8, 13:15 
+DMA4_CSDP_DSTENDIAN_LOCK    .set 0x040000
+DMA4_CSDP_DST_BIGENDIAN     .set 0x080000
+DMA4_CSDP_SRCENDIAN_LOCK    .set 0x100000
+DMA4_CSDP_SRC_BIGENDIAN     .set 0x200000
+
+*
+*  ======== DMA4_ChnlRegs ========
+*
+DMA4_ChnlRegs       .struct
+ccr        .long      ; Offset: 0x80 
+clnkCtrl   .long      ; Offset: 0x84 
+cicr       .long      ; Offset: 0x88 
+csrX       .long      ; Offset: 0x8c 
+csdp       .long      ; Offset: 0x90 
+cen        .long      ; Offset: 0x94 
+cfn        .long      ; Offset: 0x98 
+cssa       .long      ; Offset: 0x9c 
+cdsa       .long      ; Offset: 0xa0 
+csei       .long      ; Offset: 0xa4 
+csfi       .long      ; Offset: 0xa8 
+cdei       .long      ; Offset: 0xac 
+cdfi       .long      ; Offset: 0xb0 
+csac       .long      ; Offset: 0xb4 
+cdac       .long      ; Offset: 0xb8 
+ccen       .long      ; Offset: 0xbc 
+ccfn       .long      ; Offset: 0xc0 
+color      .long      ; Offset: 0xc4 
+reserved1  .long      ; Offset: 0xc8 
+reserved2  .long      ; Offset: 0xcc 
+reserved3  .long 4    ; Offset: 0xd0 - 0xdc 
+DMA4_ChnlRegsSize   .endstruct  ; 24*2 = 48 words
+
+*
+*  ======== DMA4_Regs ========
+*
+DMA4_Regs     .struct
+rev          .long                  ; Offset: 0x0 
+reserved0    .long                  ; Offset: 0x4 
+irqStatus    .long 4                ; Offset: 0x8 - 0x17 
+irqEnable    .long 4                ; Offset: 0x18 - 0x27 
+sysStatus    .long                  ; Offset: 0x28 
+sysConfig    .long                  ; Offset: 0x2c 
+reserved1    .long 13               ; Offset: 0x30 - 0x60 
+caps0        .long                  ; Offset: 0x64 
+reserved2    .long                  ; Offset: 0x68 (no caps1) 
+caps2        .long                  ; Offset: 0x6c 
+caps3        .long                  ; Offset: 0x70 
+caps4        .long                  ; Offset: 0x74 
+gcr          .long                  ; Offset: 0x78 
+reserved3    .long                  ; Offset: 0x7c 
+channelRegs  .tag DMA4_ChnlRegs, 32
+DMA4_RegsSize .endstruct	; 32*2 + 32*48 = 1600 words
+
+* extern DMA4_Regs *DMA4_dmaRegs;
+ .ref _DMA4_dmaRegs
+
+ .endif ; if !$isdefed("DMA4_OMAP_H55_")

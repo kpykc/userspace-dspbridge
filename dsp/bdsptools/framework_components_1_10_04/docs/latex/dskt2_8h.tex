@@ -1,0 +1,54 @@
+\hypertarget{dskt2_8h}{
+\subsection{dskt2.h File Reference}
+\label{dskt2_8h}\index{dskt2.h@{dskt2.h}}
+}
+
+
+\subsubsection{Detailed Description}
+Provides services to support XDAIS algorithm instance objects. 
+
+
+
+Definition in file \hyperlink{dskt2_8h-source}{dskt2.h}.
+
+{\tt \#include $<$ti/xdais/ialg.h$>$}\par
+{\tt \#include $<$stddef.h$>$}\par
+
+
+Include dependency graph for dskt2.h:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=95pt]{dskt2_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define \hyperlink{group___d_s_p_d_s_k_t2_g6ea3f0bc0c9a697930cf7d8411975ac2}{DSKT2\_\-NUM\_\-SCRATCH\_\-GROUPS}~20
+\item 
+\#define \hyperlink{group___d_s_p_d_s_k_t2_gb7906673f1c60a08206bd37c7f7d1178}{DSKT2\_\-MAX\_\-MEM\_\-ALLOCATION\_\-SIZE}~0x\-FFFF
+\item 
+\#define \hyperlink{group___d_s_p_d_s_k_t2_gcb5e98129cb03f61436195c9fd240804}{DSKT2\_\-NUM\_\-SHAREDHEAPS}~2
+\end{CompactItemize}
+\subsubsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef Void($\ast$) \hyperlink{group___d_s_p_d_s_k_t2_gc2be66a39e491bc30ef6f01d7a0a4361}{DSKT2\_\-Cache\-WBInv\-Fxn} (Ptr block\-Ptr, size\_\-t byte\-Cnt, Bool wait)
+\begin{CompactList}\small\item\em Function prototype of cache writeback function: Writes back the memory within the range of block\-Ptr and block\-Ptr + byte\-Cnt. \item\end{CompactList}\end{CompactItemize}
+\subsubsection*{Functions}
+\begin{CompactItemize}
+\item 
+Void \hyperlink{group___d_s_p_d_s_k_t2_gf946d426d6d9a95040d3967fa746cd7a}{DSKT2\_\-activate\-Alg} (Int scratch\-Mutex\-Id, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg)
+\begin{CompactList}\small\item\em Prepares a x\-DAIS algorithm instance object to start using its scratch memory. \item\end{CompactList}\item 
+Int \hyperlink{group___d_s_p_d_s_k_t2_g65d8c7ae9d40adcda0c92a9e51c6fd0b}{DSKT2\_\-control\-Alg} (\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg, \hyperlink{group__ti__xdais___i_a_l_g_g9032f20923ef2ba1d6b88c87a20075fa}{IALG\_\-Cmd} cmd, \hyperlink{struct_i_a_l_g___status}{IALG\_\-Status} $\ast$status)
+\begin{CompactList}\small\item\em This is a convenience API to call a x\-DAIS algorithm instance's alg\-Control function. \item\end{CompactList}\item 
+\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} \hyperlink{group___d_s_p_d_s_k_t2_g5528d73c34724bc310404da0dc2fbd69}{DSKT2\_\-create\-Alg} (Int scratch\-Mutex\-Id, \hyperlink{struct_i_a_l_g___fxns}{IALG\_\-Fxns} $\ast$fxns, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} parent, \hyperlink{struct_i_a_l_g___params}{IALG\_\-Params} $\ast$params)
+\begin{CompactList}\small\item\em Creates and initializes a x\-DAIS algorithm instance object. \item\end{CompactList}\item 
+\hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} \hyperlink{group___d_s_p_d_s_k_t2_gda6c7f86ed679447cb8f69b0c50a616c}{DSKT2\_\-create\-Alg2} (Int scratch\-Mutex\-Id, \hyperlink{struct_i_a_l_g___fxns}{IALG\_\-Fxns} $\ast$fxns, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} parent, \hyperlink{struct_i_a_l_g___params}{IALG\_\-Params} $\ast$params, Int ext\-Heap\-Id)
+\begin{CompactList}\small\item\em Creates and initializes a x\-DAIS algorithm instance object. \item\end{CompactList}\item 
+Void \hyperlink{group___d_s_p_d_s_k_t2_g74b6b6feca63328906acade37d23b597}{DSKT2\_\-deactivate\-Alg} (Int scratch\-Mutex\-Id, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg)
+\begin{CompactList}\small\item\em Prepares a x\-DAIS algorithm instance object to give up using its scratch memory. \item\end{CompactList}\item 
+Int \hyperlink{group___d_s_p_d_s_k_t2_g2d252c736a3bb828d9f646cc379ac0e2}{DSKT2\_\-deactivate\-All} ()
+\begin{CompactList}\small\item\em All algorithms that have been deactivated lazily are now really deactivate. Any algorithms that are still currently active will be left as is. The number of algorithms that are still active will be returned from this call. \item\end{CompactList}\item 
+Bool \hyperlink{group___d_s_p_d_s_k_t2_g8dffa02b3ca1ff6856ce3cf610be7435}{DSKT2\_\-free\-Alg} (Int scratch\-Mutex\-Id, \hyperlink{struct_i_a_l_g___obj}{IALG\_\-Handle} alg)
+\begin{CompactList}\small\item\em Deletes a x\-DAIS algorithm instance object and frees all persistent memory allocated for the instance object. \item\end{CompactList}\end{CompactItemize}

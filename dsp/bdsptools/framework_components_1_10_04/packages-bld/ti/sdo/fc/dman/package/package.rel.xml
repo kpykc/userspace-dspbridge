@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/release.dtd -->
+<release name="ti_sdo_fc_dman,bld" label="build" date="1178819362340" buildCount="20">
+<package name="ti.sdo.fc.dman"
+    version=""/>
+<imports>
+</imports>
+<references>
+    <package name="xdc"
+        version="1, 1, 0, 0">
+        <file name="IPackage.xdc"/>
+        <file name="IPackage.xs"/>
+        <file name="om2.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.sch"/>
+        <file name="std.h"/>
+        <file name="xdc.tci"/>
+    </package>
+    <package name="xdc.bld"
+        version="1, 0, 0, 0">
+        <file name="BuildEnvironment.xs"/>
+        <file name="Executable.xs"/>
+        <file name="ITarget.xs"/>
+        <file name="Library.xs"/>
+        <file name="PackageContents.xs"/>
+        <file name="Repository.xs"/>
+        <file name="Utils.xs"/>
+        <file name="_gen.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.bld.sch"/>
+    </package>
+    <xdcRoot base="/db/toolsrc/library/vendors2005/xdc/xdcdist-d36/Linux/">
+        <file name="include/utils.tci"/>
+    </xdcRoot>
+    <package name="ti.sdo.fc.utils"
+        version="1, 0, 0">
+        <file name="dbc.h"/>
+    </package>
+    <package name="ti.sdo.fc.acpy2"
+        version="">
+        <file name="acpy2_omap.h"/>
+        <file name="mgs3/acpy2_internal.h"/>
+    </package>
+    <package name="ti.targets"
+        version="1, 0, 0, 0">
+        <file name="ITarget.xs"/>
+        <file name="package.xs"/>
+        <file name="package/ti.targets.sch"/>
+        <file name="std.h"/>
+    </package>
+    <package name="ti.bios"
+        version="5, 2, 3, 11">
+        <file name="include/atm.h"/>
+        <file name="include/c55.h"/>
+        <file name="include/fxn.h"/>
+        <file name="include/hwi.h"/>
+        <file name="include/knl.h"/>
+        <file name="include/mem.h"/>
+        <file name="include/obj.h"/>
+        <file name="include/que.h"/>
+        <file name="include/sem.h"/>
+        <file name="include/std.h"/>
+        <file name="include/sts.h"/>
+        <file name="include/swi.h"/>
+        <file name="include/sys.h"/>
+        <file name="include/tistdtypes.h"/>
+    </package>
+    <package name="xdc.rts"
+        version="1, 0, 0, 0">
+        <file name="Error.h"/>
+        <file name="IHeap.h"/>
+        <file name="IModule.h"/>
+        <file name="ISystemProvider.h"/>
+        <file name="Memory.h"/>
+        <file name="System.h"/>
+        <file name="package/internal/Error.xdc.h"/>
+        <file name="package/internal/Memory.xdc.h"/>
+        <file name="package/internal/System.xdc.h"/>
+        <file name="package/package.defs.h"/>
+        <file name="std.h"/>
+        <file name="xdc.h"/>
+    </package>
+    <targetRoot base="/db/toolsrc/library/vendors2005/ti/c55/lead3v3.2.2/Linux/"
+        trgs="ti.targets.C55_large">
+        <file name="include/linkage.h"/>
+        <file name="include/setjmp.h"/>
+        <file name="include/stdarg.h"/>
+        <file name="include/stddef.h"/>
+        <file name="include/stdint.h"/>
+        <file name="include/stdlib.h"/>
+        <file name="include/string.h"/>
+    </targetRoot>
+    <package name="ti.xdais"
+        version="1, 2.0, 0, 0">
+        <file name="acpy2.h"/>
+        <file name="ialg.h"/>
+        <file name="idma2.h"/>
+    </package>
+</references>
+<orphans>
+    <file name="/db/atree/library/trees/fc-b12x/src/config.bld"/>
+</orphans>
+</release>

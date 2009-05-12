@@ -1,0 +1,188 @@
+/* 
+ *  Copyright 2007
+ *  Texas Instruments Incorporated
+ *
+ *  All rights reserved.  Property of Texas Instruments Incorporated
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ * 
+ */
+/*
+ *  ======== package.bld ========
+ */
+
+var COPTS_MGS3 = "-pdv -o1 -ml";
+COPTS_MGS3 += " -D\"MAKE_HWI_CALL=0\" -D\"DMA_OPT\"";
+COPTS_MGS3 += " -D\"DISABLE_DATA_BURST_1510=1\" -D\"DISABLE_8BIT_PACKBURST=0\"";
+COPTS_MGS3 += " -D\"_TIIDEBUG=0\"";
+COPTS_MGS3 += " -D\"_INSTR_BANDWIDTH=0\"";
+COPTS_MGS3 += " -D\"_OMAPS00005636_\" ";
+
+var AOPTS_MGS3 = "-pdr -pdv -pden -o1 -ml";
+AOPTS_MGS3 += " -ad\"MAKE_HWI_CALL=0\" -ad\"DMA_OPT\"";
+AOPTS_MGS3 += " -ad\"DISABLE_DATA_BURST_1510=1\"";
+AOPTS_MGS3 += " -ad\"DISABLE_8BIT_PACKBURST=0\"";
+AOPTS_MGS3 += " -ad\"_TIIDEBUG=0\"";
+AOPTS_MGS3 += " -ad\"_INSTR_BANDWIDTH=0\" ";
+
+var COPTS_DMA4 = "-pdv -ml -vcore:2.2";
+COPTS_DMA4 += " -D\"MAKE_HWI_CALL=1\"";
+COPTS_DMA4 += " -D\"DMA_OPT_CMODEL\" -D\"DMA_OPT\"";
+COPTS_DMA4 += " -D\"DISABLE_DATA_BURST_1510=1\" -D\"DISABLE_8BIT_PACKBURST=0\"";
+COPTS_DMA4 += " -D\"_TIIDEBUG=0\"";
+COPTS_DMA4 += " -D\"_INSTR_BANDWIDTH=0\"";
+
+var AOPTS_DMA4 = "-pdr -pdv -pden -ml -vcore:2.2";
+AOPTS_DMA4 += " -ad\"MAKE_HWI_CALL=1\"";
+AOPTS_DMA4 += " -ad\"DMA_OPT_CMODEL\" -ad\"DMA_OPT\"";
+AOPTS_DMA4 += " -ad\"DISABLE_DATA_BURST_1510=1\"";
+AOPTS_DMA4 += " -ad\"DISABLE_8BIT_PACKBURST=0\"";
+AOPTS_DMA4 += " -ad\"_TIIDEBUG=0\"";
+AOPTS_DMA4 += " -ad\"_INSTR_BANDWIDTH=0\"";
+
+var commonFiles = 
+[
+ "acpy2_init", 
+ "acpy2_exit",
+ ];
+
+var mgs3Files = 
+[
+ "mgs3/acpy2_start", 
+ "mgs3/acpy2_configure", 
+ "mgs3/acpy2_complete",
+ "mgs3/acpy2_wait", 
+ "mgs3/acpy2_isr", 
+ "mgs3/acpy2_omap_impl",
+ "mgs3/acpy2_omap_callback", 
+ "mgs3/acpy2_omap_instrumentation", 
+ "mgs3/acpy2_enhancement",
+ "mgs3/acpy2_omap_reservephysicalchannel", 
+ "mgs3/acpy2_reservedisrs", 
+ "mgs3/dma"
+];
+
+var dma4Files = 
+[
+ "dma4/acpy2_start", 
+ "dma4/acpy2_configure", 
+ "dma4/acpy2_complete",
+ "dma4/acpy2_wait", 
+ "dma4/acpy2_isr",
+ "dma4/acpy2wait",
+ "dma4/acpy2_omap", 
+ "dma4/acpy2_omap_callback", 
+ "dma4/acpy2_enhancement",
+ "dma4/dma", 
+ "dma4/acpy2_omap_instrumentation", 
+ "dma4/acpy2start"
+];
+
+var libraries = 
+{
+    "acpy2_mgs3" : 
+    {
+        objs  : mgs3Files.concat(commonFiles),
+        copts : COPTS_MGS3,
+        aopts : AOPTS_MGS3,
+        defs  : null,
+    },
+    
+    "acpy2_mgs3_rts" : 
+    {
+        objs  : mgs3Files.concat(commonFiles),
+        copts : COPTS_MGS3,
+        aopts : AOPTS_MGS3 + ' -ad"RTS_MODE"',
+        defs  : null,
+    },    
+
+    "acpy2_dma4" : 
+    {
+        objs  : dma4Files.concat(commonFiles),
+        copts : COPTS_DMA4,
+        aopts : AOPTS_DMA4,
+        defs  : null,
+    },
+    
+    "acpy2_dma4_rts" : 
+    {
+        objs  : dma4Files.concat(commonFiles),
+        copts : COPTS_DMA4,
+        aopts : AOPTS_DMA4 + ' -ad"RTS_MODE"',
+        defs  : null,
+    },    
+
+};
+
+var libraryList = {
+    "C55_large" : [
+                   "acpy2_mgs3", 
+                   "acpy2_dma4", 
+                   "acpy2_mgs3_rts",
+                   "acpy2_dma4_rts",
+                   ],
+};
+
+/* This package uses the headers, bios, dais, and dman package. */
+Pkg.uses = 
+[
+ "ti/bios/include",
+ "ti/sdo/fc/utils",
+ ];
+
+var otherFiles = ["dbc_rts.h", "dma.h", 
+                  "mgs3/acpy2_internal.h", "mgs3/_dma.h",
+                  "mgs3/dma_omap.h55", "mgs3/_dmaOmaphw.h",
+                  "dma4/acpy2_omap.h55","dma4/_dma4_omap.h",
+                  "dma4/dma4_omap.h55", "dma4/_dma.h", "dma4/_dma.h55",
+                  "dma4/idma2.h55", "dma4/dma24xx.h55"];
+
+/* The source package release */
+srcRelease = Pkg.addRelease(Pkg.name.replace(/\./g, '_') + ",src");
+srcRelease.attrs.label = "source";
+srcRelease.attrs.exportSrc = true;
+srcRelease.otherFiles = otherFiles;
+
+/* The build package release */
+bldRelease = Pkg.addRelease(Pkg.name.replace(/\./g, '_') + ",bld");
+bldRelease.attrs.label = "build";
+bldRelease.attrs.exportSrc = true;
+bldRelease.otherFiles = otherFiles.concat(["package.bld"]);
+
+Pkg.otherFiles = ["acpy2_omap.h", "acpy2_omap_instrumentation.h"];
+
+/* loop over all targets */
+for (var i = 0; i < Build.targets.length; i++) {
+    var targ = Build.targets[i];
+    var plat = targ.platform;   /* use the target's default platform */
+    var libs = libraryList[targ.name];
+
+    if (libs == null) continue;
+
+    for (var i = 0 ; i < libs.length ; i++) {
+
+        /* loop over all "bridge" profiles */
+        for (var profName in targ.profiles) {
+            if (profName.search(/^bridge_/) >= 0) {
+
+                var libBase = libs[i];
+                var libDesc = libraries[libBase];
+                print("Adding library " + libBase + profTail[profName]);
+
+                var lib = Pkg.addLibrary(libBase + profTail[profName],
+                                         targ, { copts: libDesc.copts,
+                                                 aopts: libDesc.aopts,
+                                                 defs: libDesc.defs,
+                                                 profile: profName,
+                                                 releases : [srcRelease, 
+                                                             bldRelease],
+                                                 });
+                lib.addObjects(libDesc.objs);
+            }
+        }
+    }
+}
+/*
+ *  @(#) ti.sdo.fc.acpy2; 1,0,0,20; 5-10-2007 10:49:06; /db/atree/library/trees/fc-b12x/src/
+ */
+

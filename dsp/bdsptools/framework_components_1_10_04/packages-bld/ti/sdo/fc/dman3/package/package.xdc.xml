@@ -1,0 +1,226 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.dman3' release='1, 0, 1' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='13' text='++Framework+Components%27+DMA+Manager+for+EDMA3+devices.'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='15' text='++This+package+provides+a+DMA+Manager+for+EDMA3-based+devices.'/>
+    </autodoc>
+    <module name='DMAN3' hostonly='1'>
+        <autodoc tag='summary'>
+            <comment line='12' text='++Joule+DMA+Manager.'/>
+        </autodoc>
+        <const name='MAXDMARECS' line='19' type='K%21Int%21%24' code='n' init='32'>
+            <autodoc tag='summary'>
+                <comment line='19' text='+Maximum+number+of+DMA+handles+allowed'/>
+                <comment line='20' text='++++++++++++++++++++++++++++++++++for+a+XDAIS+algorithm.+'/>
+            </autodoc>
+        </const>
+        <const name='MAXGROUPS' line='22' type='K%21Int%21%24' code='n' init='20'>
+            <autodoc tag='summary'>
+                <comment line='22' text='+Maximum+number+of+groups+for+sharing'/>
+                <comment line='23' text='+++++++++++++++++++++++++++++++++TCCs+and+parameter+RAM.+'/>
+            </autodoc>
+        </const>
+        <config name='qdmaPaRamBase' line='30' hostonly='1' type='K%21Ptr%21%24' code='Pv' init='0x01C04000'>
+            <autodoc tag='summary'>
+                <comment line='27' text='++Physical+base+address+of+the+PARAM0+in+the+EDMA3%2FQDMA'/>
+                <comment line='28' text='++hardware+whose+resources+are+being+managed+by+DMAN3.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='30' text='+This+parameter+is+set+to'/>
+                <comment line='31' text='++DMAN3_QDMA_PARAM_BASE'/>
+            </autodoc>
+        </config>
+        <config name='maxPaRamEntries' line='39' hostonly='1' type='K%21UInt%21%24' code='n' init='128'>
+            <autodoc tag='summary'>
+                <comment line='36' text='++Total+number+of+PARAM+Table+entries+on+the+target+hardware.'/>
+                <comment line='37' text='++%28eg%2C+for+IVA2%2C+Davinci+this+is+128%2C+for+Himalaya%2C+this+is+256%29.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='39' text='+This+parameter+is+set+to'/>
+                <comment line='40' text='++DMAN3_MAX_PARAM_ENTRIES+'/>
+            </autodoc>
+        </config>
+        <config name='paRamBaseIndex' line='54' hostonly='1' type='K%21UInt%21%24' code='n' init='96'>
+            <autodoc tag='summary'>
+                <comment line='45' text='++%280+%3E+value+%3E+255%29+represents+the+first+PARAM+TABLE+ENTRY'/>
+                <comment line='46' text='++NUMBER+that+is+assigned+by+configuration+for+exclusive+DMAN3+allocation.'/>
+                <comment line='47' text='++Typically%2C+addresses+%28PaRam+sets%29+between+0+and+63+are+reserved+for+use+'/>
+                <comment line='48' text='++by+drivers+that+need+EDMA%2Fchaining+capabilities.+Additionally%2C+on'/>
+                <comment line='49' text='++DM6446+PaRams+are+shared+between+the+Arm+and+the+DSP%2C+and+DMAN3+should'/>
+                <comment line='50' text='++be+configured+to+avoid+using+what+the+Arm+uses.+On+2430%2C+the+Arm'/>
+                <comment line='51' text='++doesn%27t+have+access+to+EDMA+so+PaRam+sets+below+64+are+OK+--+they+won%27t+'/>
+                <comment line='52' text='++conflict+with+the+Arm.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='54' text='+This+parameter+is+set+to'/>
+                <comment line='55' text='++DMAN3_PARAM_BASE_INDEX'/>
+            </autodoc>
+        </config>
+        <config name='numPaRamEntries' line='63' hostonly='1' type='K%21UInt%21%24' code='n' init='32'>
+            <autodoc tag='summary'>
+                <comment line='60' text='++Number+of+PARAM+Table+entries+starting+at+DMAN3_PARAM_BASE_INDEX'/>
+                <comment line='61' text='++assigned+by+configuration+for+exclusive+DMAN3+allocation.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='63' text='+This+parameter+is+set+to'/>
+                <comment line='64' text='++DMAN3_NUM_CONTIGUOUS_PARAM_ENTRIES'/>
+            </autodoc>
+        </config>
+        <config name='maxQdmaChannels' line='72' hostonly='1' type='K%21UInt%21%24' code='n' init='8'>
+            <autodoc tag='summary'>
+                <comment line='69' text='++The+total+number+of+Physical+QDMA+channels+available+on+the+'/>
+                <comment line='70' text='++target+hardware+%28eg%2C+8+for+DaVinci%2C+4+for+IVA2%29.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='72' text='+This+parameter+is+set+to'/>
+                <comment line='73' text='++DMAN3_MAX_QDMA_CHANNELS'/>
+            </autodoc>
+        </config>
+        <config name='numQdmaChannels' line='81' hostonly='1' type='K%21UInt%21%24' code='n' init='4'>
+            <autodoc tag='summary'>
+                <comment line='78' text='++The+number+of+Physical+QDMA+channels+that+are+assigned+to'/>
+                <comment line='79' text='++DMAN3+via+configuration.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='81' text='+This+parameter+is+set+to'/>
+                <comment line='82' text='++DMAN3_NUM_QDMA_CHANNELS'/>
+            </autodoc>
+        </config>
+        <config name='qdmaChannels' line='90' hostonly='1' type='K%21UInt%21%24%5BK%21length%21%5D' code='Vn' init='%5B%24%2B0%2C%24%3D1%2C%24%3D2%2C%24%3D3%24-%5D'>
+            <autodoc tag='summary'>
+                <comment line='87' text='++Array+containing+list+of+DMAN3_NUM_QDMA_CHANNELS'/>
+                <comment line='88' text='++many+Physical+QDMA+channels+assigned+to+DMAN3+via+configuration.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='90' text='+This+parameter+is+set+to'/>
+                <comment line='91' text='++DMAN3_QDMA_CHANNELS%5B%5D'/>
+            </autodoc>
+        </config>
+        <config name='tccAllocationMaskH' line='103' hostonly='1' type='K%21UInt%21%24' code='n' init='0xffffffff'>
+            <autodoc tag='summary'>
+                <comment line='96' text='++32-bit+bitmask+representing+configuration+provided+list+of+TCCs'/>
+                <comment line='97' text='++for+exclusive+DMAN3+allocation.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='99' text='++For+example%2C+for+TCC%27s+in+the+range+0-31+the+Low+Mask'/>
+                <comment line='100' text='++%28tccAllocationMaskL%29+is+configured+so+that+a+%271%27+in+bit+position+%27i%27'/>
+                <comment line='101' text='++indicates+the+TCC+%27i%27+is+assigned+to+DMAN3.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='103' text='+This+parameter+is+set+to'/>
+                <comment line='104' text='++DMAN3_TCC_FREEMASK_H'/>
+            </autodoc>
+        </config>
+        <config name='tccAllocationMaskL' line='116' hostonly='1' type='K%21UInt%21%24' code='n' init='0x00000000'>
+            <autodoc tag='summary'>
+                <comment line='109' text='++32-bit+bitmask+representing+configuration+provided+list+of+TCCs'/>
+                <comment line='110' text='++for+exclusive+DMAN3+allocation.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='112' text='++For+example%2C+for+TCC%27s+in+the+range+0-31+the+Low+Mask'/>
+                <comment line='113' text='++%28tccAllocationMaskL%29+is+configured+so+that+a+%271%27+in+bit+position+%27i%27'/>
+                <comment line='114' text='++indicates+the+TCC+%27i%27+is+assigned+to+DMAN3.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='116' text='+This+parameter+is+set+to'/>
+                <comment line='117' text='++DMAN3_TCC_FREEMASK_L'/>
+            </autodoc>
+        </config>
+        <config name='heapInternal' line='131' hostonly='1' type='K%21String%21%24' code='s' init='%22DMAN3_heapInternal_undefined%22'>
+            <autodoc tag='summary'>
+                <comment line='127' text='++BIOS+Heap+ID+for+dynamic+allocation+of+DMAN3+objects.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='129' text='++This+must+be+allocated+in+L1D+Internal+RAM.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='131' text='+This+parameter+is+set+to'/>
+                <comment line='132' text='++DMAN3_HEAP_INTERNAL'/>
+            </autodoc>
+        </config>
+        <config name='heapExternal' line='138' hostonly='1' type='K%21String%21%24' code='s' init='%22DMAN3_heapExternal_undefined%22'>
+            <autodoc tag='summary'>
+                <comment line='136' text='++BIOS+Heap+ID+for+dyn+allocation+of+private+DMAN3+data+structures.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='138' text='+This+parameter+is+set+to'/>
+                <comment line='139' text='++DMAN3_HEAP_EXTERNAL+'/>
+            </autodoc>
+        </config>
+        <config name='numTccGroup' line='150' hostonly='1' type='K%21Int%21%24%5BT%21ti.sdo.fc.dman3.DMAN3%3AMAXGROUPS%21%5D' code='An' init='%5B%24%2B0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%24-%5D'>
+            <autodoc tag='summary'>
+                <comment line='143' text='++Addresses+of+arrays+containing+the+number+of+TCC+that+will+be'/>
+                <comment line='144' text='++assigned+to+groups+for+sharing.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='146' text='++Channels+created+with+a+given+group+ID+will+use+TCCs+and+PaRams'/>
+                <comment line='147' text='++allocated+for+that+group+ID%2C+and+may+share+them+with+other+channels'/>
+                <comment line='148' text='++created+with+the+same+group+ID.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='151' text='+This+parameter+is+set+to'/>
+                <comment line='152' text='++DMAN3_NUMTCC_GROUP'/>
+            </autodoc>
+        </config>
+        <config name='numPaRamGroup' line='164' hostonly='1' type='K%21Int%21%24%5BT%21ti.sdo.fc.dman3.DMAN3%3AMAXGROUPS%21%5D' code='An' init='%5B%24%2B0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%2C%24%3D0%24-%5D'>
+            <autodoc tag='summary'>
+                <comment line='157' text='++Addresses+of+arrays+containing+the+PaRam+entries+that+will+be'/>
+                <comment line='158' text='++assigned+to+groups+for+sharing.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='160' text='++Channels+created+with+a+given+group+ID+will+use+TCCs+and+PaRams'/>
+                <comment line='161' text='++allocated+for+that+group+ID%2C+and+may+share+them+with+other+channels'/>
+                <comment line='162' text='++created+with+the+same+group+ID.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='165' text='+This+parameter+is+set+to'/>
+                <comment line='166' text='++DMAN3_NUMPARAM_GROUP'/>
+            </autodoc>
+        </config>
+        <config name='scratchAllocFxn' line='174' hostonly='1' type='K%21String%21%24' code='s' init='%24Knull'>
+            <autodoc tag='summary'>
+                <comment line='171' text='++Function+for+allocating+IDMA3+channel+object%27s+%22env%22+in+scratch'/>
+                <comment line='172' text='++memory.'/>
+            </autodoc>
+        </config>
+        <config name='scratchFreeFxn' line='181' hostonly='1' type='K%21String%21%24' code='s' init='%24Knull'>
+            <autodoc tag='summary'>
+                <comment line='178' text='++Function+for+freeing+IDMA3+channel+object%27s+%22env%22+that+was+allocated'/>
+                <comment line='179' text='++in+scratch+memory.'/>
+            </autodoc>
+        </config>
+        <config name='nullPaRamIndex' line='188' hostonly='1' type='K%21UInt%21%24' code='n' init='0'>
+            <autodoc tag='summary'>
+                <comment line='185' text='++Index+of+PARAM+to+be+reserved+as+a+%22null%22+PaRam.+This+index+will+be'/>
+                <comment line='186' text='++used+to+set+QCHMAP+when+the+corresponding+QDMA+channel+is+not+active.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='188' text='+This+parameter+is+set+to'/>
+                <comment line='189' text='++DMAN3_NULLPARAMINDEX'/>
+            </autodoc>
+        </config>
+        <config name='idma3Internal' line='201' hostonly='1' type='K%21Bool%21%24' code='b' init='%24Ktrue'>
+            <autodoc tag='summary'>
+                <comment line='194' text='++Use+the+internal+memory+heap+for+dynamic+allocation+of+IDMA3+objects.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='196' text='++A+value+of+%27false%27+means+that+IDMA3+objects+will+be+allocated+in+the+heap'/>
+                <comment line='197' text='++specified+by+DMAN3_PARAMS.heapExternal.+If+the+value+of+idma3Internal'/>
+                <comment line='198' text='++is+%27true%27%2C+IDMA3+objects+will+be+allocated+in+the+heap+specified'/>
+                <comment line='199' text='++by+DMAN3_PARAMS.heapInternal.'/>
+            </autodoc>
+        </config>
+        <config name='debug' line='211' hostonly='1' type='K%21Bool%21%24' code='b' init='%24Kfalse'>
+            <autodoc tag='summary'>
+                <comment line='205' text='++Enable+the+debug+profile+of+the+DMAN3+library.'/>
+            </autodoc>
+            <autodoc tag='details'>
+                <comment line='207' text='++This+will+likely+result+in+a+larger+and+slower+library+being+linked+in%2C'/>
+                <comment line='208' text='++but+it+will+provide+extra+parameter+checking+and+debug+trace'/>
+                <comment line='209' text='++statements+dropped+in+the+BIOS+SYS+trace+buffer.'/>
+            </autodoc>
+        </config>
+    </module>
+</package>

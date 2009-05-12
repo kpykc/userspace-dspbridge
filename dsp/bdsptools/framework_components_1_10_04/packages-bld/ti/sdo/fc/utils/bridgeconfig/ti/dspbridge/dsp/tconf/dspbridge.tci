@@ -1,0 +1,608 @@
+/*
+ *  Copyright 2007 by Texas Instruments Incorporated.
+ *
+ *  All rights reserved. Property of Texas Instruments Incorporated.
+ *  Restricted rights to use, duplicate or disclose this code are
+ *  granted through contract.
+ *
+ */
+
+/*
+ *  ======== dspbridge.tci ========
+ */
+
+var dspbridge = {};
+
+/* Types used by DSP Bridge config */
+dspbridge.$$types = {
+    Integer    : typeof(0),
+    String     : typeof(""),
+    Boolean    : typeof(true),
+    Hexadecimal: typeof(0x0),
+    Object     : "object",
+};
+
+/* Container for all configuration modules */
+dspbridge.$$modules = [];
+
+/* Container for all global names, to check for name collision */
+dspbridge.$$nameList = {};
+
+/* debug mode */
+dspbridge.$$dbg = false;
+
+/* template generator */
+dspbridge.$$template =
+utils.loadCapsule(utils.findFile("ti/dspbridge/dsp/tconf/template.tci"));
+
+/* tests functions */
+dspbridge.$$test =
+utils.loadCapsule(utils.findFile("ti/dspbridge/dsp/tconf/test.tci"));
+
+/*
+ *  ======== Module Functions ========
+ */
+dspbridge.checkType = function ()
+{
+    var mods = dspbridge.modules();
+    for (var i = 0 ; i < mods.length ; i++) {
+        var mod = mods[i];
+        
+        /* check types for global properties */
+        for (var j in mod.$$global) {
+            dspbridge.$$test.exec(mod,
+                                  null, // checking type of glb prop
+                                  "checkType",
+                                  mod.$$global[j].name,
+                                  mod.$$global[j].type);
+            
+        }
+
+        /* check types for instance properties, for each instance */
+        var insts = mod.instances();
+        for (var j = 0 ; j < insts.length ; j++) {
+            var inst = insts[j];
+            for (var k in mod.$$instance) {
+                if (mod.$$instance[k].type != undefined) {
+                    dspbridge.$$test.exec(mod,
+                                          inst, //checking type of inst prop
+                                          "checkType",
+                                          mod.$$instance[k].name,
+                                          mod.$$instance[k].type);
+                }
+            }
+        }
+
+        /* check type of user init function */
+        if ((mod.$$initFxn != null) && !(mod.$$initFxn instanceof Extern)) {
+            throw "Module " +  mod.name + " init function is not valid, " +
+            "it needs to be declared using 'prog.extern'";
+        }
+    }
+
+}
+
+/* set to TRUE when we need to generate BIOS files */
+dspbridge.genBiosFiles = true;
+
+//
+//  ======== dspbridge.gen ========
+//
+dspbridge.gen = function (prog, genName)
+{
+    var asmType;
+
+    // Get the ending of the generated assembly file names
+    if (prog.cpu.attrs.cpuCore == "64x+") {
+        asmType = "62";
+    }
+    else {
+        asmType = "55";
+    }
+
+    // Insert generated content into appropriate files.
+    // [file]cfg.cmd [file]cfg.h [file]cfg.h62 [file]cfg].s62 [file]cfg_c.c
+    var tpls =
+    [
+        {type: "asmSource", file: "cfg.s" + asmType},
+        {type: "asmHeader", file: "cfg.h" + asmType},
+        {type: "cSource",   file: "cfg_c.c"},
+        {type: "cHeader",   file: "cfg.h"},
+        {type: "linker",    file: "cfg.cmd"}
+     ];
+
+    /* code generation */
+    for (var i in tpls) {
+        var content = new java.io.StringWriter();
+        var mods = dspbridge.modules();
+        for (var j = 0 ; j < mods.length ; j++) {
+            var mod = mods[j];
+            var tpl = mod.$$template;
+            if ((tpl) && (tpl[tpls[i].type] != undefined)) {
+                var filename = utils.findFile(tpl[tpls[i].type]);
+                if (filename == null) {
+                    throw ("Cannot find template file " + tpl[tpls[i].type]);
+                }
+                dspbridge.print("Module: " + mod.name + "," +
+                                "template file: " + filename);
+                var out = dspbridge.$$template.compile(prog, 
+                                                       filename, 
+                                                       mod);
+                content.write(out);
+            }
+        }
+        content.flush();
+
+        /* 
+         * append to BIOS generated files only for base image, for dynamic 
+         * nodes, there is no BIOS generated files
+         */
+        var b = dspbridge.module("BRIDGE");
+        var append = (b != null) ? (b.BRIDGELIG == false) : false;
+        this.writeFile(genName + tpls[i].file, 
+                       content.toString(), 
+                       dspbridge.genBiosFiles);
+    }
+
+    /* Generate XML file */
+    this.writeFile(genName + "cfg.xml", this.xml(), false);
+
+}
+
+dspbridge.validate = function ()
+{
+    var mods = dspbridge.modules();
+    for (var i = 0 ; i < mods.length ; i++) {
+        var mod = mods[i];
+        dspbridge.print ("Validate: " + mod.$$name);
+
+        /* validate global properties */
+        for (var j in mod.$$global) {
+            for (var k in mod.$$global[j].test) {
+                dspbridge.$$test.exec(mod,
+                                      null, // testing global prop
+                                      mod.$$global[j].test[k],
+                                      mod.$$global[j].name,
+                                      ""); // no arg for now
+            }
+        }
+
+        /* validate instance properties for each instance */
+        var insts = mod.instances();
+        for (var j = 0 ; j < insts.length ; j++) {
+            for (var k in mod.$$instance) {
+                for (var l in mod.$$instance[k].test) {
+                    dspbridge.$$test.exec(mod,
+                                          insts[j], // testing instance prop
+                                          mod.$$instance[k].test[l],
+                                          mod.$$instance[k].name,
+                                          "");
+                }
+            }
+        }
+
+        /* eventually calls module specific validate if needed */
+        if (mod.validate != undefined) mod.validate();
+    }
+}
+
+dspbridge.finalize = function ()
+{
+    var mods = dspbridge.modules();
+    for (var i = 0 ; i < mods.length ; i++) {
+        var mod = mods[i];
+        dspbridge.print ("Finalize: " + mod.$$name);
+        if (mod.finalize != undefined) mod.finalize();
+    }
+
+    // Make sure all heaps have a label
+    dspbridge.addHeapLabels();
+}
+
+// 
+//  ======== addHeapLabels ========
+//  Add labels to any memory heaps that do not already have labels.
+//
+dspbridge.addHeapLabels = function()
+{
+    var mem = prog.module("MEM").instances();
+    var MEM_NULL = prog.module("MEM").instance("MEM_NULL");
+
+    for (var i = 0 ; i < mem.length ; i++) {
+        if ((mem[i] == MEM_NULL) || (mem[i].createHeap == false)) {
+            continue;
+        }
+
+        if (!mem[i].enableHeapLabel) {
+            // Heap with no label, need to give it a unique label
+            var prefix = mem[i].name + "_HEAP";
+            var name = prefix;
+
+            // Generate names until one is found that is different from all
+            // other heap labels. (There cannot be more than 0x10000 heaps.)
+            for (var j = 0; j < 0x100000; j++) {
+                var match = false;
+                // Try using the name without ID number first
+                name = (j == 0) ? prefix : prefix + j;
+                //print("Trying name: " + name);
+                for (var k = 0; k < mem.length; k++) {
+                    if (mem[k].enableHeapLabel) {
+                        var nameK = mem[k].heapLabel.name;
+                        if ((nameK == name) || (nameK == ("_" + name))) {
+                            // This name has already been used
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                if (match == false) {
+                    // Found an unused name
+                    break;
+                }
+            }
+
+            //print("Old heap name: " + mem[i].heapLabel.name);
+            mem[i].enableHeapLabel = true;
+            mem[i].heapLabel = prog.extern(name);
+            //print("Updated heap name: " + mem[i].heapLabel.name);
+        }
+    }
+}
+
+/*
+ * Eventually all modules and instances names will be put in the same global
+ * object. e.g. 'bridge'. We need to make sure that names are unique in this
+ * namespace. We need to verify that names are unique wrt BIOS objects too.
+*/
+dspbridge.checkNamespace = function (name)
+{
+    // TBD: perhaps we could use the dspbridge.get instead of $$nameList?
+    if ((prog.get(name) != undefined) ||
+        (dspbridge.$$nameList[name] != undefined)) {
+            throw name +
+            " already defined in the current namespace";
+        }
+
+    if (name.match(/(\s|\/|\\)/)) {
+        throw name + " is invalid, must not have whitespace, '\\' or '/' ";
+    }
+
+    /* put new module in namespace, to avoid name contention */
+    dspbridge.$$nameList[name] = true;
+}
+
+dspbridge.printNameList = function ()
+{
+    for (var i in dspbridge.$$nameList) {
+        print (i);
+    }
+}
+
+dspbridge.modules = function () 
+{
+    return dspbridge.$$modules;
+}
+
+dspbridge.module = function (name) 
+{
+    var mods = dspbridge.modules();
+    for (var i = 0 ; i < mods.length ; i++) {
+        if (mods[i].name == name) {
+            return mods[i];
+        }
+    }    
+    return null;
+}
+
+dspbridge.register= function (modFile)
+{
+    var file = utils.findFile(modFile);
+    dspbridge.print ("module.add: " + file);
+    if (file == null) {
+        throw ("Cannot find module file: " + modFile);
+    }
+
+    var mod = utils.loadCapsule(file);
+    
+    /* is this mod already registered? */
+    if (dspbridge.module(mod.$$name) != undefined) {
+        dspbridge.print ("dspbridge.register: " + mod.$$name +
+                         " already registered");
+        return;
+    }
+
+    dspbridge.checkNamespace(mod.$$name);
+    dspbridge.print ("dspbridge.register: " + mod.$$name);
+    dspbridge.$$modules.push(mod);
+
+    /* Now init new module */
+
+    /* initialize global module properties */
+    mod.name = mod.$$name;
+    mod.$$instances = [];
+    mod.create = dspbridge.createInstance;
+    mod.instances = function () { return mod.$$instances; };
+    mod.instance = function (x)
+    {
+        for (var i in mod.$$instances) {
+            if (mod.$$instances[i].name == x) {
+                return mod.$$instances[i];
+            }
+        }
+        return undefined;
+    };
+
+    /* check TCF user guide to see if there are other functions needed */
+
+    /* create "global" properties from $$global */
+    for (var i in mod.$$global) {
+        if (mod.hasOwnProperty(mod.$$global[i].name))
+            throw ("Global property " + '"' + mod.$$global[i].name + '"' +
+                   " of " + mod.$$name + " already exists");
+        mod[mod.$$global[i].name] = mod.$$global[i].val;
+    }
+
+    /* call modules' init if it exists */
+    if (mod.init != undefined) {
+        mod.init();
+    }
+
+    return mod;
+}
+
+dspbridge.createInstance = function (name)
+{
+    /* here, 'this' is the module object that is being invoked */
+    var mod = this;
+
+    if ((mod.$$instance == undefined) ||
+        (mod.$$instance.length == 0)) {
+        throw ("Cannot create instance of module: " + mod.name);
+    }
+
+    dspbridge.checkNamespace(name);
+
+    /* construct new instance with 'instance' fields */
+    var newmod = {};
+    newmod.$$name = name;
+    newmod.$$instanceof = mod;
+    for (var i in mod.$$instance) {
+        if (newmod.hasOwnProperty(mod.$$instance[i].name))
+            throw ("Instance property " + '"' + mod.$$instance[i].name +
+                   '"' + " of " + mod.$$name + " already exists");
+        newmod[mod.$$instance[i].name] = mod.$$instance[i].val;
+    }
+
+    newmod.name = name;
+    newmod.module = mod;
+    mod.$$instances.push(newmod);
+    return newmod;
+}
+
+dspbridge.get = function (name)
+{
+    var mods = dspbridge.modules();
+    for (var i = 0 ; i < mods.length ; i++) {
+        var mod = mods[i];
+        if (name == mod.name) {
+            return mod;
+        }
+        
+        var insts = mod.instances();
+        for (var j = 0 ; j < insts.length ; j++) {
+            if (name == insts[j].name) {
+                return insts[j];
+            }
+        }
+    }
+}
+
+/*
+ *  ======== prog.gen ========
+ */
+dspbridge.biosGen = prog.gen;
+
+prog.gen = function (x)
+{
+    var genName;
+    var tmpStr;
+
+    /* finalize all modules first */
+    dspbridge.finalize();
+
+    /* check all types first */
+    dspbridge.checkType();
+
+    /* run validation */
+    dspbridge.validate();
+
+    /*
+     * If x == undefined, use default script name for file generation.  If
+     * x is defined, use it for file generation.
+     */
+    genName = (x == undefined) ? utils.getProgName() : x;
+
+    /* Invoke BIOS gen, when building base image */
+    if (dspbridge.genBiosFiles) {
+        dspbridge.biosGen.call(this, x);
+    }
+    
+    /* Invoke DSP Bridge gen. */
+    /* this happens after CDB generation */
+    dspbridge.gen(this, genName);
+}
+
+dspbridge.getProgObjs = utils.getProgObjs;
+
+utils.getProgObjs = function (prog, gbl)
+{
+    /* first call XDC default function */
+    dspbridge.getProgObjs.call(prog, prog, gbl);
+
+    /*
+     * get all modules in prog
+     * and make module global variable
+     */
+    var mods = dspbridge.modules();
+    for (var i = 0; i < mods.length; i++) {
+        gbl[mods[i].name] = mods[i];
+
+        /*
+         * get all instances of mod[i]
+         * and make instance global variable
+         */
+        var insts = mods[i].instances();
+        for (var j = 0; j < insts.length; j++) {
+            gbl[insts[j].name] = insts[j];
+        }
+    }
+}
+
+dspbridge.xml = function () 
+{
+    var xml = <DSP_Bridge/>;
+
+    var mods = dspbridge.modules();
+    for (var i = 0; i < mods.length; i++) {
+        var mod = mods[i];
+        var name = mod.name;
+
+        for (var j in mod.$$global) {            
+            xml[name][mod.$$global[j].name] = 
+                dspbridge.toText(mod.$$global[j],
+                                 mod[mod.$$global[j].name]);
+        }
+
+        var insts = mod.instances();
+        for (var j = 0; j < insts.length; j++) {
+            for (var k in mod.$$instance) {
+                xml[name].instances[insts[j].name][mod.$$instance[k].name] = 
+                    dspbridge.toText(mod.$$instance[k],
+                                     insts[j][mod.$$instance[k].name]);
+            }
+        }
+    }
+    
+    return xml;
+}
+
+dspbridge.toText = function (prop, val) 
+{
+    /* default value, no processing */
+    var ret = val;
+
+    if ((prop.type == "Object") &&
+        (val != undefined) &&
+        (val.name != undefined)) {
+        ret = val.name;
+    }
+    else if (prop.type == "Hexadecimal") {
+        ret = utils.toHex(val);
+    }
+    /* 
+     * if user uses '0' or '1' instead of 'false' or 'true', then convert the
+     * value:
+     */
+    else if ( (prop.type == "Boolean") && (val == 0 || val == 1) ) {
+        ret = (val == 1);                                 
+    }
+
+    return ret;
+}
+
+dspbridge.readFile = function (fileName)
+{
+    var ins = new java.io.BufferedReader(new java.io.FileReader(fileName));
+    var outs = new java.io.StringWriter();
+    var nextLine;
+    while ((nextLine = ins.readLine()) != null) {
+        outs.write(nextLine);
+        outs.write("\n");
+    }
+    outs.flush();
+    return (outs.toString());
+}
+
+dspbridge.writeFile = function (filename, content, append)
+{
+    // do not generate empty files
+    if (content != "") {
+        var fd = new java.io.FileWriter(filename, append);
+        fd.write(content);
+        fd.close();
+    }
+}
+
+dspbridge.toHex = function (x)
+{
+    if (x >= 0) {
+        return this.appendH(utils.toHex(x));
+    }
+    else {
+        if (-x > 0x80000000) {
+           throw ("dspbridge.toHex " + x + " is out of range...");
+        }
+        return this.appendH(utils.toHex(0xFFFFFFFF + x + 1));
+    }
+}
+
+dspbridge.appendH = function (x)
+{
+    return (x.substring(x.indexOf("x") + 1) + "H");
+}
+
+dspbridge.print = function (x) 
+{
+    if (dspbridge.$$dbg) {
+        print (x);
+    }
+}
+
+dspbridge.trace = {};
+dspbridge.trace.map = {};
+dspbridge.trace.add = function (obj, name)
+{
+    if (dspbridge.trace.map[name] != undefined) {
+        print (name + " is already in the trace map");
+    }
+    dspbridge.trace.map[name] = {};
+    for (var i in obj) {
+        if ((typeof(obj[i]) == "function") &&
+            (i != "print")) {
+            dspbridge.trace.map[name][i] = obj[i];
+            var fxn = '' +
+                'print ("!fxn '+ i +' ++");\n' +
+                'dspbridge.trace.printArgs(arguments);\n' +
+                'var r = dspbridge.trace.map.' + name + '.' + i + '.apply(this,arguments);\n' +
+                'print ("!fxn '+ i +' --");\n' +
+                'return r;\n';
+            obj[i] = new Function (fxn);
+        }
+    }
+}
+
+dspbridge.trace.printArgs = function (args)
+{
+    if (args != undefined) {
+        for (var i = 0 ; i < args.length ; i++) {
+            var text = "    !arg " + i + " " + args[i];
+            if ((args[i] != null) && (args[i].name != undefined)) {
+                text += ", " + args[i].name;
+            }
+            print (text);
+        }
+    }
+}
+
+/*
+ * comment this out for debugging... 
+ * basically we hook all functions so that we get a trace each a function
+ * is called, and we displayed all args
+ */
+// dspbridge.trace(dspbridge.$$test, "$$test");
+// dspbridge.trace(dspbridge.$$template, "$$template");
+// dspbridge.trace.add(dspbridge, "dspbridge");
+/*
+ *  @(#) ti.sdo.fc.utils; 1, 0, 0,58; 5-10-2007 10:50:25; /db/atree/library/trees/fc-b12x/src/
+ */
+

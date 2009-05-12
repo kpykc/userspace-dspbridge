@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<package name='ti.sdo.fc.dman' release='' xmlns='xdc/spec'>
+    <autodoc tag='summary'>
+        <comment line='12' text='++Framework+Components%27+DMA+Manager.+'/>
+    </autodoc>
+    <autodoc tag='details'>
+        <comment line='14' text='++This+package+provides+a+DMA+Manager.+'/>
+    </autodoc>
+</package>

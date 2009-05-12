@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--  This file conforms to the DTD xdc/bld/release.dtd -->
+<release name="" label="" date="" buildCount="">
+<package name="ti.xdais.dm"
+    version="1, 0, 1, 0"/>
+<imports>
+</imports>
+<references>
+    <package name="gnu.targets"
+        version="1, 0, 0, 0">
+        <file name="ITarget.xs"/>
+        <file name="package.xs"/>
+        <file name="package/gnu.targets.sch"/>
+    </package>
+    <xdcRoot base="/db/toolsrc/library/vendors2005/xdc/xdcdist-d37/Linux/">
+        <file name="include/utils.tci"/>
+    </xdcRoot>
+    <package name="ti.targets"
+        version="1, 0, 0, 0">
+        <file name="ITarget.xs"/>
+        <file name="package.xs"/>
+        <file name="package/ti.targets.sch"/>
+    </package>
+    <package name="xdc"
+        version="1, 1, 0, 0">
+        <file name="IPackage.xdc"/>
+        <file name="IPackage.xs"/>
+        <file name="om2.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.sch"/>
+        <file name="xdc.tci"/>
+    </package>
+    <package name="xdc.bld"
+        version="1, 0, 0, 0">
+        <file name="BuildEnvironment.xs"/>
+        <file name="Executable.xs"/>
+        <file name="ITarget.xs"/>
+        <file name="Library.xs"/>
+        <file name="PackageContents.xs"/>
+        <file name="Repository.xs"/>
+        <file name="Utils.xs"/>
+        <file name="_gen.xs"/>
+        <file name="package.xs"/>
+        <file name="package/xdc.bld.sch"/>
+    </package>
+</references>
+<orphans>
+    <file name="/db/wtree/library/trees/dais-g07x/src/config.bld"/>
+</orphans>
+</release>
