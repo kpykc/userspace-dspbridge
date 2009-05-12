@@ -49,9 +49,9 @@ else
 endif
 
 BRIDGETOOL_DIR = $(CURDIR)/dsp/bdsptools
-SABIOS_DIR = $(DEPOT)/BIOS-$(SABIOS_VER)/bios_$(SABIOS_VER_2)/packages
+SABIOS_DIR = $(DEPOT)/bios_$(SABIOS_VER_2)/packages
 SABIOS_ROOT_DIR = $(DEPOT)/BIOS-$(SABIOS_VER)
-DD_XDCDIR = $(DEPOT)/BIOS-$(SABIOS_VER)/bios_$(SABIOS_VER_2)/xdctools
+DD_XDCDIR = $(DEPOT)/bios_$(SABIOS_VER_2)/xdctools
 DD_XDC = $(DD_XDCDIR)/xdc
 
 # we use XDC args to pass argument to the config.bld so that config.bld is 

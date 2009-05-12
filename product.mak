@@ -18,7 +18,7 @@ SABIOS_VER_2 = 5_33_02
 
 # CodeGen Tools
 CGT55_VER = 3.2.2
-CGT6X_VER = 6.0.7
+CGT6X_VER = 6.0.22
 
 # Framework components
 FC_VER = 1_10_04
