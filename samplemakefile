@@ -53,6 +53,7 @@ SABIOS_DIR = $(DEPOT)/bios_$(SABIOS_VER_2)/packages
 SABIOS_ROOT_DIR = $(DEPOT)/BIOS-$(SABIOS_VER)
 DD_XDCDIR = $(DEPOT)/bios_$(SABIOS_VER_2)/xdctools
 DD_XDC = $(DD_XDCDIR)/xdc
+TARGETDIR = $(PREFIX)/target
 
 # we use XDC args to pass argument to the config.bld so that config.bld is 
 # generic as much as possible
@@ -79,7 +80,7 @@ DD_XDCOPTIONS = XDCOPTIONS=v XDCBUILDCFG=$(CURDIR)/config.bld \
 
 BRIDGE_EXPORT_PACKAGES = dsp/ti/dspbridge/dsp/bridge_product
 
-SAMPLE_PACKAGES = samples/dsp 
+SAMPLE_PACKAGES = samples/dsp
 
 .samples: .bridge_samples
 
@@ -95,6 +96,7 @@ else
     MKDIR = mkdir
 	RM = rm
 	TOUCH = touch
+	CP = cp
 endif
 
 .bridge_tools: dsp/bdsptools/bridge-tools.tar
@@ -126,6 +128,16 @@ endif
 .clean_samples:
 	$(DD_XDC) $(DD_XDC_ARGS) $(DD_XDCOPTIONS) clean $(DSP_JOBS) -P \
 		$(SAMPLE_PACKAGES) 
+	$(RM) -f samples/dsp/.xdcenv.mak .bridge_tools .fc_tar
+	$(RM) -rf dsp/bdsptools/framework_components_1_10_04/
+	$(RM) -rf dsp/bdsptools/packages/
+
+.install:
+	if test ! -d $(TARGETDIR)/dspbridge/; \
+	then $(MKDIR) -p $(TARGETDIR)/dspbridge/; \
+	fi
+	$(CP) -f $(SAMPLE_PACKAGES)/*.dll64P $(TARGETDIR)/dspbridge/
+	$(CP) -f $(SAMPLE_PACKAGES)/*.dof64P $(TARGETDIR)/dspbridge/
 
 #.execute_version_script: version.ksh $(VERSION_FILE)
 #	@$(KSH) $< $(VERSION_FILE)

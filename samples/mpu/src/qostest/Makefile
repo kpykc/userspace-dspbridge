@@ -19,12 +19,12 @@ PROJROOT=../..
 
 include $(PROJROOT)/make/start.mk
 
-INCLUDE=-I $(PROJROOT)/inc -I $(PROJROOT)/../TARGET/host/include
-LDPATH=$(PROJROOT)/lib
+INCLUDE=-I $(PROJROOT)/inc
+LDPATH=$(TARGETDIR)/lib
 LDFLAGS = -L $(LDPATH)  -L $(PROJROOT)/src/qos
 CFLAGS=-Wall -g -O2 $(INCLUDE) -finline-functions -D$(PROCFAMILY) $(LDFLAGS)
 
-LIBS = -lbridge -lpthread -lqos
+LIBS = -lbridge -lqos
 
 all: qostest.out
 

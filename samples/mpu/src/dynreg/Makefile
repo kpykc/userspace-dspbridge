@@ -75,7 +75,7 @@ INCLUDES    = \
 #ST_LIBS        = bridge
 #SH_LIBS        =
 #SH_LIBS        = pthread bridge
-LIB_OBJS        = -lpthread -lbridge
+LIB_OBJS        = -lbridge
 
 
 # Search path for library (and linker command) files.

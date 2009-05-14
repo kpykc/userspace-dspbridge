@@ -53,7 +53,6 @@ endif
 #default (first) target should be "all"
 #make sure the target directories are created
 #all: $(HOSTDIR) $(ROOTFSDIR) $(TARGETDIR)
-all: $(TARGETDIR)
 
 CONFIG_SHELL := /bin/bash
 

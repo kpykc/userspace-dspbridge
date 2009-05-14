@@ -253,17 +253,17 @@ endif   # ifneq ($(TARGETTYPE),)
 #   ----------------------------------------------------------
 #   install - install the files
 #   ----------------------------------------------------------
-install:: $(TARGETDIR) $(SUBMODULES) $(TARGET)
+install:: $(SUBMODULES) $(TARGET)
 ifdef HOSTRELEASE
 ifdef SH_SONAME
 	$(INSTALL) -D $(TARGET) $(TARGETDIR)/$(HOSTRELEASE)/$(SH_SONAME)
 	$(RM) -f $(TARGETDIR)/$(HOSTRELEASE)/$(TARGET)
-	ln -s $(SH_SONAME) $(TARGETDIR)/$(HOSTRELEASE)/$(TARGET)
+	ln -s $(SH_SONAME) $(TARGETDIR)/lib/$(TARGET)
 else
 ifneq ($(TOPLEVEL),)
-	$(INSTALL) -D $(TARGETKO) $(TARGETDIR)/$(HOSTRELEASE)/$(TARGETKO)
+	$(INSTALL) -D $(TARGETKO) $(TARGETDIR)/dspbridge/$(TARGETKO)
 else
-	$(INSTALL) -D $(TARGET) $(TARGETDIR)/$(HOSTRELEASE)/$(TARGET)
+	$(INSTALL) -D $(TARGET) $(TARGETDIR)/dspbridge/$(TARGET)
 endif
 endif
 endif
