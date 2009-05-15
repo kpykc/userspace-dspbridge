@@ -20,7 +20,7 @@ RM = rm
 export PREFIX=$(shell pwd)
 
 ifndef DEPOT
-$(error Error: variable PREFIX not defined)
+$(error Error: variable DEPOT not defined)
 endif
 
 clean:
