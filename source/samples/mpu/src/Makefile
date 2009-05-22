@@ -63,16 +63,9 @@ scale \
 dmmcopy \
 dynreg \
 cexec \
-
-ifeq ($(PROCFAMILY),OMAP_3430)
-SUBMODULES	+= qostest \
+crashmon \
+qostest \
 zerocopymsg 
-endif
-
-ifeq ($(PROCFAMILY),OMAP_24xx)
-SUBMODULES	+= iva_dmmcopy/linux \
-ivamsg/linux
-endif
 
 # Framework
 
