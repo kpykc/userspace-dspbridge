@@ -109,6 +109,7 @@ function setupBRIDGE (platform, dll)
     TSK_dispatcher = prog.module("TSK").create("TSK_dispatcher");
     TSK_dispatcher.fxn = prog.extern("RMS_rpc");
     TSK_dispatcher.stackMemSeg = prog.get("EXTMEM");
+    TSK_dispatcher.priority = 7;
     
     //add instance TSK.TERMINATE_TSK
     TERMINATE_TSK = bios.TSK.create("TERMINATE_TSK");
