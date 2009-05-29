@@ -78,7 +78,7 @@ CFLAGS += -fno-strict-aliasing
 #   Machine dependent
 
 ifeq ($(PROCFAMILY),OMAP_3430)
-CFLAGS += -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -march=armv7a -msoft-float -Uarm -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR($(basename $(TARGETNAME)))" -D"KBUILD_MODNAME=KBUILD_STR($(basename $(TARGETNAME)))"  -DMODULE -D__LINUX_ARM_ARCH__=7 
+CFLAGS += -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -march=armv7-a -msoft-float -Uarm -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR($(basename $(TARGETNAME)))" -D"KBUILD_MODNAME=KBUILD_STR($(basename $(TARGETNAME)))"  -DMODULE -D__LINUX_ARM_ARCH__=7
 endif
 
 #   Code generation
