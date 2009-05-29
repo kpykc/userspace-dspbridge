@@ -111,7 +111,7 @@ var $$global = [
         },
 	  {
             name : "hibernationTimeout",
-            val  : 30000,
+            val  : 5000,
             label: "DSP Inactivity Timeout (msec) for Hibernate Transition",
             type : "Integer",
         },
