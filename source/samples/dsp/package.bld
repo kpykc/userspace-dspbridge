@@ -57,7 +57,7 @@ var programs = [
                    "pinglib", "pingdata", "strmcopyCreate",
                    "strmcopyExecute", "strmcopyDelete", "iscale",
                    "scale_ti", "scale_ti_vtab", "ssktcrea", "ssktexec",
-                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute"]
+                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute" ]
     },
     {
         name:    "dynbase",
@@ -96,7 +96,7 @@ var programs64 = [
                    "pinglib", "pingdata", "strmcopyCreate",
                    "strmcopyExecute", "strmcopyDelete", "iscale",
                    "scale_ti", "scale_ti_vtab", "ssktcrea", "ssktexec",
-                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute"]
+                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute" ]
     },
     {
         name:    "dynbase",
@@ -393,7 +393,8 @@ Pkg.uses = [
     "ti/dspbridge/dsp/bridge_product/exports/include",
     "ti/sdo/fc/dskt2",
     "ti/sdo/fc/dman3",
-    "ti/sdo/fc/acpy3"
+    "ti/sdo/fc/acpy3",
+    "ti/dspbridge/dsp/ldrv/newdev"
     ];
 
 // Use this instead

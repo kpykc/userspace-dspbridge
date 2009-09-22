@@ -15,73 +15,73 @@ XDCCFGDIR = package/cfg/
 # in the event that some included BOM script changes.
 #
 ifneq (clean,$(MAKECMDGOALS))
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/recap.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/recap.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/IPackage.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/IPackage.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/spec/package/xdc.services.spec.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/spec/package/xdc.services.spec.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/package.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/package.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/ITarget.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/ITarget.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/PackageContents.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/PackageContents.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/package/xdc.shelf.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/package/xdc.shelf.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Script.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Script.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/package/xdc.bld.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/package/xdc.bld.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/corevers/package/xdc.corevers.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/corevers/package/xdc.corevers.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/cmd/package/xdc.services.intern.cmd.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/cmd/package/xdc.services.intern.cmd.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/package/xdc.services.global.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/package/xdc.services.global.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Executable.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Executable.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/package.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/package.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Library.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Library.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/_gen.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/_gen.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Utils.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Utils.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/package.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/package.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/_gen.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/_gen.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Utils.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Utils.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Repository.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Repository.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/ITarget.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/ITarget.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/Clock.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/Clock.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/xmlgen.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/xmlgen.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/BuildEnvironment.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/BuildEnvironment.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/om2.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/om2.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Executable.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Executable.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/include/utils.tci:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/include/utils.tci
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/package/xdc.services.global.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/package/xdc.services.global.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/package/xdc.shelf.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/package/xdc.shelf.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/xsr/package/xdc.services.intern.xsr.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/xsr/package/xdc.services.intern.xsr.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/ITargetFilter.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/ITargetFilter.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/PackageContents.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/PackageContents.xs
 /vobs/SDS/Source/Bridge/dsp/config.bld:
 package.mak: /vobs/SDS/Source/Bridge/dsp/config.bld
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/xmlgen.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/xmlgen.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/include/utils.tci:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/include/utils.tci
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/Clock.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/Clock.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/xdc.tci:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/xdc.tci
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/gen/package/xdc.services.intern.gen.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/gen/package/xdc.services.intern.gen.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/ITargetFilter.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/ITargetFilter.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Repository.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/Repository.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/package/ti.targets.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/package/ti.targets.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/package/xdc.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/package/xdc.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/ITarget.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/ITarget.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/package.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/ti/targets/package.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/BuildEnvironment.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/bld/BuildEnvironment.xs
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/xsr/package/xdc.services.intern.xsr.sch:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/xsr/package/xdc.services.intern.xsr.sch
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/template.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/template.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/template.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/template.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/recap.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/recap.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/package/xdc.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/package/xdc.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/spec/package/xdc.services.spec.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/spec/package/xdc.services.spec.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Library.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Library.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/gen/package/xdc.services.intern.gen.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/gen/package/xdc.services.intern.gen.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/package/ti.targets.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/package/ti.targets.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/package/xdc.bld.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/package/xdc.bld.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/IPackage.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/IPackage.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/package.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/ti/targets/package.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/corevers/package/xdc.corevers.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/corevers/package/xdc.corevers.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Script.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/Script.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/xdc.tci:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/xdc.tci
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/cmd/package/xdc.services.intern.cmd.sch:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/cmd/package/xdc.services.intern.cmd.sch
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/ITarget.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/bld/ITarget.xs
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/package.xs:
+package.mak: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/package.xs
 package.mak: package.bld
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/om2.xs:
-package.mak: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/om2.xs
 endif
 
 all,64P .libraries,64P .dlls,64P .executables,64P test,64P:;

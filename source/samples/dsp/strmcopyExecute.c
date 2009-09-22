@@ -34,6 +34,10 @@
 #include <rms.h>
 #include <node.h>
 
+#ifdef _INST2_
+ #include <inst2.h>
+#endif 
+
 #define DLLDEBUG 0
 #define UTL_breakPoint() asm(" .if (.MNEMONIC)\n ESTOP_1\n .else\n ESTOP_1()\n .endif\n NOP")
 
@@ -83,10 +87,25 @@ RMS_STATUS STRMCOPY_TI_execute(NODE_EnvPtr env)
     /* Until end of stream indicated, receive and send a host buffer: */
     for (;;) {
 
+	/*
+        * The following calls to INST2_COLLECT are only for testing porpose,
+        * this calls will simulate the behavior of the INST2 meassurements of 
+        * the USN layer
+       */  
+       #ifdef _INST2_
+       /* collect time before the blocking call */
+       INST2_COLLECT(INST2_FORMAT_BENCH | INST2_TAG_WAIT | INST2_SUFFIX_START, 0, 0, 0)
+       #endif
+	   
         /* Wait until input stream is ready, or until GPP message arrives. */
         readyStreams = NODE_wait(env, &copyObj->inStream, 1, NODE_FOREVER,
             &msgReady);
-
+	   
+        #ifdef _INST2_ 
+        /* collect time after the blocking call */
+        INST2_COLLECT(INST2_FORMAT_BENCH | INST2_TAG_WAIT | INST2_SUFFIX_STOP, 0, 0, 0)
+        #endif
+		
         /* If a message has arrived. */
         if (msgReady != 0) {
 

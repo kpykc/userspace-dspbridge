@@ -34,6 +34,10 @@
 #include <rms.h>
 #include <node.h>
 
+#ifdef _INST2_
+ #include <inst2.h>
+#endif
+
 #define DLLDEBUG 0
 #define UTL_breakPoint() asm(" .if (.MNEMONIC)\n ESTOP_1\n .else\n ESTOP_1()\n .endif\n NOP")
 
@@ -75,6 +79,11 @@ RMS_STATUS STRMCOPY_TI_create(Int argLength,
 #if DLLDEBUG
     UTL_breakPoint();
 #endif
+
+     #ifdef _INST2_
+     //SYSTEM instrumentation testing
+     INST2_INIT(0,INST2_FORMAT_ALL | INST2_TAG_ALL);
+     #endif
 
     /* Allocate context structure for this instance of the strmcopy object. */
     if ((copyObj = MEM_calloc(0, sizeof(StrmcopyObj), 0)) != NULL) {

@@ -17,6 +17,7 @@ var dbs_cgtools_dir_c64 = "";
 var loadMonitor = "";
 var scaling = "";
 var ipc = "";
+var inst2= "";
 for (x = 0; x < arguments.length; x++) {
     if (arguments[x].match(/^DEPOT=/) ) {
         // [1] operation is used on the return value of split(), which is an 
@@ -66,6 +67,10 @@ for (x = 0; x < arguments.length; x++) {
     	scaling = arguments[x].split("=")[1];
         print("setting scaling variable as = " + scaling);
     }    
+    else if (arguments[x].match(/^INST2=/) ) {
+        inst2 = arguments[x].split("=")[1];
+        print("setting inst2 variable as = " + inst2);
+    }
     else if (arguments[x].match(/^IPC=/) ) {
         // [1] operation is used on the return value of split(), which is an 
         // array. 
@@ -181,6 +186,17 @@ profTail["bridge_release"] = "";
 tiTargets.C55_large.lnkOpts.suffix =
     "-m $(XDCCFGDIR)/$@.map "; // -l $(rootDir)/lib/rts55x.lib";
 
+var inst2defs;
+	
+if (inst2=="TRUE") {
+    print("Inst2 enabled");
+    inst2defs=" -D_INST2_ ";
+} 
+else {
+    inst2defs="";
+}	
+
+
 /*
  * -g:    dwarf debug symbols (v5.3.0b4)
  * -pdr:   display diagnostic remarks
@@ -189,7 +205,7 @@ tiTargets.C55_large.lnkOpts.suffix =
 tiTargets.C64P.profiles["bridge_debug"] = {
     compileOpts: {
         copts: "-pdr -g -pden"  + pdsOpts,
-        defs:  "-D_DBG_ -DDBC_ASSERTS=1 -D_TI_NODEHEAP -DIDMA3_USEFULLPACKAGEPATH",
+        defs:  "-D_DBG_ -DDBC_ASSERTS=1 -D_TI_NODEHEAP -DIDMA3_USEFULLPACKAGEPATH" + inst2defs,
         aopts: "-g",
     },
     linkOpts: linkerOpts,

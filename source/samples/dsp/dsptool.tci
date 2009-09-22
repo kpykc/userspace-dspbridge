@@ -1,0 +1,51 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== dsptool.tci ========
+ *
+ */
+
+// add instance NODE.dsptoolNode
+dsptoolNode = bridge.NODE.create("dsptoolNode");
+
+dsptoolNode.uuid = "34C5E5E3_F237_33F6_B18B_22E2615C73C0";
+dsptoolNode.name = "DSPTOOL_TI";
+dsptoolNode.nodeType = "TASKNODE";
+dsptoolNode.priority = 1;
+dsptoolNode.stackSize = 1024;
+dsptoolNode.stackSeg = 0;
+dsptoolNode.messageDepth = 2;
+dsptoolNode.numInputStreams = 0;
+dsptoolNode.numOutputStreams = 0;
+dsptoolNode.timeout = 2000;
+dsptoolNode.createFxn = "DSPTOOL_TI_create";
+dsptoolNode.executeFxn = "DSPTOOL_TI_execute";
+dsptoolNode.deleteFxn = "DSPTOOL_TI_delete";
+
+if (dynamicNode) {
+    dsptoolNode.loadType = "Dynamic";
+    dsptoolNode.splitPhases = splitPhases;
+
+    if (chipType != "2430" && chipType != "3430") {
+            dsptoolNode.createCodeSeg = bridge.DYN_EXTERNAL;
+            dsptoolNode.createDataSeg = bridge.DYN_EXTERNAL;
+            dsptoolNode.executeCodeSeg = bridge.DYN_EXTERNAL;
+            dsptoolNode.executeDataSeg = bridge.DYN_EXTERNAL;
+            dsptoolNode.deleteCodeSeg = bridge.DYN_EXTERNAL;
+            dsptoolNode.deleteDataSeg = bridge.DYN_EXTERNAL;
+    }
+}

@@ -90,6 +90,9 @@
 -lbridgev1035`instrSuffix`    /* Bridge library */
 %} else {
 -lbpwr`debugSuffix`      /* BPWR support -- platform independent lib */
+%if (bridge.BRIDGE.enableDebug == true ) {
+-linst2`debugSuffix`      /* INST2 support -- platform independent lib */
+%}
 -lbridge`instrSuffix`    /* Bridge library */
 %}
 %
@@ -128,6 +131,9 @@
 -lbpwr243x`debugSuffix`      /* BPWR support for OMAP243x */
 %}else if (bridge.BRIDGE.TIOMAP3430) {
 -lbpwr343x`debugSuffix`      /* BPWR support for OMAP343x */
+%if (bridge.BRIDGE.enableDebug == true ) {
+-linst2`debugSuffix`      /* INST2 support for OMAP343x */
+%}
 %}
 -ehwi0                       /* Set entry point to HWI reset */
 %}

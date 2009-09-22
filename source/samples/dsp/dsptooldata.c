@@ -15,26 +15,11 @@
  */
 
 /*
- *  ======== dynbase.tci ========
+ *  ======== dsptooldata.c ========
  */
 
-var fDebugBridge = false;
+#include <std.h>
+#include "dsptooldata.h"
 
-// add instance LOG.trace
-trace = bridge.LOG.create("trace");
-
-if (fDebugBridge) {
-    // enable Bridge debug support
-    bridge.BRIDGE.enableDebug = 1;
-}
-
-// Create and configure LOG buffer for INST2
-if ((dspbridge.module("BRIDGE").enableDebug == true)){
-    bridge.LOG.create("LOG_multimedia");
-    bridge.LOG.instance("LOG_multimedia").dataType = "raw data";
-    bridge.LOG.TS = true;	// Add time stamp when log is called 
-
-    var idlInst = bridge.IDL.create("idlInst");
-    idlInst.fxn = prog.extern("INST2_idleFxn");
-	idlInst.calibration = true;
-}
+/* Node 'class' data, shared between node instances: */
+Uns DSPTOOL_TI_instances = 0; /* Since global, must use node prefix.      */

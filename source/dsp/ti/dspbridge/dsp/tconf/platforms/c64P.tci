@@ -110,12 +110,14 @@ function setupBRIDGE (platform, dll)
     TSK_dispatcher.fxn = prog.extern("RMS_rpc");
     TSK_dispatcher.stackMemSeg = prog.get("EXTMEM");
     TSK_dispatcher.priority = 7;
+    TSK_dispatcher.allocateTaskName = true;
     
     //add instance TSK.TERMINATE_TSK
     TERMINATE_TSK = bios.TSK.create("TERMINATE_TSK");
     TERMINATE_TSK.fxn = prog.extern("RMS_terminateTask");
     TERMINATE_TSK.stackMemSeg = prog.get("EXTMEM");
     TERMINATE_TSK.priority = 15;
+    TERMINATE_TSK.allocateTaskName = true;
 
     if (0) {
         // add instance DBP.dbpipe

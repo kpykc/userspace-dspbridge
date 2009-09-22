@@ -13,12 +13,12 @@
 #
 
 # DSP BIOS
-SABIOS_VER   = 5.33.02
-SABIOS_VER_2 = 5_33_02
+SABIOS_VER   = 5.33.04
+SABIOS_VER_2 = 5_33_04
 
 # CodeGen Tools
 CGT55_VER = 3.2.2
-CGT6X_VER = 6.0.22
+CGT6X_VER = 6.0.7
 
 # Framework components
 FC_VER = 1_10_04
@@ -42,3 +42,6 @@ L_MONITOR = TRUE
 
 #define DVFS module
 SCALING = TRUE
+
+#define INST2 module
+INST2 = FALSE

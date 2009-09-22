@@ -61,4 +61,7 @@ SECTIONS {
     .text:algInit: {}
 }
 
+SECTIONS {
+    .instrumentation: {}
+}
 %}

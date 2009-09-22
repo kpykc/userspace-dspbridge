@@ -41,6 +41,10 @@
 #include <rms_sh.h>   /* RMS definitions shared on both GPP and DSP           */
 #include <node.h>     /* DSP/BIOS Bridge Node APIs                            */
 
+#ifdef _INST2_
+#include <inst2.h>
+#endif
+
 #include "pinglib.h"
 #include "pingdata.h"
 
@@ -83,7 +87,6 @@ RMS_STATUS PING_TI_create(Int argLength, Char * argData,
 	numOutStreams |= numOutStreams;
 	*outDef |= *outDef;
 
-
     /* Allocate task node context object. */
     if ((pingPtr = MEM_calloc(PINGMEMSEG, sizeof(PING_TI_Obj), 0))
          != MEM_ILLEGAL) {
@@ -96,6 +99,11 @@ RMS_STATUS PING_TI_create(Int argLength, Char * argData,
           *  of the RMS server thread, which is not reentrant, it is safe to
           *  directly alter global node class data in these functions.
           */
+         #ifdef _INST2_
+           //SYSTEM instrumentation testing
+           INST2_INIT(0,INST2_FORMAT_ALL | INST2_TAG_ALL);
+         #endif
+	  
          pingPtr->instance = ++PING_TI_instances;
 
          /* Save Ping node context for use in execute and delete phases. */
@@ -107,7 +115,7 @@ RMS_STATUS PING_TI_create(Int argLength, Char * argData,
          retval = RMS_EOUTOFMEMORY;
     }
 
-    PING_print("PING_TI_create: retval = 0x%x\n", retval);
+    PING_print("**PING_TI_create: retval = 0x%x **\n", retval);
 
     /* Assert Ensures */
     DBC_ensure((retval == RMS_EFAIL) || (retval == RMS_EOUTOFMEMORY) ||

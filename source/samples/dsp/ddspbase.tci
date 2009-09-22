@@ -87,6 +87,9 @@ utils.importFile("strmcopy.tci");
 /* Ping Node */
 utils.importFile("ping.tci");
 
+/* DSPTool Node */
+utils.importFile("dsptool.tci");
+
 /* Scale Node */
 utils.importFile("scale.tci");
 
@@ -100,3 +103,16 @@ if( (chipType == "v1035") && (dspbridge.module("BRIDGE").includeMipcLib) )
 {
     utils.importFile("mipc.tci");
 }
+
+// Create and configure LOG buffer for INST2
+if ((dspbridge.module("BRIDGE").enableDebug == true)){
+    bridge.LOG.create("LOG_multimedia");
+    bridge.LOG.instance("LOG_multimedia").dataType = "raw data";
+    bridge.LOG.TS = true;	// Add time stamp when log is called 
+
+    var idlInst = bridge.IDL.create("idlInst");
+    idlInst.fxn = prog.extern("INST2_idleFxn");
+	idlInst.calibration = true;
+}
+	
+	   

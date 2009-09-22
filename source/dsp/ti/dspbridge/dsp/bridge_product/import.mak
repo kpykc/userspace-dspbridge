@@ -32,6 +32,8 @@ all: .all-local
 	$(CP) -f ../bridge/strm/strm.h ./exports/include/.
 	$(CP) -f ../ldrv/newdev/ddma.h ./exports/include/.
 	$(CP) -f ../bpwr/bpwr.h ./exports/include/.
+	$(CP) -f ../inst2/inst2.h ./exports/include/.
+	$(CP) -f ../inst2/_inst2.h ./exports/include/.
 
 ifneq (,$(findstring C55_large,$(TARGETS)))
 	$(CP) -f ../bridge/bridge.a55L ./exports/lib/.
@@ -71,6 +73,9 @@ ifneq (,$(findstring C64P,$(TARGETS)))
 	$(CP) -f ../ldrv/tiomap/tiomap24xxd.a64P ./exports/lib/.
 	$(CP) -f ../qos/thrload.a64P ./exports/lib/.
 	$(CP) -f ../qos/thrloadd.a64P ./exports/lib/.
+	$(CP) -f ../inst2/inst2.a64P ./exports/lib/.
+	$(CP) -f ../inst2/inst2d.a64P ./exports/lib/.
+
 endif
 
 	@$(MSG) import compleleted ...

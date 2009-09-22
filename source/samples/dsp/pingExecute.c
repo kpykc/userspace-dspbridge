@@ -41,6 +41,10 @@
 #include <rms_sh.h>   /* RMS definitions shared on both GPP and DSP           */
 #include <node.h>     /* DSP/BIOS Bridge Node APIs                            */
 
+#ifdef _INST2_         /*INSTRUMENTATION TESTING */
+    #include <inst2.h>
+#endif
+
 #include "pinglib.h"
 #include "pingdata.h"
 
@@ -80,10 +84,28 @@ RMS_STATUS PING_TI_execute(NODE_EnvPtr node)
     msg.cmd = ~(RMS_EXIT);  /* Initialize */
     do {
        /* Wait (with delay timeout) for RMS exit messsage from GPP: */
-       NODE_getMsg(node, &msg, NODE_FOREVER);
+
+	/*
+        * The following calls to INST2_COLLECT are only for testing porpose,
+        * this calls will simulate the behavior of the INST2 meassurements of 
+        * the USN layer
+       */  
+       #ifdef _INST2_
+       /* collect time before the blocking call */
+       INST2_COLLECT(INST2_FORMAT_BENCH | INST2_TAG_WAIT | INST2_SUFFIX_START, 0, 0, 0)
+       #endif
+	   
+	/* wait for strms and messages from host*/  
+	NODE_getMsg(node, &msg, NODE_FOREVER);
+
+	#ifdef _INST2_
+       /* collect time after the blocking call */
+       INST2_COLLECT(INST2_FORMAT_BENCH | INST2_TAG_WAIT | INST2_SUFFIX_STOP, 0, 0, 0)
+	#endif
+	
        PING_print("PING_TI_execute: Received ping from GPP: cmd = 0x%x; cnt = 0x%x\n",
 		       msg.cmd, msg.arg1);
-
+       
        /*
         *  Unless a DSPNode_Terminate() call was made from GPP,
         *  NODE_getMsg will have timed out, with msg.cmd left as RMS_USER+1.

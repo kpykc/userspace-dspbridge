@@ -66,9 +66,10 @@ function getSects()
 {
     if (prog.name == "ddspbaseMisalign_tiomap1510.x55L") {
         print("*** Setting up customized template ***");
-        return("ti/dspbridge/dsp/samples/misalign.xdt");
+        return("misalign.xdt");
     }
     else {
+        return("inst2cmd.xdt");
         return null;
     }
 }

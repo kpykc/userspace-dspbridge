@@ -21,26 +21,26 @@ xdc/IPackage.xdc:
 vpath xdc/IPackage.xdc $(XPKGVPATH)
 
 ifneq (clean,$(MAKECMDGOALS))
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/antlr.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/antlr.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/cmd/java/package.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/cmd/java/package.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/tar.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/tar.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/junit.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/junit.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/js.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/js.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/xbean.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/shelf/java/xbean.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/xsr/java/package.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/xsr/java/package.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/gen/java/package.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/intern/gen/java/package.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/spec/java/package.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/spec/java/package.jar:
-package/package.xdc.xml: /data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/java/package.jar
-/data/omapts/linux/dsp-tc/BIOS-5.33.02/bios_5_33_02/xdctools/packages/xdc/services/global/java/package.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/java/package.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/global/java/package.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/tar.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/tar.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/xsr/java/package.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/xsr/java/package.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/antlr.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/antlr.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/spec/java/package.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/spec/java/package.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/junit.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/junit.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/xbean.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/xbean.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/js.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/shelf/java/js.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/gen/java/package.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/gen/java/package.jar:
+package/package.xdc.xml: /dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/cmd/java/package.jar
+/dsp-tc/BIOS-5.33.04/bios_5_33_04/xdctools/packages/xdc/services/intern/cmd/java/package.jar:
 endif
 # goals for files generated during schema generation but unspecified by schema's pattern rule
 
