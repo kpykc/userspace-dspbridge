@@ -38,7 +38,7 @@ do {									\
 #define REINSTALL	1
 
 #define EVENTS		4
-#define BASEIMAGE_FILE	"/system/lib/dsp/baseimage.dof"
+#define BASEIMAGE_FILE	"/lib/dsp/baseimage.dof"
 #define ROOT_ACCESS	1406
 
 char *evt_name[5] = {"MMU_FAULT", "SYS_ERROR", "PWR_ERROR",
