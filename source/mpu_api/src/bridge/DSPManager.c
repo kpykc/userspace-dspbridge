@@ -99,6 +99,7 @@ DBAPI DspManager_Open(UINT argc, PVOID argp)
 	FILE *file;
 	char line[4];
 
+/*
 	if (argc == ROOT_ACCESS)
 		goto open;
 
@@ -113,6 +114,7 @@ DBAPI DspManager_Open(UINT argc, PVOID argp)
 		return DSP_EFAIL;
 	}
 open:
+*/
 	if (!bridge_sem_initialized) {
 		if (sem_init(&semOpenClose, 0, 1) == -1) {
 			DEBUGMSG(DSPAPI_ZONE_ERROR,
