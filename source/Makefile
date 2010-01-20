@@ -16,33 +16,97 @@
 
 MAKE = make
 RM = rm
+CP = cp
+MKDIR = mkdir
 
-PREFIX ?= $(shell pwd)
-TARGETDIR ?=$(PREFIX)/target
-
-ifndef DEPOT
-$(error Error: variable DEPOT not defined)
+ifndef PREFIX
+PREFIX = $(shell pwd)
+endif
+ifndef TDIR
+TDIR = target
 endif
 
+TARGETDIR=$(PREFIX)/$(TDIR)
+
+ifndef DDIR
+TARGETDSPDIR = $(TARGETDIR)/dspbridge
+else
+TARGETDSPDIR = $(PREFIX)/$(DDIR)
+endif
+
+DEPOT ?= /opt/dsp
+
+# we dont support parallel builds yet - force single CPU build
+# TODO: we need to define proper dependencies in *all* make files
+# before we enable this flag
+MAKEFLAGS += -j 1
+
+PREBUILT_DSPBINARY_DIR ?= ../binaries/
+PREBUILT_DSPBINARY_FILES ?= \
+		      ddspbase_tiomap3430.dof64P	\
+		      dmmcopydyn_3430.dll64P		\
+		      dmmcopyPhasedyn_3430.dll64P	\
+		      dynbase_tiomap3430.dof64P		\
+		      loaddyn_3430.dll64P		\
+		      monitor_tiomap3430.dof64P		\
+		      pingdyn_3430.dll64P		\
+		      pingPhasedyn_3430.dll64P		\
+		      scaledyn_3430.dll64P		\
+		      scalePhasedyn_3430.dll64P		\
+		      strmcopydyn_3430.dll64P		\
+		      strmcopyPhasedyn_3430.dll64P	\
+		      zcmsgdyn_3430.dll64P		\
+		      zcmsgPhasedyn_3430.dll64P
+
+
 .EXPORT_ALL_VARIABLES:
+API_DIR := mpu_api/src
+MPU_SAMPLE_DIR := samples/mpu/src
 
-clean:
-	$(MAKE) -C mpu_api/src clean
-	$(MAKE) -C samples/mpu/src clean
+
+SUBDIRS :=  $(API_DIR) $(MPU_SAMPLE_DIR)
+SUBDIRS_CLEAN := $(patsubst %, %-c, $(SUBDIRS))
+SUBDIRS_INSTALL := $(patsubst %, %-i, $(SUBDIRS))
+
+.PHONY: $(SUBDIRS)
+
+all: $(SUBDIRS_INSTALL) predsp
+	@echo INSTALL: abc $(SUBDIRS_ALL)  cln$(SUBDIRS_CLEAN) inst$(SUBDIRS_INSTALL) sdr$(SUBDIRS)
+
+clean: $(SUBDIRS_CLEAN)
 	$(MAKE) -f samplemakefile .clean
-	$(RM) -rf target
+	if test -d $(TARGETDSPDIR); then	\
+		$(RM) -rf $(TARGETDSPDIR);	\
+	fi
+	@echo clean: abc $(SUBDIRS_ALL)  cln$(SUBDIRS_CLEAN) inst$(SUBDIRS_INSTALL) sdr$(SUBDIRS)
 
-all: .api .samples .dsp
+mpu_build: .api .samples
 
-.api:
-	$(MAKE) -C mpu_api/src clean
-	$(MAKE) -C mpu_api/src all
-	$(MAKE) -C mpu_api/src install
+dsp_build: all .dsp
 
-.samples: .api
-	$(MAKE) -C samples/mpu/src/ clean
-	$(MAKE) -C samples/mpu/src/ all
-	$(MAKE) -C samples/mpu/src/ install
+predsp:
+	if test ! -d $(TARGETDSPDIR); then	\
+		$(MKDIR) -p $(TARGETDSPDIR);	\
+	fi
+	$(CP) $(foreach file, $(PREBUILT_DSPBINARY_FILES), $(PREBUILT_DSPBINARY_DIR)/$(file)) $(TARGETDSPDIR)
+	echo "MAKEFLAGS = $(MAKEFLAGS)"
+
+.api-install: $(patsubst %, %-i, $(API_DIR))
+
+.api: .api-install
+
+.samples-install: $(patsubst %, %-i, $(MPU_SAMPLE_DIR))
+
+.samples: .samples-install
+
+%-c:
+	$(MAKE) -C $(patsubst %-c,%,$@) clean
+	@echo DONE $@-c clean
+
+%-i:
+	$(MAKE) -C $(patsubst %-i,%,$@) all install
+	@echo DONE $@-i install
 
 .dsp:
 	$(MAKE) -f samplemakefile .clean .bridge_samples .install
+	@echo "DONE dsp"

@@ -1,0 +1,97 @@
+Date: 20100115
+
+This is a quick readme regarding the build for userspace components
+WARNING: This document is still a work in progress.
+
+Section 0. Jump Start for the impatient:
+----------------------------------------
+make CROSS_COMPILE=<cross_compile_name>
+Output will be in target directory
+  target/
+  |-- dspbridge (dspbridge test samples, prebuilt DSP components)
+  `-- lib (Libbridge)
+
+
+Section I. Pre-requisites:
+-------------------------
+
+a) PC: Linux machine - any latest PC with compilation environment is a
+  must. it may work in other environments, but there are no guarentees
+b) Compiler:
+   i. ARM: http://www.codesourcery.com/sgpp/lite/arm - 2007q3, 2008q3,
+      2009q1 are known to work. This should be enough if you dont want
+      to build DSP components and would like to use prebuilt stuff
+   ii. DSP:
+       CGT (Code Generation Tool): https://myportal.ti.com/portal/dt?provider=TIPassLoginSingleContainer&lt=myti&j5=2&j3=1&goto=https%3A%2F%2Fwww-a.ti.com%3A443%2Fdownloads%2Fsds_support%2Ftargetcontent%2FLinuxDspTools%2Fdownload.html
+	DSP/BIOS 5.33.04 package: https://myportal.ti.com/portal/dt?provider=TIPassLoginSingleContainer&lt=myti&j5=2&j3=1&goto=https%3A%2F%2Fwww-a.ti.com%3A443%2Fdownloads%2Fsds_support%2Ftargetcontent%2Fbios%2Findex.html
+WARNING: this information might be outdates, confirm with the wiki page
+above for the latest information
+
+Section II. Make options for userpace repository
+------------------------------------------------
+
+Build is a standard gnumake system, there are few things to consider though:
+
+a) Make variables:
+=================
+   Compiler selection:
+     DEPOT - This points to the common directory off which cgt
+             and dsp_bios are based off (Defaults: /opt/dsp)
+     CROSS_COMPILE - this is the standard MPU cross compiler
+	     (Default: arm-none-linux-gnueabi-).
+	     for a native build, use CROSS_COMPILE=""
+
+   Installation location tweaks:
+     PREFIX - where do you want the installation of final files to go to?
+              (Default: $PWD) - MUST be absolute path
+     TDIR - where do you want the libdspbridge to go to?
+             (Default: target) (Final result: $PREFIX/$TDIR)
+     DDIR - where do you want the utilites, dsp libraries to go to?
+             (Default: $PREFIX/$TDIR/dspbridge) (Final result: $PREFIX/$DDIR)
+
+b) Build targets:
+=================
+    <none> OR all:
+	Builds all mpu components including examples, copies prebuilt DSP bridge
+	testing binaries.
+	WARNING: these binaries have very basic functionality and cannot be used
+	for multimedia development!
+
+    clean:
+	Cleanup the build
+
+    mpu_build:
+	Just build the samples and libbridge (no prebuilt binaries copied)
+
+    dsp_build:
+	Build the test samples
+
+    predsp:
+	Just copy the prebuilt binaries
+
+    .api:
+	Just build libbridge alone and install
+
+    .samples:
+	Just build the mpu side test samples alone
+
+    .dsp:
+	Just build the dsp components alone
+
+Section III) Where do I get help/FAQs?
+--------------------------------
+
+Drop an email to http://groups.google.com/group/omapzoom
+
+I want to read more. where do I go?
+   http://omappedia.org/wiki/DSPBridge_Project
+
+Where is the main userspace repository hosted?
+   http://dev.omapzoom.org/?p=tidspbridge/userspace-dspbridge.git;a=summary
+
+Do I need kernel changes for it?
+   yes - DSPBridge is not mainlined to linux kernel
+
+Which version of kernel should I use with this on OMAP3?
+  See http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap-2.6.git;a=shortlog;h=refs/heads/dspbridge
+  userspace stays in sync with this.
