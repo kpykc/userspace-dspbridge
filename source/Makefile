@@ -18,6 +18,7 @@ MAKE = make
 RM = rm
 
 PREFIX ?= $(shell pwd)
+TARGETDIR ?=$(PREFIX)/target
 
 ifndef DEPOT
 $(error Error: variable DEPOT not defined)
