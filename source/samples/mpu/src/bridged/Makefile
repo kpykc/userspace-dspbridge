@@ -30,9 +30,9 @@ all: bridged
 bridged: bridged.c fuser.c
 	$(CC) $(CFLAGS) -o bridged bridged.c fuser.c $(LIBS)
 
-install:
-	$(INSTALL) -D bridged $(TARGETDIR)/dspbridge/bridged
-	$(STRIP) -s $(TARGETDIR)/dspbridge/bridged
+install: bridged
+	$(INSTALL) -D $< $(TARGETDIR)/dspbridge/$<
+	$(STRIP) -s $(TARGETDIR)/dspbridge/$<
 
 clean:
 	\rm -f bridged
