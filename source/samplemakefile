@@ -53,8 +53,9 @@ SABIOS_DIR = $(DEPOT)/bios_$(SABIOS_VER_2)/packages
 SABIOS_ROOT_DIR = $(DEPOT)/BIOS-$(SABIOS_VER)
 DD_XDCDIR = $(DEPOT)/bios_$(SABIOS_VER_2)/xdctools
 DD_XDC = $(DD_XDCDIR)/xdc
-TARGETDIR = $(PREFIX)/target
-
+ifndef TARGETDIR
+    TARGETDIR = $(PREFIX)/target
+endif
 # we use XDC args to pass argument to the config.bld so that config.bld is 
 # generic as much as possible
 DD_XDC_ARGS = XDCARGS="DEPOT=$(DEPOT)\
@@ -81,6 +82,9 @@ DD_XDCOPTIONS = XDCOPTIONS=v XDCBUILDCFG=$(CURDIR)/config.bld \
 BRIDGE_EXPORT_PACKAGES = dsp/ti/dspbridge/dsp/bridge_product
 
 SAMPLE_PACKAGES = samples/dsp
+
+DLL_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dll64P))
+DOF_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dof64P))
 
 .samples: .bridge_samples
 
@@ -136,8 +140,12 @@ endif
 	if test ! -d $(TARGETDIR)/dspbridge/; \
 	then $(MKDIR) -p $(TARGETDIR)/dspbridge/; \
 	fi
-	$(CP) -f $(SAMPLE_PACKAGES)/*.dll64P $(TARGETDIR)/dspbridge/
-	$(CP) -f $(SAMPLE_PACKAGES)/*.dof64P $(TARGETDIR)/dspbridge/
+ifneq ($(DLL_FILES),)
+	$(CP) -f $(DLL_FILES) $(TARGETDIR)/dspbridge/
+endif
+ifneq ($(DOF_FILES),)
+	$(CP) -f $(DOF_FILES)/ $(TARGETDIR)/dspbridge/
+endif
 
 #.execute_version_script: version.ksh $(VERSION_FILE)
 #	@$(KSH) $< $(VERSION_FILE)
