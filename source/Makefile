@@ -17,11 +17,13 @@
 MAKE = make
 RM = rm
 
-export PREFIX=$(shell pwd)
+PREFIX=$(shell pwd)
 
 ifndef DEPOT
 $(error Error: variable DEPOT not defined)
 endif
+
+.EXPORT_ALL_VARIABLES:
 
 clean:
 	$(MAKE) -C mpu_api/src clean
