@@ -17,7 +17,7 @@
 MAKE = make
 RM = rm
 
-PREFIX=$(shell pwd)
+PREFIX ?= $(shell pwd)
 
 ifndef DEPOT
 $(error Error: variable DEPOT not defined)
