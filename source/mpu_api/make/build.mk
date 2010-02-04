@@ -85,7 +85,7 @@ endif
 #   Code generation
 CFLAGS += -fno-common
 #   Macros
-CFLAGS += -DLINUX $(addprefix -D, $(CDEFS))
+CFLAGS += $(addprefix -D, $(CDEFS))
 
 ifdef __KERNEL__
 CFLAGS      += -D__KERNEL__  -fno-builtin
