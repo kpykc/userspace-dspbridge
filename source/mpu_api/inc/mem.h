@@ -336,13 +336,13 @@ extern "C" {
  *      If valid linear address is returned, be sure to call
  *      MEM_UnmapLinearAddress().
  */
-#ifndef LINUX
+#ifndef __linux__
 	extern PVOID MEM_LinearAddress(IN PVOID pPhyAddr, IN ULONG cBytes);
 #else
 #define MEM_LinearAddress(pPhyAddr, cBytes) pPhyAddr
 #endif
 
-#ifndef LINUX
+#ifndef __linux__
 /*
  *  ======== MEM_PageLock ========
  *  Purpose:
@@ -399,7 +399,7 @@ extern "C" {
  *  Ensures:
  *      - pBaseAddr no longer points to a valid linear address.
  */
-#ifndef LINUX
+#ifndef __linux__
 	extern VOID MEM_UnmapLinearAddress(IN PVOID pBaseAddr);
 #else
 #define MEM_UnmapLinearAddress(pBaseAddr)

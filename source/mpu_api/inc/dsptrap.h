@@ -36,7 +36,7 @@
 
 #include <wcdioctl.h>
 
-#ifndef LINUX
+#ifndef __linux__
 #define TI_FUNCTION_OFFSET  0x5000
 
 #define NT_CMD_FROM_OFFSET(x) CTL_CODE(FILE_DEVICE_UNKNOWN, \

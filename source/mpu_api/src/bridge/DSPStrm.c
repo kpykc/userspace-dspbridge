@@ -186,7 +186,7 @@ DBAPI DSPStream_AllocateBuffers(DSP_HSTREAM hStream, UINT uSize,
  */
 DBAPI DSPStream_Close(DSP_HSTREAM hStream)
 {
-#ifndef LINUX
+#ifndef __linux__
 	HANDLE hEvent;
 #endif
 	DSP_STATUS status = DSP_SOK;
@@ -245,7 +245,7 @@ DBAPI DSPStream_Close(DSP_HSTREAM hStream)
 			status = DSP_EBADSEGID;	/*no SM segments */
 
 	}
-#ifndef LINUX			/* Events are handled in kernel */
+#ifndef __linux__			/* Events are handled in kernel */
 	if (DSP_SUCCEEDED(status)) {
 		/* Get the user event from the stream */
 		/* Set up the structure */
@@ -260,7 +260,7 @@ DBAPI DSPStream_Close(DSP_HSTREAM hStream)
 		tempStruct.ARGS_STRM_CLOSE.hStream = hStream;
 		status = DSPTRAP_Trap(&tempStruct, CMD_STRM_CLOSE_OFFSET);
 	}
-#ifndef LINUX			/* Events are handled in kernel */
+#ifndef __linux__			/* Events are handled in kernel */
 	if (DSP_SUCCEEDED(status))
 		CloseHandle(hEvent);
 
@@ -458,7 +458,7 @@ DBAPI DSPStream_Open(DSP_HNODE hNode, UINT uDirection, UINT uIndex,
 	DSP_STATUS status = DSP_SOK;
 	Trapped_Args tempStruct;
 	struct STRM_ATTR strmAttrs;
-#ifndef LINUX			/* Events are handled in kernel */
+#ifndef __linux__			/* Events are handled in kernel */
 	CHAR szEventName[STRM_MAXEVTNAMELEN];
 	WCHAR wszEventName[STRM_MAXEVTNAMELEN];
 	CHAR szTemp[STRM_MAXEVTNAMELEN];
@@ -489,7 +489,7 @@ DBAPI DSPStream_Open(DSP_HNODE hNode, UINT uDirection, UINT uIndex,
 	}
 	*phStream = NULL;
 	strmAttrs.hUserEvent = NULL;
-#ifndef LINUX			/* Events are handled in kernel */
+#ifndef __linux__			/* Events are handled in kernel */
 			 /* Create a 'named' user event that is unique.*/
 	strmAttrs.pStreamAttrIn = pAttrIn;
 	szEventName[0] = 'E';
@@ -596,7 +596,7 @@ loop_end:
 		tempStruct.ARGS_STRM_OPEN.pAttrIn = &strmAttrs;
 		tempStruct.ARGS_STRM_OPEN.phStream = phStream;
 		status = DSPTRAP_Trap(&tempStruct, CMD_STRM_OPEN_OFFSET);
-#ifndef LINUX			/* Events are handled in kernel */
+#ifndef __linux__			/* Events are handled in kernel */
 		if (DSP_FAILED(status))
 			CloseHandle(strmAttrs.hUserEvent);
 
@@ -613,7 +613,7 @@ loop_end:
 DBAPI DSPStream_PrepareBuffer(DSP_HSTREAM hStream, UINT uSize, BYTE *pBuffer)
 {
 	DSP_STATUS status = DSP_SOK;
-#ifndef LINUX
+#ifndef __linux__
 	/*  Pages are never swapped out (i.e. always locked in Linux) */
 	ULONG aPageTab[STRM_MAXLOCKPAGES];
 	/* Find the maximum # of pages that could be locked. x86 &
@@ -633,7 +633,7 @@ DBAPI DSPStream_PrepareBuffer(DSP_HSTREAM hStream, UINT uSize, BYTE *pBuffer)
 		if (uSize <= 0)
 			status = DSP_ESIZE;
 	}
-#ifndef LINUX
+#ifndef __linux__
 	/*  Pages are never swapped out (i.e. always locked in Linux) */
 	if (DSP_SUCCEEDED(status)) {
 		if (cPages > STRM_MAXLOCKPAGES)
@@ -804,7 +804,7 @@ DBAPI DSPStream_UnprepareBuffer(DSP_HSTREAM hStream, UINT uSize,
 		if ((uSize <= 0))
 			status = DSP_EFAIL;
 	}
-#ifndef LINUX			/*  Pages are never swapped out
+#ifndef __linux__			/*  Pages are never swapped out
 						(i.e. always locked in Linux) */
 	if (DSP_SUCCEEDED(status)) {
 		if (!UnlockPages((LPVOID) pBuffer, uSize))

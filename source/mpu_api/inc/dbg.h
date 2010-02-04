@@ -49,7 +49,7 @@ extern "C" {
 #include <dspapi.h>
 
 /* Levels of trace debug messages: */
-#ifndef LINUX			/* No DEBUGZONE in Linux, DBG mask == GT mask */
+#ifndef __linux__			/* No DEBUGZONE in Linux, DBG mask == GT mask */
 #define DBG_ENTER   (BYTE)(0x01 & DEBUGZONE(0))	/* Function entry point. */
 #define DBG_LEVEL1  (BYTE)(0x02 & DEBUGZONE(1))	/* Display debugging state/varibles */
 #define DBG_LEVEL2  (BYTE)(0x04 & DEBUGZONE(2))	/* Display debugging state/varibles */
@@ -97,7 +97,7 @@ extern "C" {
  */
 	extern bool DBG_Init();
 
-#ifndef LINUX
+#ifndef __linux__
 /*
  *  ======== DBG_Printf ========
  *  Purpose:
@@ -113,7 +113,7 @@ extern "C" {
  *  Ensures:
  */
 	extern DSP_STATUS DBG_Printf(IN PSTR pstrFormat, ...);
-#endif				// LINUX
+#endif				// __linux__
 
 /*
  *  ======== DBG_Trace ========

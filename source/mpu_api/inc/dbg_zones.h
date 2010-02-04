@@ -46,7 +46,7 @@
 #ifndef _DBG_ZONES_H_
 #define _DBG_ZONES_H_
 
-#ifndef LINUX			/* No DEBUGZONE in Linux */
+#ifndef __linux__			/* No DEBUGZONE in Linux */
 
 #include <dbdefs.h>
 
@@ -100,6 +100,6 @@ extern DBGPARAM dpCurSettings;
 
 #define DBG_SetGT() DBG_SetGT_DBG()
 
-#endif				/* ifndef LINUX */
+#endif				/* ifndef __linux__ */
 
 #endif				/*ifndef _DBG_ZONES_H_ */

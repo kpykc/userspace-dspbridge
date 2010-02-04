@@ -37,7 +37,7 @@
 extern "C" {
 #endif
 
-#ifdef LINUX
+#ifdef __linux__
 
 /* Enable/Disable user API print messages in Linux */
 #define DSPAPI_ZONE_INIT         0x0
@@ -60,7 +60,7 @@ extern "C" {
 
 #define DEBUGMSG(x,y) if(x >= DSPAPI_DEBUG_LEVEL) printf(y)
 
-#else				/* ifdef LINUX */
+#else				/* ifdef __linux__ */
 
 /*
  * DEBUG macro support.
@@ -99,7 +99,7 @@ extern "C" {
 
 #endif
 
-#endif				/* ifdef LINUX */
+#endif				/* ifdef __linux__ */
 
 #ifdef __cplusplus
 }

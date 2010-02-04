@@ -61,7 +61,7 @@ extern "C" {
 #define MEMRY_GETVIRTUALSEGID   MEM_GETVIRTUALSEGID
 #define MEMRY_MASKVIRTUALSEGID  MEM_MASKVIRTUALSEGID
 
-#ifndef LINUX
+#ifndef __linux__
 
 /*
  *  ======== MEMRY_Alloc ========
@@ -166,7 +166,7 @@ extern "C" {
 	extern DSPAPIDLL PVOID WINAPI MEMRY_PageLock(PVOID pBuffer,
 						     ULONG cSize);
 
-#endif				/* ifndef LINUX */
+#endif				/* ifndef __linux__ */
 
 /*
  *  ======== MEMRY_LinearAddress ========
@@ -187,7 +187,7 @@ extern "C" {
 	extern inline PVOID MEMRY_LinearAddress(PVOID pPhyAddr, ULONG cBytes) {
 		return pPhyAddr;
 	}
-#ifndef LINUX
+#ifndef __linux__
 /*
  *  ======== MEMRY_PageUnlock ========
  *  Purpose:
@@ -219,7 +219,7 @@ extern "C" {
  */
 	extern PVOID MEMRY_ReserveVM(ULONG cBytes);
 
-#endif				/* ifndef LINUX */
+#endif				/* ifndef __linux__ */
 
 /*
  *  ======== MEMRY_UnMapLinearAddress ========
