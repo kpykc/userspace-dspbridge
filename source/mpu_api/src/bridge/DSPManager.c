@@ -87,6 +87,19 @@ static bool bridge_sem_initialized = false;
 #define DSP_HIB			0x9
 #define RETENTION		0x8
 #define MPU_HIB			0x7
+
+static void start(void) __attribute__((constructor));
+
+void start(void)
+{
+	if (sem_init(&semOpenClose, 0, 1) == -1) {
+		DEBUGMSG(DSPAPI_ZONE_ERROR,
+				(TEXT("MGR: Failed to Initialize"
+				      "the bridge semaphore\n")));
+	} else
+		bridge_sem_initialized = true;
+}
+
 /*
  *  ======== DspManager_Open ========
  *  Purpose:
@@ -115,15 +128,8 @@ DBAPI DspManager_Open(UINT argc, PVOID argp)
 	}
 open:
 */
-	if (!bridge_sem_initialized) {
-		if (sem_init(&semOpenClose, 0, 1) == -1) {
-			DEBUGMSG(DSPAPI_ZONE_ERROR,
-				 (TEXT("MGR: Failed to Initialize"
-					   "the bridge semaphore\n")));
-			return DSP_EFAIL;
-		} else
-			bridge_sem_initialized = true;
-	}
+	if (!bridge_sem_initialized)
+		return DSP_EFAIL;
 
 	sem_wait(&semOpenClose);
 	if (usage_count == 0) {	/* try opening handle to Bridge driver */
