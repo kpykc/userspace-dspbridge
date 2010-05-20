@@ -65,8 +65,7 @@ dynreg \
 cexec \
 crashmon \
 qostest \
-zerocopymsg \
-bridged
+zerocopymsg
 
 # Framework
 
