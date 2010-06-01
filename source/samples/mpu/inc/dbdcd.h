@@ -59,11 +59,11 @@ extern "C" {
  *      pszCoffPath:            Pointer to name of COFF file containing DCD
  *                              objects to be registered.
  *  Returns:
- *      DSP_SOK:                Success.
- *      DSP_EDCDNOAUTOREGISTER: Unable to find auto-registration section.
- *      DSP_EDCDREADSECT:       Unable to read object code section.
- *      DSP_EDCDLOADBASE:       Unable to load code base.
- *      DSP_EHANDLE:            Invalid DCD_HMANAGER handle..
+ *      0:                Success.
+ *      -EACCES: Unable to find auto-registration section.
+ *      -EACCES:       Unable to read object code section.
+ *      -EACCES:       Unable to load code base.
+ *      -EFAULT:            Invalid DCD_HMANAGER handle..
  *  Requires:
  *      DCD initialized.
  *  Ensures:
@@ -85,11 +85,11 @@ extern "C" {
  *      pszCoffPath:            Pointer to name of COFF file containing
  *                              DCD objects to be unregistered.
  *  Returns:
- *      DSP_SOK:                Success.
- *      DSP_EDCDNOAUTOREGISTER: Unable to find auto-registration section.
- *      DSP_EDCDREADSECT:       Unable to read object code section.
- *      DSP_EDCDLOADBASE:       Unable to load code base.
- *      DSP_EHANDLE:            Invalid DCD_HMANAGER handle..
+ *      0:                Success.
+ *      -EACCES: Unable to find auto-registration section.
+ *      -EACCES:       Unable to read object code section.
+ *      -EACCES:       Unable to load code base.
+ *      -EFAULT:            Invalid DCD_HMANAGER handle..
  *  Requires:
  *      DCD initialized.
  *  Ensures:
@@ -109,9 +109,9 @@ extern "C" {
  *      pszZlDllName:   Pointer to a DLL name string.
  *      phDcdMgr:       A pointer to a DCD manager handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EMEMORY:    Unable to allocate memory for DCD manager handle.
- *      DSP_EFAIL:      General failure.
+ *      0:        Success.
+ *      -ENOMEM:    Unable to allocate memory for DCD manager handle.
+ *      -EPERM:      General failure.
  *  Requires:
  *      DCD initialized.
  *      pszZlDllName is non-NULL.
@@ -129,8 +129,8 @@ extern "C" {
  *  Parameters:
  *      hDcdMgr:        A DCD manager handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Invalid DCD manager handle.
+ *      0:        Success.
+ *      -EFAULT:    Invalid DCD manager handle.
  *  Requires:
  *      DCD initialized.
  *  Ensures:
@@ -147,8 +147,8 @@ extern "C" {
  *      objType:            Type of object to enumerate.
  *      pUuid:              Pointer to a DSP_UUID object.
  *  Returns:
- *      DSP_SOK:            Success.
- *      DSP_EFAIL:          Unable to enumerate through the DCD database.
+ *      0:            Success.
+ *      -EPERM:          Unable to enumerate through the DCD database.
  *      DSP_SENUMCOMPLETE:  Enumeration completed. This is not an error code.
  *  Requires:
  *      DCD initialized.
@@ -188,10 +188,10 @@ extern "C" {
  *      pPersistentDepLibs: Array indicating if corresponding lib is persistent.
  *      phase: phase to obtain correct input library
  *  Returns:
- *      DSP_SOK: Success.
- *      DSP_EMEMORY: Memory allocation failure.
- *      DSP_EDCDREADSECT: Failure to read section containing library info.
- *      DSP_EFAIL: General failure.
+ *      0: Success.
+ *      -ENOMEM: Memory allocation failure.
+ *      -EACCES: Failure to read section containing library info.
+ *      -EPERM: General failure.
  *  Requires:
  *      DCD initialized.
  *      Valid hDcdMgr.
@@ -218,10 +218,10 @@ extern "C" {
  *      pNumPersLibs:   number of persistent dependent library.
  *      phase:          Phase to obtain correct input library
  *  Returns:
- *      DSP_SOK: Success.
- *      DSP_EMEMORY: Memory allocation failure.
- *      DSP_EDCDREADSECT: Failure to read section containing library info.
- *      DSP_EFAIL: General failure.
+ *      0: Success.
+ *      -ENOMEM: Memory allocation failure.
+ *      -EACCES: Failure to read section containing library info.
+ *      -EPERM: General failure.
  *  Requires:
  *      DCD initialized.
  *      Valid hDcdMgr.
@@ -249,8 +249,8 @@ extern "C" {
  *      phase:          Which phase to load
  *      fPhaseSplit:    Are phases in multiple libraries
  *  Returns:
- *      DSP_SOK: Success.
- *      DSP_EFAIL: General failure.
+ *      0: Success.
+ *      -EPERM: General failure.
  *  Requires:
  *      DCD initialized.
  *      Valid hDcdMgr.
@@ -280,13 +280,13 @@ extern "C" {
  *      pObjDef:            Pointer to an object definition structure. A
  *                          union of various possible DCD object types.
  *  Returns:
- *      DSP_SOK: Success.
- *      DSP_EDCDPARSESECT:  Unable to parse content of object code section.
- *      DSP_EDCDREADSECT:   Unable to read object code section.
- *      DSP_EDCDGETSECT:    Unable to access object code section.
- *      DSP_EDCDLOADBASE:   Unable to load code base.
- *      DSP_EFAIL:          General failure.
- *      DSP_EHANDLE:        Invalid DCD_HMANAGER handle.
+ *      0: Success.
+ *      -EACCES:  Unable to parse content of object code section.
+ *      -EACCES:   Unable to read object code section.
+ *      -EACCES:    Unable to access object code section.
+ *      -EACCES:   Unable to load code base.
+ *      -EPERM:          General failure.
+ *      -EFAULT:        Invalid DCD_HMANAGER handle.
  *  Requires:
  *      DCD initialized.
  *      pObjUuid is non-NULL.
@@ -314,11 +314,11 @@ extern "C" {
  *                              DCD object.
  *      handle:                 Handle to pass to callback.
  *  Returns:
- *      DSP_SOK:                Success.
- *      DSP_EDCDNOAUTOREGISTER: Unable to find .dcd_register section.
- *      DSP_EDCDREADSECT:       Unable to read object code section.
- *      DSP_EDCDLOADBASE:       Unable to load code base.
- *      DSP_EHANDLE:            Invalid DCD_HMANAGER handle..
+ *      0:                Success.
+ *      -EACCES: Unable to find .dcd_register section.
+ *      -EACCES:       Unable to read object code section.
+ *      -EACCES:       Unable to load code base.
+ *      -EFAULT:            Invalid DCD_HMANAGER handle..
  *  Requires:
  *      DCD initialized.
  *  Ensures:
@@ -356,8 +356,8 @@ extern "C" {
  *      objType:        Type of object.
  *      pszPathName:    Path to the object's COFF file.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EFAIL:      Failed to register object.
+ *      0:        Success.
+ *      -EPERM:      Failed to register object.
  *  Requires:
  *      DCD initialized.
  *      pUuid and szPathName are non-NULL values.
@@ -378,8 +378,8 @@ extern "C" {
  *                  object.
  *      objType:    Type of object.
  *  Returns:
- *      DSP_SOK:    Success.
- *      DSP_EFAIL:  Unable to de-register the specified object.
+ *      0:    Success.
+ *      -EPERM:  Unable to de-register the specified object.
  *  Requires:
  *      DCD initialized.
  *      pUuid is a non-NULL value.

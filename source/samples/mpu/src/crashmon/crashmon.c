@@ -90,7 +90,7 @@ DSP_STATUS Load_Baseimage(DSP_HPROCESSOR hProc);
 
 
 int main(int argc, char *argv[]) {
-    DSP_STATUS status = DSP_SOK;
+    DSP_STATUS status = 0;
 
 #ifdef PALMS_BUILD
 	PmLogErr err;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 }
 
 DSP_STATUS Crash_Listener() {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	DSP_HPROCESSOR hProc;
 	unsigned int index=0;
 	struct DSP_NOTIFICATION* notificationObjects[4];
@@ -226,7 +226,7 @@ EXIT:
 
 DSP_STATUS Recover_Dsp(DSP_HPROCESSOR *hProcessor)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	struct DSP_PROCESSORSTATE ProcStatus;
 
 	DSP_HPROCESSOR hProc;
@@ -245,7 +245,7 @@ RETRY:
 EXIT:
 	/* keep trying to reload the baseimage until it can */
 	DEBUG_PRINT("Proc state = %d\n", ProcStatus.iState);
-	if ((status != DSP_SOK) || (ProcStatus.iState == PROC_ERROR))  {
+	if ((status != 0) || (ProcStatus.iState == PROC_ERROR))  {
 		sleep(1);
 		goto RETRY;
 	}
@@ -254,7 +254,7 @@ EXIT:
 }
 
 DSP_STATUS Attach_DspProc(DSP_HPROCESSOR *hProc) {
-	DSP_STATUS 	status = DSP_SOK;
+	DSP_STATUS 	status = 0;
 	UINT index = 0;
 	struct DSP_PROCESSORINFO dspInfo;
 	unsigned int numProcs;
@@ -276,7 +276,7 @@ DSP_STATUS Attach_DspProc(DSP_HPROCESSOR *hProc) {
 		if ((dspInfo.uProcessorType == DSPTYPE_55) ||
 		   (dspInfo.uProcessorType == DSPTYPE_64)) {
 			uProcId = index;
-			status = DSP_SOK;
+			status = 0;
 			break;
 		}
 		index++;
@@ -291,7 +291,7 @@ EXIT:
 }
 
 DSP_STATUS Dettach_DspProc(DSP_HPROCESSOR hProc) {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	status = DSPProcessor_Detach(hProc);
 
@@ -306,7 +306,7 @@ DSP_STATUS Dettach_DspProc(DSP_HPROCESSOR hProc) {
 
 DSP_STATUS Load_Baseimage(DSP_HPROCESSOR hProc)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	const char* argv[2] = {BASEIMAGE_FILE, NULL};
 
 	if (DSP_SUCCEEDED(status)) {

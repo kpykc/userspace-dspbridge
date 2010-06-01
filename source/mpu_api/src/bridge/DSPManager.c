@@ -53,7 +53,7 @@
 
 /*  ----------------------------------- DSP/BIOS Bridge */
 #include <dbdefs.h>
-#include <errbase.h>
+#include <errno.h>
 
 /*  ----------------------------------- Trace & Debug */
 #include <dbg.h>
@@ -110,7 +110,7 @@ DBAPI DspManager_Open(UINT argc, PVOID argp)
 	int status = 0;
 
 	if (!bridge_sem_initialized)
-		return DSP_EFAIL;
+		return -EPERM;
 
 	sem_wait(&semOpenClose);
 	if (usage_count == 0) {	/* try opening handle to Bridge driver */
@@ -122,9 +122,9 @@ DBAPI DspManager_Open(UINT argc, PVOID argp)
 	if (status >= 0) {
 		/* Success in opening handle to Bridge driver */
 		usage_count++;
-		status = DSP_SOK;
+		status = 0;
 	} else
-		status = DSP_EFAIL;
+		status = -EPERM;
 
 
 	/*printf ("argc = %d, hMediaFile[%x] = %d\n", argc, &hMediaFile,
@@ -154,9 +154,9 @@ DBAPI DspManager_Close(UINT argc, PVOID argp)
 	if (status >= 0) {
 		/* Success in opening handle to Bridge driver */
 		usage_count--;
-		status = DSP_SOK;
+		status = 0;
 	} else
-		status = DSP_EFAIL;
+		status = -EPERM;
 
 	sem_post(&semOpenClose);
 
@@ -175,7 +175,7 @@ DBAPI DspManager_Close(UINT argc, PVOID argp)
 DBAPI DSPManager_EnumNodeInfo(UINT uNode, OUT struct DSP_NDBPROPS *pNDBProps,
 			UINT uNDBPropsSize, OUT UINT *puNumNodes)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -196,13 +196,13 @@ DBAPI DSPManager_EnumNodeInfo(UINT uNode, OUT struct DSP_NDBPROPS *pNDBProps,
 			status = DSPTRAP_Trap(&tempStruct,
 					CMD_MGR_ENUMNODE_INFO_OFFSET);
 		} else {
-			status = DSP_ESIZE;
+			status = -EINVAL;
 			DEBUGMSG(DSPAPI_ZONE_ERROR,
 				 (TEXT("MGR: pNDBProps is too Small \r\n")));
 		}
 	} else {
 		/* Invalid pointer */
-		status = DSP_EPOINTER;
+		status = -EFAULT;
 		DEBUGMSG(DSPAPI_ZONE_ERROR,
 			 (TEXT("MGR: pNDBProps is Invalid \r\n")));
 	}
@@ -220,7 +220,7 @@ DBAPI DSPManager_EnumProcessorInfo(UINT uProcessor,
 			     OUT struct DSP_PROCESSORINFO *pProcessorInfo,
 			     UINT uProcessorInfoSize, OUT UINT *puNumProcs)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -243,13 +243,13 @@ DBAPI DSPManager_EnumProcessorInfo(UINT uProcessor,
 			status = DSPTRAP_Trap(&tempStruct,
 				CMD_MGR_ENUMPROC_INFO_OFFSET);
 		} else {
-			status = DSP_ESIZE;
+			status = -EINVAL;
 			DEBUGMSG(DSPAPI_ZONE_ERROR,
 			(TEXT("MGR: uProcessorInfoSize is too Small \r\n")));
 		}
 	} else {
 		/* Invalid pointer */
-		status = DSP_EPOINTER;
+		status = -EFAULT;
 		DEBUGMSG(DSPAPI_ZONE_ERROR,
 			 (TEXT("MGR: pProcessorInfo is Invalid \r\n")));
 	}
@@ -265,7 +265,7 @@ DBAPI DSPManager_EnumProcessorInfo(UINT uProcessor,
 DBAPI DSPManager_WaitForEvents(struct DSP_NOTIFICATION **aNotifications,
 			 UINT uCount, OUT UINT *puIndex, UINT uTimeout)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -289,7 +289,7 @@ DBAPI DSPManager_WaitForEvents(struct DSP_NOTIFICATION **aNotifications,
 
 	} else
 		/* Invalid pointer */
-		status = DSP_EPOINTER;
+		status = -EFAULT;
 
 
 	return status;
@@ -303,7 +303,7 @@ DBAPI DSPManager_WaitForEvents(struct DSP_NOTIFICATION **aNotifications,
 DBAPI DSPManager_RegisterObject(IN struct DSP_UUID *pUuid,
 			  IN DSP_DCDOBJTYPE objType, IN CHAR *pszPathName)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -319,7 +319,7 @@ DBAPI DSPManager_RegisterObject(IN struct DSP_UUID *pUuid,
 
 	if ((pUuid == NULL) || (objType > DSP_DCDDELETELIBTYPE) ||
 	    (pszPathName == NULL)) {
-		status = DSP_EINVALIDARG;
+		status = -EINVAL;
 	}
 
 	if (DSP_SUCCEEDED(status)) {
@@ -346,7 +346,7 @@ DBAPI DSPManager_RegisterObject(IN struct DSP_UUID *pUuid,
 DBAPI DSPManager_UnregisterObject(IN struct DSP_UUID *pUuid,
 				IN DSP_DCDOBJTYPE objType)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -361,7 +361,7 @@ DBAPI DSPManager_UnregisterObject(IN struct DSP_UUID *pUuid,
 		 (TEXT("MGR: DSPManager_RegisterObject\r\n")));
 
 	if ((pUuid == NULL) || (objType > DSP_DCDDELETELIBTYPE))
-		status = DSP_EINVALIDARG;
+		status = -EINVAL;
 
 
 	if (DSP_SUCCEEDED(status)) {
@@ -388,13 +388,13 @@ DBAPI DSPManager_UnregisterObject(IN struct DSP_UUID *pUuid,
  */
 DBAPI DSPManager_GetProcResourceInfo(UINT *pBuf, UINT *pSize)
 {
-    DSP_STATUS      status = DSP_SOK;
+    DSP_STATUS      status = 0;
     Trapped_Args    tempStruct;
     DEBUGMSG(DSPAPI_ZONE_FUNCTION,
 	(TEXT("MGR: DSPManager_RegisterObject\r\n")));
 
 	if (pBuf == NULL)
-		status = DSP_EINVALIDARG;
+		status = -EINVAL;
 
 	if (DSP_SUCCEEDED(status)) {
 		/* Call DSP Trap */

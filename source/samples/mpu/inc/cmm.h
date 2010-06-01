@@ -112,9 +112,9 @@ extern "C" {
  *      hDevObject: Handle to a device object.
  *      pMgrAttrs:  Comm mem manager attributes.
  *  Returns:
- *      DSP_SOK:        Success;
- *      DSP_EMEMORY:    Insufficient memory for requested resources.
- *      DSP_EFAIL:      Failed to initialize critical sect sync object.
+ *      0:        Success;
+ *      -ENOMEM:    Insufficient memory for requested resources.
+ *      -EPERM:      Failed to initialize critical sect sync object.
  *
  *  Requires:
  *      CMM_Init() called.
@@ -134,12 +134,12 @@ extern "C" {
  *  Parameters:
  *      hCmmMgr:    Cmm Mgr handle.
  *      bForce:     Force deallocation of all cmm memory immediately if set TRUE.
- *                  If FALSE, and outstanding allocations will return DSP_EFAIL
+ *                  If FALSE, and outstanding allocations will return -EPERM
  *                  status.
  *  Returns:
- *      DSP_SOK:        CMM object & resources deleted.
- *      DSP_EFAIL:      Unable to free CMM object due to outstanding allocation.
- *      DSP_EHANDLE:    Unable to free CMM due to bad handle.
+ *      0:        CMM object & resources deleted.
+ *      -EPERM:      Unable to free CMM object due to outstanding allocation.
+ *      -EFAULT:    Unable to free CMM due to bad handle.
  *  Requires:
  *      CMM is initialized.
  *      hCmmMgr != NULL.
@@ -172,8 +172,8 @@ extern "C" {
  *      ulSegId:    SM segment Id used in CMM_Calloc() attrs.
  *                  Set to 0 to use default segment.
  *  Returns:
- *      DSP_SOK
- *      DSP_EFAIL
+ *      0
+ *      -EPERM
  *  Requires:
  *      CMM initialized.
  *      pBufPA != NULL
@@ -192,8 +192,8 @@ extern "C" {
  *      phCmmMgr:     Location to store the shared memory mgr handle on output.
  *
  *  Returns:
- *      DSP_SOK:        Cmm Mgr opaque handle returned.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Cmm Mgr opaque handle returned.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *      phCmmMgr != NULL
  *      hDevObject != NULL
@@ -211,9 +211,9 @@ extern "C" {
  *      pCmmInfo:    Location to store the Cmm information on output.
  *
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Invalid handle.
- *      DSP_EINVALIDARG Invalid input argument.
+ *      0:        Success.
+ *      -EFAULT:    Invalid handle.
+ *      -EINVAL Invalid input argument.
  *  Requires:
  *  Ensures:
  *
@@ -271,10 +271,10 @@ extern "C" {
  *      pulSegId:        Address to store segment Id.
  *
  *  Returns:
- *      DSP_SOK:         Success.
- *      DSP_EHANDLE:     Invalid hCmmMgr handle.
- *      DSP_EINVALIDARG: Invalid input argument.
- *      DSP_EFAIL:       Unable to register.
+ *      0:         Success.
+ *      -EFAULT:     Invalid hCmmMgr handle.
+ *      -EINVAL: Invalid input argument.
+ *      -EPERM:       Unable to register.
  *      - On success *pulSegId is a valid SM segment ID.
  *  Requires:
  *      ulSize > 0
@@ -303,10 +303,10 @@ extern "C" {
  *      hCmmMgr:    Handle to a Cmm Mgr.
  *      ulSegId     Segment identifier returned by CMM_RegisterGPPSMSeg.
  *  Returns:
- *       DSP_SOK:         Success.
- *       DSP_EHANDLE:     Invalid handle.
- *       DSP_EINVALIDARG: Invalid ulSegId.
- *       DSP_EFAIL:       Unable to unregister for unknown reason.
+ *       0:         Success.
+ *       -EFAULT:     Invalid handle.
+ *       -EINVAL: Invalid ulSegId.
+ *       -EPERM:       Unable to unregister for unknown reason.
  *  Requires:
  *  Ensures:
  *
@@ -345,9 +345,9 @@ extern "C" {
  *      hCmmMgr:        Handle to Cmm Mgr associated with this translator.
  *      pXlatorAttrs:   Translator attributes used for the client NODE or STREAM.
  *  Returns:
- *      DSP_SOK:            Success.
- *      DSP_EINVALIDARG:    Bad input Attrs.
- *      DSP_EMEMORY:   Insufficient memory(local) for requested resources.
+ *      0:            Success.
+ *      -EINVAL:    Bad input Attrs.
+ *      -ENOMEM:   Insufficient memory(local) for requested resources.
  *  Requires:
  *      phXlator != NULL
  *      hCmmMgr != NULL
@@ -367,9 +367,9 @@ extern "C" {
  *      hXlator:    handle to translator.
  *      bForce:     bForce = TRUE will free XLators SM buffers/dscriptrs.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Bad translator handle.
- *      DSP_EFAIL:      Unable to free translator resources.
+ *      0:        Success.
+ *      -EFAULT:    Bad translator handle.
+ *      -EPERM:      Unable to free translator resources.
  *  Requires:
  *      cRefs > 0
  *  Ensures:
@@ -387,8 +387,8 @@ extern "C" {
  *      hXlator:    handle to translator.
  *      pBufVa      Virtual address of PA to free.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Bad translator handle.
+ *      0:        Success.
+ *      -EFAULT:    Bad translator handle.
  *  Requires:
  *  Ensures:
  *
@@ -409,8 +409,8 @@ extern "C" {
  *     uSegId:      Segment identifier of SM segment(s)
  *     bSetInfo     Set xlator fields if TRUE, else return base addr
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Bad translator handle.
+ *      0:        Success.
+ *      -EFAULT:    Bad translator handle.
  *  Requires:
  *      (cRefs > 0)
  *      (pAddr != NULL)

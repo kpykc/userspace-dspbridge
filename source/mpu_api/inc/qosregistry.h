@@ -429,9 +429,9 @@ void DSPRegistry_Delete(struct QOSREGISTRY *registry);
 
 		DSP_OK			successful
 
-		DSP_ESIZE		block for results is too small
+		-EINVAL		block for results is too small
 
-		DSP_ENOTFOUND	item not found
+		-ENOENT	item not found
 
 	Requirement Coverage
 
@@ -464,7 +464,7 @@ DSP_STATUS DSPRegistry_Find(UINT Id, struct QOSREGISTRY *registry,
 
 	Return
 
-		DSP_STATUS		Error code or DSP_SOK for success
+		DSP_STATUS		Error code or 0 for success
 
 	Requirement Coverage
 
@@ -496,7 +496,7 @@ DSP_STATUS DSPRegistry_Add(struct QOSDATA *listhead, struct QOSDATA *entry);
 
 	Return
 
-		DSP_STATUS	Error code or DSP_SOK for success
+		DSP_STATUS	Error code or 0 for success
 
 	Requirement Coverage
 
@@ -561,7 +561,7 @@ ULONG DSPQos_TypeSpecific(struct QOSDATA *DataObject, ULONG FunctionCode,
 
 	Return
 
-		DSP_STATUS		Error code or DSP_SOK for success
+		DSP_STATUS		Error code or 0 for success
 
 	Requirement Coverage
 
@@ -593,7 +593,7 @@ DSP_STATUS DSPComponent_Register(struct QOSREGISTRY *registry,
 
 	Return
 
-		DSP_STATUS		Error code or DSP_SOK for success
+		DSP_STATUS		Error code or 0 for success
 
 	Requirement Coverage
 
@@ -646,7 +646,7 @@ struct QOSDATA *DSPData_Create(ULONG id);
 
 	Return
 
-		DSP_STATUS		Error code or DSP_SOK for success
+		DSP_STATUS		Error code or 0 for success
 
 	Requirement Coverage
 

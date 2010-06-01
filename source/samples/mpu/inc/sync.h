@@ -96,9 +96,9 @@ extern "C" {
  *      hEvent: Handle to a synchronization event, created/opened in
  *              SYNC_OpenEvent.
  *  Returns:
- *      DSP_SOK:        Success;
- *      DSP_EFAIL:      Failed to close event handle.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success;
+ *      -EPERM:      Failed to close event handle.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *      SYNC initialized.
  *  Ensures:
@@ -113,8 +113,8 @@ extern "C" {
  *  Parameters:
  *      hCSObj: critical section handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *  Ensures:
  */
@@ -127,8 +127,8 @@ extern "C" {
  *  Parameters:
  *      hCSObj: critical section handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *  Ensures:
  */
@@ -168,8 +168,8 @@ extern "C" {
  *  Parameters:
  *      hCSObj: critical section handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EMEMORY:    Out of memory.
+ *      0:        Success.
+ *      -ENOMEM:    Out of memory.
  *  Requires:
  *  Ensures:
  */
@@ -182,8 +182,8 @@ extern "C" {
  *  Parameters:
  *      hCSObj: critical section handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EMEMORY:    Out of memory.
+ *      0:        Success.
+ *      -ENOMEM:    Out of memory.
  *  Requires:
  *  Ensures:
  */
@@ -196,8 +196,8 @@ extern "C" {
  *  Parameters:
  *      hCSObj: critical section handle.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *  Ensures:
  */
@@ -224,10 +224,10 @@ extern "C" {
  *      2. (hUserEvent != NULL):
  *          A user mode event is supplied by the caller of SYNC_OpenEvent().
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EFAIL:      Unable to create user mode event.
- *      DSP_EMEMORY:    Insufficient memory.
- *      DSP_EINVALIDARG SYNC_ATTRS values are invalid.
+ *      0:        Success.
+ *      -EPERM:      Unable to create user mode event.
+ *      -ENOMEM:    Insufficient memory.
+ *      -EINVAL SYNC_ATTRS values are invalid.
  *  Requires:
  *      - SYNC initialized.
  *      - phEvent != NULL.
@@ -245,9 +245,9 @@ extern "C" {
  *      hWindow:    Handle to the window
  *      uMsg:       Message to be posted
  *  Returns:
- *      DSP_SOK:        Success
- *      DSP_EFAIL:      Post message failed
- *      DSP_EHANDLE:    Invalid Window handle
+ *      0:        Success
+ *      -EPERM:      Post message failed
+ *      -EFAULT:    Invalid Window handle
  *  Requires:
  *      SYNC initialized
  *  Ensures
@@ -261,9 +261,9 @@ extern "C" {
  *  Parameters:
  *      hEvent:         Handle to a sync event.
  *  Returns:
- *      DSP_SOK:        Success;
- *      DSP_EFAIL:      Failed to reset event.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success;
+ *      -EPERM:      Failed to reset event.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *      SYNC initialized.
  *  Ensures:
@@ -277,9 +277,9 @@ extern "C" {
  *  Parameters:
  *      hEvent:         Handle to an event object.
  *  Returns:
- *      DSP_SOK:        Success.
- *      DSP_EFAIL:      Failed to signal event.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        Success.
+ *      -EPERM:      Failed to signal event.
+ *      -EFAULT:    Invalid handle.
  *  Requires:
  *      SYNC initialized.
  *  Ensures:
@@ -300,8 +300,8 @@ extern "C" {
  *                      If SYNC_INFINITE, the function's time-out interval 
  *                      never elapses. 
  *  Returns:
- *      DSP_SOK:        The object was signalled.
- *      DSP_EHANDLE:    Invalid handle.
+ *      0:        The object was signalled.
+ *      -EFAULT:    Invalid handle.
  *      SYNC_E_FAIL:    Wait failed, possibly because the process terminated.
  *      SYNC_E_TIMEOUT: Timeout expired while waiting for event to be signalled.
  *  Requires:
@@ -328,10 +328,10 @@ extern "C" {
  *                      never elapses.
  *      puIndex:        Location to store index of event that was signalled.
  *  Returns:
- *      DSP_SOK:        The object was signalled.
+ *      0:        The object was signalled.
  *      SYNC_E_FAIL:    Wait failed, possibly because the process terminated.
  *      SYNC_E_TIMEOUT: Timeout expired before event was signalled.
- *      DSP_EMEMORY:    Memory allocation failed.
+ *      -ENOMEM:    Memory allocation failed.
  *  Requires:
  *  Ensures:
  */

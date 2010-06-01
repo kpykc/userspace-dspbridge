@@ -106,8 +106,8 @@ extern "C" {
  *      pstrFormat: sprintf-style format string.
  *      ...:        Arguments for format string.
  *  Returns:
- *      DSP_SOK:    Success, or trace level masked.
- *      DSP_EFAIL:  On Error.
+ *      0:    Success, or trace level masked.
+ *      -EPERM:  On Error.
  *  Requires:
  *      DBG initialized.
  *  Ensures:
@@ -125,8 +125,8 @@ extern "C" {
  *      pstrFormat:     sprintf-style format string.
  *      ...:            Arguments for format string.
  *  Returns:
- *      DSP_SOK:        Success, or trace level masked.
- *      DSP_EFAIL:      On Error.
+ *      0:        Success, or trace level masked.
+ *      -EPERM:      On Error.
  *  Requires:
  *      DBG initialized.
  *  Ensures:

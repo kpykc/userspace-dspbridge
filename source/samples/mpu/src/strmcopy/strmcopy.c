@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 	FILE *inFile = NULL;	/* Input file handle. */
 	FILE *outFile = NULL;	/* Output file handle. */
 	struct STRMCOPY_TASK strmcopyTask;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	DspManager_Open(argc, NULL);
 
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
  */
 static DSP_STATUS InitializeProcessor(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_EFAIL;
+	DSP_STATUS status = -EPERM;
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
 	UINT index = 0;
@@ -164,7 +164,7 @@ static DSP_STATUS InitializeProcessor(struct STRMCOPY_TASK *copyTask)
 									|| (dspInfo.uProcessorType == DSPTYPE_64)) {
 			printf("DSP device detected !! \n");
 			procId = index;
-			status = DSP_SOK;
+			status = 0;
 			break;
 		}
 		index++;
@@ -211,7 +211,7 @@ static DSP_STATUS InitializeNode(struct STRMCOPY_TASK *copyTask)
 	struct DSP_NODEATTRIN nodeAttrIn;
 	struct DSP_STRMATTR attrs;
 	struct DSP_UUID uuid;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	uuid = nodeuuid;
 	attrs.uBufsize = DEFAULTBUFSIZE;
@@ -287,7 +287,7 @@ static DSP_STATUS InitializeNode(struct STRMCOPY_TASK *copyTask)
  */
 static DSP_STATUS InitializeStreams(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	struct DSP_STREAMATTRIN attrs;
 
 	attrs.cbStruct = sizeof(struct DSP_STREAMATTRIN);
@@ -358,7 +358,7 @@ static DSP_STATUS InitializeStreams(struct STRMCOPY_TASK *copyTask)
 static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 																FILE *outFile)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	BYTE *pInBuf = NULL;
 	BYTE *pOutBuf = NULL;
 	DWORD dwArg = 0;
@@ -401,7 +401,7 @@ static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 				/*Wait for input notification to reclaim a queued buffer:*/
 				status = DSPStream_Reclaim(copyTask->hOutStream, &pOutBuf,
 														&dwBufSize,NULL,&dwArg);
-				if (status == DSP_ETIMEOUT) {
+				if (status == -ETIME) {
 					fprintf(stdout, "DSPStream_Reclaim timed out.\n");
 					break;
 				} else if (!DSP_SUCCEEDED(status)) {
@@ -416,7 +416,7 @@ static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 			}
 		} while ((cBytesRead > 0) && DSP_SUCCEEDED(status));
 	} else {
-		status = DSP_EFAIL;
+		status = -EPERM;
 	}
 	return (status);
 }
@@ -428,7 +428,7 @@ static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 static DSP_STATUS CleanupStreams(struct STRMCOPY_TASK *copyTask)
 {
 	struct DSP_STREAMINFO streamInfo;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	DWORD dwArg = 0;
 	DWORD dwBufsize = DEFAULTBUFSIZE;
 	BYTE *pBuf;
@@ -497,7 +497,7 @@ static DSP_STATUS CleanupStreams(struct STRMCOPY_TASK *copyTask)
  */
 static DSP_STATUS CleanupNode(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	DSP_STATUS exitStatus;
 
 	if (copyTask->hNode) {
@@ -526,7 +526,7 @@ static DSP_STATUS CleanupNode(struct STRMCOPY_TASK *copyTask)
  */
 static DSP_STATUS CleanupProcessor(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	if (copyTask->hProcessor) {
 		/* Detach from processor. */
@@ -548,7 +548,7 @@ static DSP_STATUS CleanupProcessor(struct STRMCOPY_TASK *copyTask)
 static DSP_STATUS ProcessArgs(int argc, char **argv, FILE **inFile,
 												FILE **outFile, INT *pStrmMode)
 {
-	DSP_STATUS status = DSP_EFAIL;
+	DSP_STATUS status = -EPERM;
 	INT nModeVal;
 	if (argc != 4) {
 		fprintf(stdout, "Usage: %s <stream transport id> <input-filename>"
@@ -574,7 +574,7 @@ static DSP_STATUS ProcessArgs(int argc, char **argv, FILE **inFile,
 		if (*inFile) {
 			*outFile = fopen(argv[3], "wb");
 			if (*outFile) {
-				status = DSP_SOK;
+				status = 0;
 			} else {
 				fprintf(stdout, "%s: Unable to open file %s for writing\n",
 															argv[0], argv[3]);

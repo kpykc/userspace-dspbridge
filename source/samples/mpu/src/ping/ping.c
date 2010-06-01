@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 	struct PING_TASK pingTask;	/* Ping task context                    */
 	UINT msgCount;		/* Number of messages DSP sends         */
 	struct PING_NODEDATA argsBuf;	/* Task Node args.                      */
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	/* Process command line arguments, open data files: */
 	status = ProcessArgs(argc, argv, &msgCount, &argsBuf);
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
  */
 static DSP_STATUS AttachProcessor(struct PING_TASK *pingTask)
 {
-	DSP_STATUS status = DSP_EFAIL;
+	DSP_STATUS status = -EPERM;
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
 	UINT index = 0;
@@ -136,7 +136,7 @@ static DSP_STATUS AttachProcessor(struct PING_TASK *pingTask)
 									(dspInfo.uProcessorType == DSPTYPE_64)) {
 			printf("DSP device detected !! \n");
 			procId = index;
-			status = DSP_SOK;
+			status = 0;
 			break;
 		}
 		index++;
@@ -238,9 +238,9 @@ static DSP_STATUS RunNode(struct PING_TASK *pingTask)
 					}
 				}
 				if (DSP_FAILED(status)) {
-					if (status == DSP_ETIMEOUT) {
+					if (status == -ETIME) {
 						/* Okay to timeout if message queue is empty */
-						status = DSP_SOK;
+						status = 0;
 						continue;
 					} else {
 						fprintf(stdout,"DSPNode_GetMessage failed: 0x%x\n",
@@ -268,7 +268,7 @@ static DSP_STATUS RunNode(struct PING_TASK *pingTask)
  */
 static DSP_STATUS DestroyNode(struct PING_TASK *pingTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	if (pingTask->hNode) {
 		/* Delete DSP node. */
@@ -290,7 +290,7 @@ static DSP_STATUS DestroyNode(struct PING_TASK *pingTask)
  */
 static DSP_STATUS DetachProcessor(struct PING_TASK *pingTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	if (pingTask->hProcessor) {
 		/* Detach from processor. */
@@ -312,7 +312,7 @@ static DSP_STATUS DetachProcessor(struct PING_TASK *pingTask)
 static DSP_STATUS ProcessArgs(int argc, char **argv, UINT *pMsgCnt,
 												struct PING_NODEDATA *argsBuf)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 	switch (argc) {
 	case 1:
 		*pMsgCnt = DEFAULTMSGS;
@@ -325,7 +325,7 @@ static DSP_STATUS ProcessArgs(int argc, char **argv, UINT *pMsgCnt,
 	default:
 		fprintf(stdout, "Usage: %s <message_count> \n", argv[0]);
 		strncpy((char *)argsBuf->cData, DEFAULTDELAY, ARGSIZE);
-		status = DSP_EFAIL;
+		status = -EPERM;
 		break;
 	}
 	if (DSP_SUCCEEDED(status)) {

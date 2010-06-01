@@ -32,10 +32,10 @@
  *!                 Removed unused DSP_ENUMLASTNODE define.
  *! 13-Feb-2002 jeh Added uSysStackSize to DSP_NDBPROPS.
  *! 23-Jan-2002 ag  Added #define DSP_SHMSEG0.
- *! 12-Dec-2001 ag  Added DSP_ESTRMMODE error code.
- *! 04-Dec-2001 jeh Added DSP_ENOTCONNECTED error code.
+ *! 12-Dec-2001 ag  Added -EPERM error code.
+ *! 04-Dec-2001 jeh Added -ENOTCONN error code.
  *! 10-Dec-2001 kc: Modified macros and definitions to disable DSP_POSTMESSAGE.
- *! 01-Nov-2001 jeh Added DSP_EOVERLAYMEMORY.
+ *! 01-Nov-2001 jeh Added -ENXIO.
  *! 18-Oct-2001 ag  Added DSP_STRMMODE type.
  *!                 Added DSP_ENOTSHAREDMEM.
  *! 21-Sep-2001 ag  Added additional error codes.
@@ -44,7 +44,7 @@
  *!                 from DSP_NODEINFO.
  *! 02-Apr-2001 sg  Added missing error codes, rearranged codes, switched to
  *!             hex offsets, renamed some codes to match API spec.
- *! 16-Jan-2001 jeh Added DSP_ESYMBOL, DSP_EUUID.
+ *! 16-Jan-2001 jeh Added -ESPIPE, -ENOKEY.
  *! 13-Feb-2001 kc: DSP/BIOS Bridge name updates.
  *! 05-Dec-2000 ag: Added DSP_RMSxxx user available message command codes.
  *! 09-Nov-2000 rr: Added DSP_PROCEESORRESTART define; Removed DSP_PBUFFER.
@@ -56,7 +56,7 @@
  *!                 these codes within the RM module.
  *! 27-Sep-2000 jeh Added segid, alignment, uNumBufs to DSP_STREAMATTRIN.
  *! 29-Aug-2000 jeh Added DSP_NODETYPE enum, changed DSP_EALREADYATTACHED to
- *!                 DSP_EALREADYCONNECTED. Changed scStreamConnection[1]
+ *!                 -EISCONN. Changed scStreamConnection[1]
  *!                 to scStreamConnection[16] in DSP_NODEINFO structure.
  *!                 Added DSP_NOTIFICATION, DSP_STRMATTR. PSTRING changed
  *!                 back to TCHAR * and moved to dbtype.h.

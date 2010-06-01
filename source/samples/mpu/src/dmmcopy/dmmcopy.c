@@ -101,7 +101,7 @@ INT main(INT argc, char **argv)
 	FILE *inFile = NULL;	/* Input file handle. */
 	FILE *outFile = NULL;	/* Output file handle. */
 	struct DMMCOPY_TASK dmmcopyTask;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	DspManager_Open(argc, NULL);
 	/* Process command line arguments, open data files: */
@@ -147,7 +147,7 @@ INT main(INT argc, char **argv)
  */
 static DSP_STATUS InitializeProcessor(struct DMMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_EFAIL;
+	DSP_STATUS status = -EPERM;
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
 	UINT index = 0;
@@ -164,7 +164,7 @@ static DSP_STATUS InitializeProcessor(struct DMMCOPY_TASK *copyTask)
 			}
 			printf("DSP device detected !! \n");
 			procId = index;
-			status = DSP_SOK;
+			status = 0;
 			break;
 		}
 		index++;
@@ -210,7 +210,7 @@ static DSP_STATUS InitializeNode(struct DMMCOPY_TASK *copyTask)
 	struct DSP_CBDATA *pArgs;
 	struct DSP_NODEATTRIN nodeAttrIn;
 	struct DSP_UUID uuid;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	uuid = DMMCOPY_TI_uuid;
 	nodeAttrIn.uTimeout = DSP_FOREVER;
@@ -258,7 +258,7 @@ static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
 																FILE *outFile)
 {
 	INT cBytesRead = 0;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	/* Actual MPU Buffer addresses */
 	ULONG aBufferSend = 0;
@@ -291,7 +291,7 @@ static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
 	}
 	if (!aBufferSend || !aBufferRecv) {
 		fprintf(stdout, "Failed to allocate MPU buffers.\n");
-		status = DSP_EMEMORY;
+		status = -ENOMEM;
 	} else {
 		/* Reserve DSP virtual memory for send buffer */
 		status = DSPProcessor_ReserveMemory(copyTask->hProcessor, ulSendResv,
@@ -472,7 +472,7 @@ static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
 static DSP_STATUS CleanupNode(struct DMMCOPY_TASK *copyTask)
 {
 	DSP_STATUS exitStatus;
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	if (copyTask->hNode) {
 		/* Terminate DSP node */
@@ -500,7 +500,7 @@ static DSP_STATUS CleanupNode(struct DMMCOPY_TASK *copyTask)
  */
 static DSP_STATUS CleanupProcessor(struct DMMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = DSP_SOK;
+	DSP_STATUS status = 0;
 
 	if (copyTask->hProcessor) {
 		/* Detach from processor. */
@@ -523,7 +523,7 @@ static DSP_STATUS CleanupProcessor(struct DMMCOPY_TASK *copyTask)
  */
 static DSP_STATUS ProcessArgs(INT argc,char **argv,FILE **inFile,FILE **outFile)
 {
-	DSP_STATUS status = DSP_EFAIL;
+	DSP_STATUS status = -EPERM;
 	if (argc != 3) {
 		fprintf(stdout, "Usage: dmmcopy <input-filename> <output-filename>\n");
 	} else {
@@ -532,7 +532,7 @@ static DSP_STATUS ProcessArgs(INT argc,char **argv,FILE **inFile,FILE **outFile)
 		if (*inFile) {
 			*outFile = fopen(argv[2], "wb");
 			if (*outFile) {
-				status = DSP_SOK;
+				status = 0;
 			} else {
 				fprintf(stdout, "%s: Unable to open file %s for writing\n",
 															argv[0], argv[2]);
