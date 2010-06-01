@@ -45,7 +45,7 @@
 #define MAXMSGLEN     128	/* Max length of MessageBox msg.         */
 
 
-static DSP_STATUS status = 0;
+static int status = 0;
 static struct QOSREGISTRY *registry;
 static struct QOSDATA **results = NULL;
 static ULONG NumFound;
@@ -447,7 +447,7 @@ printf("\n*** TEST CASE 5: Querying the database for required "
 int main(int argc, char **argv)
 {
 
-	DSP_STATUS status = 0;
+	int status = 0;
 	bool memory = false;
 	bool processor = false;
 	unsigned count =0;

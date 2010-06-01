@@ -98,10 +98,10 @@ typedef enum {
 static VOID DisplayUsage();
 static VOID PrintVerbose(PSTR pstrFmt, ...);
 static CHAR *getNodeType(DSP_NODETYPE nodeType);
-static DSP_STATUS getSectDataFromLib(IN CHAR *szLibPath, IN CHAR *szSection,
+static int getSectDataFromLib(IN CHAR *szLibPath, IN CHAR *szSection,
 					OUT UINT *pNumNodes, OPTIONAL OUT struct DSP_UUID *pLibUUIDs,
 														OUT NLDR_PHASE *phase);
-static DSP_STATUS ProcessArgs(INT argc, CHAR *argv[], DYNREG_COMMAND *cmd,
+static int ProcessArgs(INT argc, CHAR *argv[], DYNREG_COMMAND *cmd,
 														      CHAR *szLibPath);
 static int readBuffer(struct Dynamic_Loader_Stream *this, void *buffer,
 															unsigned bufsize);
@@ -118,7 +118,7 @@ FILE *filePointer = NULL;
 INT main(INT argc, CHAR *argv[])
 {
 
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct DSP_UUID *pLibUUIDs = NULL;
 	CHAR szUuid[36];
 	struct DSP_NDBPROPS hNdbProps;
@@ -444,12 +444,12 @@ static CHAR *getNodeType(DSP_NODETYPE nodeType)
  *  ======== ProcessArgs ========
  *  Process command-line arguments
  */
-static DSP_STATUS ProcessArgs(INT argc, CHAR *argv[], DYNREG_COMMAND *cmd,
+static int ProcessArgs(INT argc, CHAR *argv[], DYNREG_COMMAND *cmd,
 																CHAR *szLibPath)
 {
 
 	INT i = 0;
-	DSP_STATUS status = 0;
+	int status = 0;
 	/* Initialize as null command */
 	*cmd = DYNREG_CMDNULL;
 	if (argc < 2 || argc > 5) {
@@ -505,7 +505,7 @@ static DSP_STATUS ProcessArgs(INT argc, CHAR *argv[], DYNREG_COMMAND *cmd,
  *  Given a library name and section name, extract all UUIDs or phase
  *  data and return pointer to array
  */
-static DSP_STATUS getSectDataFromLib(IN CHAR *szLibPath, IN CHAR *szSection,
+static int getSectDataFromLib(IN CHAR *szLibPath, IN CHAR *szSection,
 											OUT UINT *pNumNodes,
 				OPTIONAL OUT struct DSP_UUID *pLibUUIDs,OUT NLDR_PHASE *phase)
 {
@@ -522,7 +522,7 @@ static DSP_STATUS getSectDataFromLib(IN CHAR *szLibPath, IN CHAR *szSection,
 	//CHAR      *pTempBuf;
 	CHAR *pTempCoffBuf;
 	CHAR seps[] = ", ";
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct DL_stream_t inputStream;
 	struct DL_sym_t inputSymbols;
 

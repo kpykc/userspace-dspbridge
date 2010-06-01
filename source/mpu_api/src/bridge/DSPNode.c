@@ -44,7 +44,7 @@
  *! ================
  *! 14-Mar-2002 map Set *pBuffer to null before returning error status in
  *!		            DSPNode_AllocMsgBuf.
- *! 01-Oct-2001 rr  CMM error codes are converted to DSP_STATUS in
+ *! 01-Oct-2001 rr  CMM error codes are converted to int in
  *!                 DSPNode_Allocate.
  *! 11-Sep-2001 ag  Zero-copy message support.
  *! 08-Jun-2001 jeh Fixed priority range check in DSPNode_ChangePriority.
@@ -102,7 +102,7 @@
 extern int hMediaFile;		/* class driver handle */
 
 /* Declared here, not to users */
-DSP_STATUS GetNodeType(DSP_HNODE hNode, DSP_NODETYPE *pNodeType);
+int GetNodeType(DSP_HNODE hNode, DSP_NODETYPE *pNodeType);
 
 /*
  *  ======== DSPNode_Allocate ========
@@ -116,7 +116,7 @@ DBAPI DSPNode_Allocate(DSP_HPROCESSOR hProcessor,
 		 IN OPTIONAL struct DSP_NODEATTRIN *pAttrIn,
 		 OUT DSP_HNODE *phNode)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	struct CMM_OBJECT *hCmm;		/* shared memory mngr handle */
 	struct CMM_INFO pInfo;		/* Used for virtual space allocation */
@@ -266,7 +266,7 @@ func_end:
 DBAPI DSPNode_AllocMsgBuf(DSP_HNODE hNode, UINT uSize,
 		   IN OPTIONAL struct DSP_BUFFERATTR *pAttr, OUT BYTE **pBuffer)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
 		(TEXT("NODE: DSPNode_AllocMsgBuf:\r\n")));
@@ -323,7 +323,7 @@ DBAPI DSPNode_AllocMsgBuf(DSP_HNODE hNode, UINT uSize,
  */
 DBAPI DSPNode_ChangePriority(DSP_HNODE hNode, INT iPriority)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -376,7 +376,7 @@ DBAPI DSPNode_ConnectEx(DSP_HNODE hNode, UINT uStream, DSP_HNODE hOtherNode,
 		  UINT uOtherStream, IN OPTIONAL struct DSP_STRMATTR *pAttrs,
 		  IN OPTIONAL struct DSP_CBDATA *pConnParam)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_ConnectEx:\r\n")));
@@ -409,7 +409,7 @@ DBAPI DSPNode_ConnectEx(DSP_HNODE hNode, UINT uStream, DSP_HNODE hOtherNode,
  */
 DBAPI DSPNode_Create(DSP_HNODE hNode)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -451,7 +451,7 @@ DBAPI DSPNode_Create(DSP_HNODE hNode)
  */
 DBAPI DSPNode_Delete(DSP_HNODE hNode)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	BYTE *pVirtBase = NULL;
 	struct DSP_BUFFERATTR bufAttr;
@@ -550,7 +550,7 @@ loop_end:
 DBAPI DSPNode_FreeMsgBuf(DSP_HNODE hNode, IN BYTE *pBuffer,
 				IN OPTIONAL struct DSP_BUFFERATTR *pAttr)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_FreeMsgBuf:\r\n")));
@@ -595,7 +595,7 @@ DBAPI DSPNode_FreeMsgBuf(DSP_HNODE hNode, IN BYTE *pBuffer,
 DBAPI DSPNode_GetAttr(DSP_HNODE hNode, OUT struct DSP_NODEATTR *pAttr,
 		UINT uAttrSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_GetAttr:\r\n")));
@@ -643,7 +643,7 @@ DBAPI DSPNode_GetAttr(DSP_HNODE hNode, OUT struct DSP_NODEATTR *pAttr,
 DBAPI DSPNode_GetMessage(DSP_HNODE hNode, OUT struct DSP_MSG *pMessage,
 				UINT uTimeout)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -692,10 +692,10 @@ DBAPI DSPNode_GetMessage(DSP_HNODE hNode, OUT struct DSP_MSG *pMessage,
  *  Purpose:
  *      Return the node type
  */
-DSP_STATUS GetNodeType(DSP_HNODE hNode, DSP_NODETYPE *pNodeType)
+int GetNodeType(DSP_HNODE hNode, DSP_NODETYPE *pNodeType)
 {
-	/*DSP_STATUS status;*/
-	DSP_STATUS status = 0;
+	/*int status;*/
+	int status = 0;
 	struct DSP_NODEATTR nodeAttr;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("GetNodeType:\r\n")));
@@ -723,7 +723,7 @@ DSP_STATUS GetNodeType(DSP_HNODE hNode, DSP_NODETYPE *pNodeType)
  */
 DBAPI DSPNode_Pause(DSP_HNODE hNode)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_Pause:\r\n")));
@@ -751,7 +751,7 @@ DBAPI DSPNode_Pause(DSP_HNODE hNode)
 DBAPI DSPNode_PutMessage(DSP_HNODE hNode, IN CONST struct DSP_MSG *pMessage,
 						UINT uTimeout)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -805,7 +805,7 @@ DBAPI
 DSPNode_RegisterNotify(DSP_HNODE hNode, UINT uEventMask,
 		       UINT uNotifyType, struct DSP_NOTIFICATION *hNotification)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -857,7 +857,7 @@ DSPNode_RegisterNotify(DSP_HNODE hNode, UINT uEventMask,
  */
 DBAPI DSPNode_Run(DSP_HNODE hNode)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_Run:\r\n")));
@@ -883,16 +883,16 @@ DBAPI DSPNode_Run(DSP_HNODE hNode)
  *      Signal a task node running on a  DSP processor that it should
  *      exit its execute-phase function.
  */
-DBAPI DSPNode_Terminate(DSP_HNODE hNode, DSP_STATUS *pStatus)
+DBAPI DSPNode_Terminate(DSP_HNODE hNode, int *pStatus)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPNode_Terminate:\r\n")));
 
 	if (hNode) {
 		/* !DSP_ValidWritePtr means it is a valid write ptr */
-		if (!DSP_ValidWritePtr(pStatus, sizeof(DSP_STATUS))) {
+		if (!DSP_ValidWritePtr(pStatus, sizeof(int))) {
 			/* Set up the structure */
 			/* Call DSP Trap */
 			tempStruct.ARGS_NODE_TERMINATE.hNode = hNode;
@@ -923,7 +923,7 @@ DBAPI DSPNode_GetUUIDProps(DSP_HPROCESSOR hProcessor,
 		IN CONST struct DSP_UUID *pNodeID,
 		 OUT struct DSP_NDBPROPS *pNodeProps)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,

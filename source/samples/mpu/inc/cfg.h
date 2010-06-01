@@ -101,7 +101,7 @@ extern "C" {
  *  Ensures:
  *      0:        *pdwAutoStart contains autostart mask for this devnode.
  */
-	extern DSP_STATUS CFG_GetAutoStart(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetAutoStart(IN struct CFG_DEVNODE* hDevNode,
 					   OUT DWORD * pdwAutoStart);
 
 /*
@@ -121,7 +121,7 @@ extern "C" {
  *      0:    Success.
  *      else:       *pdwVersion is NULL.
  */
-	extern DSP_STATUS CFG_GetCDVersion(OUT DWORD * pdwVersion);
+	extern int CFG_GetCDVersion(OUT DWORD * pdwVersion);
 
 /*
  *  ======== CFG_GetDevObject ========
@@ -141,7 +141,7 @@ extern "C" {
  *      0:    *pdwValue is set to the retrieved DWORD.
  *      else:       *pdwValue is set to 0L.
  */
-	extern DSP_STATUS CFG_GetDevObject(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetDevObject(IN struct CFG_DEVNODE* hDevNode,
 					   OUT DWORD * pdwValue);
 
 /*
@@ -162,7 +162,7 @@ extern "C" {
  *      0:    pDSPResTable points to a filled table of resources allocated
  *                  for the specified WMD.
  */
-	extern DSP_STATUS CFG_GetDSPResources(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetDSPResources(IN struct CFG_DEVNODE* hDevNode,
 					      OUT struct CFG_DSPRES * pDSPResTable);
 
 
@@ -186,7 +186,7 @@ extern "C" {
  *                  and *pstrExecFile contains default executable for this 
  *                  devnode.
  */
-	extern DSP_STATUS CFG_GetExecFile(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetExecFile(IN struct CFG_DEVNODE* hDevNode,
 					  IN ULONG cBufSize,
 					  OUT PSTR pstrExecFile);
 
@@ -209,7 +209,7 @@ extern "C" {
  *                  allocated for the specified WMD.
  *
  */
-	extern DSP_STATUS CFG_GetHostResources(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetHostResources(IN struct CFG_DEVNODE* hDevNode,
 					       OUT struct CFG_HOSTRES * pHostResTable);
 
 /*
@@ -227,7 +227,7 @@ extern "C" {
  *      0:    *pdwValue is set to the retrieved DWORD(non-Zero).
  *      else:       *pdwValue is set to 0L.
  */
-	extern DSP_STATUS CFG_GetObject(OUT DWORD * pdwValue, DWORD dwType);
+	extern int CFG_GetObject(OUT DWORD * pdwValue, DWORD dwType);
 
 /*
  *  ======== CFG_GetPerfValue ========
@@ -264,7 +264,7 @@ extern "C" {
  *                      into pWMDFileName.
  *
  */
-	extern DSP_STATUS CFG_GetWMDFileName(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetWMDFileName(IN struct CFG_DEVNODE* hDevNode,
 					     IN ULONG cBufSize,
 					     OUT PSTR pWMDFileName);
 
@@ -288,7 +288,7 @@ extern "C" {
  *                  pstrZLFileName, and *pstrZLFileName contains ZLFileName 
  *                  for this devnode.
  */
-	extern DSP_STATUS CFG_GetZLFile(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_GetZLFile(IN struct CFG_DEVNODE* hDevNode,
 					IN ULONG cBufSize,
 					OUT PSTR pstrZLFileName);
 
@@ -321,7 +321,7 @@ extern "C" {
  *  Ensures:
  *      0:    The Private DWORD was successfully set.
  */
-	extern DSP_STATUS CFG_SetDevObject(IN struct CFG_DEVNODE* hDevNode,
+	extern int CFG_SetDevObject(IN struct CFG_DEVNODE* hDevNode,
 					   IN DWORD dwValue);
 
 /*
@@ -339,9 +339,9 @@ extern "C" {
  *  Ensures:
  *      0:        The Private DWORD was successfully set.
  */
-	extern DSP_STATUS CFG_SetObject(IN DWORD dwValue, IN DWORD dwType);
+	extern int CFG_SetObject(IN DWORD dwValue, IN DWORD dwType);
 
-	extern DSP_STATUS CFG_GetC55Procs(OUT DWORD * numProcs);
+	extern int CFG_GetC55Procs(OUT DWORD * numProcs);
 #ifdef __cplusplus
 }
 #endif

@@ -278,7 +278,7 @@ struct PROCESS_CONTEXT{
  *      Also it can hold other neccessary
  *      information in its storage area.
  */
-	extern DSP_STATUS DRV_Create(struct DRV_OBJECT* * phDrvObject);
+	extern int DRV_Create(struct DRV_OBJECT* * phDrvObject);
 
 /*
  *  ======== DRV_Destroy ========
@@ -301,7 +301,7 @@ struct PROCESS_CONTEXT{
  *                        DRV handle.
  *                      - Registry is updated with "0" as the DRV Object.
  */
-	extern DSP_STATUS DRV_Destroy(struct DRV_OBJECT* hDrvObject);
+	extern int DRV_Destroy(struct DRV_OBJECT* hDrvObject);
 
 /*
  *  ======== DRV_Exit ========
@@ -362,7 +362,7 @@ struct PROCESS_CONTEXT{
  *      0:        *phDevObject != NULL
  *      -EPERM:      *phDevObject = NULL
  */
-	extern DSP_STATUS DRV_GetDevObject(UINT uIndex, struct DRV_OBJECT* hDrvObject,
+	extern int DRV_GetDevObject(UINT uIndex, struct DRV_OBJECT* hDrvObject,
 					   struct DEV_OBJECT* * phDevObject);
 
 /*
@@ -407,7 +407,7 @@ struct PROCESS_CONTEXT{
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS DRV_Init();
+	extern int DRV_Init();
 
 /*
  *  ======== DRV_InsertDevObject ========
@@ -425,7 +425,7 @@ struct PROCESS_CONTEXT{
  *  Ensures:
  *      0:        Device Object is inserted and the List is not empty.
  */
-	extern DSP_STATUS DRV_InsertDevObject(struct DRV_OBJECT* hDrvObject,
+	extern int DRV_InsertDevObject(struct DRV_OBJECT* hDrvObject,
 					      struct DEV_OBJECT* hDevObject);
 
 /*
@@ -446,7 +446,7 @@ struct PROCESS_CONTEXT{
  *  Ensures:
  *      List either does not exist (NULL), or is not empty if it does exist.
 */
-	extern DSP_STATUS DRV_RemoveDevObject(struct DRV_OBJECT* hDrvObject,
+	extern int DRV_RemoveDevObject(struct DRV_OBJECT* hDrvObject,
 					      struct DEV_OBJECT* hDevObject);
 
 /*
@@ -466,7 +466,7 @@ struct PROCESS_CONTEXT{
  *      Resource structure is stored in the registry which will be
  *      later used by the CFG module.
  */
-	extern DSP_STATUS DRV_RequestResources(IN DWORD dwContext,
+	extern int DRV_RequestResources(IN DWORD dwContext,
 					       OUT DWORD * pDevNodeString);
 
 /*
@@ -483,7 +483,7 @@ struct PROCESS_CONTEXT{
  *      The Resources are released based on Bus type.
  *      Resource structure is deleted from the registry
  */
-	extern DSP_STATUS DRV_ReleaseResources(IN DWORD dwContext,
+	extern int DRV_ReleaseResources(IN DWORD dwContext,
 					       struct DRV_OBJECT* hDrvObject);
 
 #ifdef __cplusplus

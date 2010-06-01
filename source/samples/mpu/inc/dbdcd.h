@@ -72,7 +72,7 @@ extern "C" {
  *      COFF file to contain the right COFF sections, especially
  *      ".dcd_register", which is used for auto registration.
  */
-	extern DSP_STATUS DCD_AutoRegister(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_AutoRegister(IN struct DCD_MANAGER* hDcdMgr,
 					   IN CHAR * pszCoffPath);
 
 /*
@@ -98,7 +98,7 @@ extern "C" {
  *      COFF file to contain the right COFF sections, especially
  *      ".dcd_register", which is used for auto unregistration.
  */
-	extern DSP_STATUS DCD_AutoUnregister(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_AutoUnregister(IN struct DCD_MANAGER* hDcdMgr,
 					     IN CHAR * pszCoffPath);
 
 /*
@@ -119,7 +119,7 @@ extern "C" {
  *  Ensures:
  *      A DCD manager handle is created.
  */
-	extern DSP_STATUS DCD_CreateManager(IN CHAR * pszZlDllName,
+	extern int DCD_CreateManager(IN CHAR * pszZlDllName,
 					    OUT struct DCD_MANAGER* * phDcdMgr);
 
 /*
@@ -135,7 +135,7 @@ extern "C" {
  *      DCD initialized.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_DestroyManager(IN struct DCD_MANAGER* hDcdMgr);
+	extern int DCD_DestroyManager(IN struct DCD_MANAGER* hDcdMgr);
 
 /*
  *  ======== DCD_EnumerateObject ========
@@ -158,7 +158,7 @@ extern "C" {
  *      This function can be used in conjunction with DCD_GetObjectDef to
  *      retrieve object properties.
  */
-	extern DSP_STATUS DCD_EnumerateObject(IN INT cIndex,
+	extern int DCD_EnumerateObject(IN INT cIndex,
 					      IN DSP_DCDOBJTYPE objType,
 					      OUT struct DSP_UUID * pUuid);
 
@@ -199,7 +199,7 @@ extern "C" {
  *      pDepLibUuids != NULL.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_GetDepLibs(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_GetDepLibs(IN struct DCD_MANAGER* hDcdMgr,
 					 IN struct DSP_UUID * pUuid,
 					 USHORT numLibs,
 					 OUT struct DSP_UUID * pDepLibUuids,
@@ -229,7 +229,7 @@ extern "C" {
  *      pNumLibs != NULL.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_GetNumDepLibs(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_GetNumDepLibs(IN struct DCD_MANAGER* hDcdMgr,
 					    IN struct DSP_UUID * pUuid,
 					    OUT USHORT * pNumLibs,
 					    OUT USHORT * pNumPersLibs,
@@ -259,7 +259,7 @@ extern "C" {
  *      pdwSize != NULL.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_GetLibraryName(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_GetLibraryName(IN struct DCD_MANAGER* hDcdMgr,
 					     IN struct DSP_UUID * pUuid,
 					     IN OUT PSTR pstrLibName,
 					     IN OUT DWORD * pdwSize,
@@ -293,7 +293,7 @@ extern "C" {
  *      pObjDef is non-NULL.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_GetObjectDef(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_GetObjectDef(IN struct DCD_MANAGER* hDcdMgr,
 					   IN struct DSP_UUID * pObjUuid,
 					   IN DSP_DCDOBJTYPE objType,
 					   OUT struct DCD_GENERICOBJ *pObjDef);
@@ -327,7 +327,7 @@ extern "C" {
  *      COFF file to contain the right COFF sections, especially
  *      ".dcd_register", which is used for auto registration.
  */
-	extern DSP_STATUS DCD_GetObjects(IN struct DCD_MANAGER* hDcdMgr,
+	extern int DCD_GetObjects(IN struct DCD_MANAGER* hDcdMgr,
 					 IN CHAR * pszCoffPath,
 					 DCD_REGISTERFXN registerFxn,
 					 PVOID handle);
@@ -364,7 +364,7 @@ extern "C" {
  *      objType is a valid type value.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_RegisterObject(IN struct DSP_UUID * pUuid,
+	extern int DCD_RegisterObject(IN struct DSP_UUID * pUuid,
 					     IN DSP_DCDOBJTYPE objType,
 					     IN CHAR * pszPathName);
 
@@ -386,7 +386,7 @@ extern "C" {
  *      objType is a valid type value.
  *  Ensures:
  */
-	extern DSP_STATUS DCD_UnregisterObject(IN struct DSP_UUID * pUuid,
+	extern int DCD_UnregisterObject(IN struct DSP_UUID * pUuid,
 					       IN DSP_DCDOBJTYPE objType);
 
 #ifdef __cplusplus

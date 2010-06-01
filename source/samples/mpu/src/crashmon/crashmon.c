@@ -69,7 +69,7 @@
 /** Helper Macros **/
 #define DSP_ERROR_EXIT(err, msg, label)			\
     if (DSP_FAILED(err)) {					\
-	ERROR_PRINT("%s : Err Num = %lx\n", msg, err);		\
+	ERROR_PRINT("%s : Err Num = %d\n", msg, err);		\
 	goto label;						\
     }
 
@@ -82,15 +82,15 @@
     memset(_var, 0, sizeof(_type));
 
 /* Function Definitions */
-DSP_STATUS Crash_Listener();
-DSP_STATUS Attach_DspProc(DSP_HPROCESSOR *hProc);
-DSP_STATUS Dettach_DspProc(DSP_HPROCESSOR hProc);
-DSP_STATUS Recover_Dsp(DSP_HPROCESSOR *hProc);
-DSP_STATUS Load_Baseimage(DSP_HPROCESSOR hProc);
+int Crash_Listener();
+int Attach_DspProc(DSP_HPROCESSOR *hProc);
+int Dettach_DspProc(DSP_HPROCESSOR hProc);
+int Recover_Dsp(DSP_HPROCESSOR *hProc);
+int Load_Baseimage(DSP_HPROCESSOR hProc);
 
 
 int main(int argc, char *argv[]) {
-    DSP_STATUS status = 0;
+    int status = 0;
 
 #ifdef PALMS_BUILD
 	PmLogErr err;
@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
     return (int)status;
 }
 
-DSP_STATUS Crash_Listener() {
-	DSP_STATUS status = 0;
+int Crash_Listener() {
+	int status = 0;
 	DSP_HPROCESSOR hProc;
 	unsigned int index=0;
 	struct DSP_NOTIFICATION* notificationObjects[4];
@@ -224,9 +224,9 @@ EXIT:
 	return status;
 }
 
-DSP_STATUS Recover_Dsp(DSP_HPROCESSOR *hProcessor)
+int Recover_Dsp(DSP_HPROCESSOR *hProcessor)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct DSP_PROCESSORSTATE ProcStatus;
 
 	DSP_HPROCESSOR hProc;
@@ -253,8 +253,8 @@ EXIT:
 	return status;
 }
 
-DSP_STATUS Attach_DspProc(DSP_HPROCESSOR *hProc) {
-	DSP_STATUS 	status = 0;
+int Attach_DspProc(DSP_HPROCESSOR *hProc) {
+	int 	status = 0;
 	UINT index = 0;
 	struct DSP_PROCESSORINFO dspInfo;
 	unsigned int numProcs;
@@ -290,8 +290,8 @@ EXIT:
 	return status;
 }
 
-DSP_STATUS Dettach_DspProc(DSP_HPROCESSOR hProc) {
-	DSP_STATUS status = 0;
+int Dettach_DspProc(DSP_HPROCESSOR hProc) {
+	int status = 0;
 
 	status = DSPProcessor_Detach(hProc);
 
@@ -304,9 +304,9 @@ DSP_STATUS Dettach_DspProc(DSP_HPROCESSOR hProc) {
 	return status;
 }
 
-DSP_STATUS Load_Baseimage(DSP_HPROCESSOR hProc)
+int Load_Baseimage(DSP_HPROCESSOR hProc)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	const char* argv[2] = {BASEIMAGE_FILE, NULL};
 
 	if (DSP_SUCCEEDED(status)) {

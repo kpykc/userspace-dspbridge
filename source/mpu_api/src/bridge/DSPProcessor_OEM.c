@@ -63,7 +63,7 @@
 DBAPI DSPProcessor_Ctrl(DSP_HPROCESSOR hProcessor, ULONG dwCmd,
 		  IN OPTIONAL struct DSP_CBDATA *pArgs)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Ctrl\r\n")));
@@ -94,7 +94,7 @@ DBAPI DSPProcessor_Ctrl(DSP_HPROCESSOR hProcessor, ULONG dwCmd,
 DBAPI DSPProcessor_Load(DSP_HPROCESSOR hProcessor, IN CONST INT iArgc,
 		  IN CONST CHAR **aArgv, IN CONST CHAR **aEnvp)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -154,7 +154,7 @@ DBAPI DSPProcessor_Load(DSP_HPROCESSOR hProcessor, IN CONST INT iArgc,
  */
 DBAPI DSPProcessor_Start(DSP_HPROCESSOR hProcessor)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Start\r\n")));
@@ -180,7 +180,7 @@ DBAPI DSPProcessor_Start(DSP_HPROCESSOR hProcessor)
  */
 DBAPI DSPProcessor_Stop(DSP_HPROCESSOR hProcessor)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Stop\r\n")));

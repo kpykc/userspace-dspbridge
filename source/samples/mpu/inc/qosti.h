@@ -62,7 +62,7 @@ void DbgMsg(DWORD dwZone, char *szFormat, ...);
   ret    0 if Message was transferred to DSP successfully.
  ============================================================================*/
 
-DSP_STATUS QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
+int QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
 																DWORD *dwOut2);
 
 /*  ========================================================================
@@ -71,7 +71,7 @@ DSP_STATUS QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
   ret    0 if successfully created.
   ========================================================================*/
 
-DSP_STATUS QosTI_Create();
+int QosTI_Create();
 
 /* ========================================================================
   func   Delete
@@ -97,7 +97,7 @@ void QosTI_Delete();
   ret   0 if successful.
   ========================================================================*/
 
-DSP_STATUS QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize, 
+int QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize, 
 								UINT *memUsed, UINT *memLargestFreeBlockSize,
 								UINT *memFreeBlocks, UINT *memAllocBlocks);
 
@@ -110,7 +110,7 @@ DSP_STATUS QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize,
     arg   OUT predictedFreq:
     ret   0 if successful.
     ======================================================================== */
-DSP_STATUS QosTI_GetProcLoadStat(UINT *currentLoad, UINT *predLoad,
+int QosTI_GetProcLoadStat(UINT *currentLoad, UINT *predLoad,
 				UINT *currDspFreq, UINT *predictedFreq);
 
 #endif				/* _RQOSTI_H*/

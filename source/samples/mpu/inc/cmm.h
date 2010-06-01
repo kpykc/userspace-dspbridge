@@ -123,7 +123,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_Create(OUT struct CMM_OBJECT** phCmmMgr,
+	extern int CMM_Create(OUT struct CMM_OBJECT** phCmmMgr,
 				     struct DEV_OBJECT* hDevObject,
 				     IN CONST struct CMM_MGRATTRS *pMgrAttrs);
 
@@ -146,7 +146,7 @@ extern "C" {
  *  Ensures:
  *      Memory resources used by Cmm Mgr are freed.
  */
-	extern DSP_STATUS CMM_Destroy(struct CMM_OBJECT* hCmmMgr, bool bForce);
+	extern int CMM_Destroy(struct CMM_OBJECT* hCmmMgr, bool bForce);
 
 /*
  *  ======== CMM_Exit ========
@@ -180,7 +180,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_FreeBuf(struct CMM_OBJECT* hCmmMgr,
+	extern int CMM_FreeBuf(struct CMM_OBJECT* hCmmMgr,
 				      PVOID pBufPA, ULONG ulSegId);
 
 /*
@@ -199,7 +199,7 @@ extern "C" {
  *      hDevObject != NULL
  *  Ensures:
  */
-	extern DSP_STATUS CMM_GetHandle(DSP_HPROCESSOR hProcessor,
+	extern int CMM_GetHandle(DSP_HPROCESSOR hProcessor,
 					OUT struct CMM_OBJECT** phCmmMgr);
 
 /*
@@ -218,7 +218,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_GetInfo(struct CMM_OBJECT* hCmmMgr,
+	extern int CMM_GetInfo(struct CMM_OBJECT* hCmmMgr,
 				      					OUT struct CMM_INFO * pCmmInfo);
 
 /*
@@ -284,7 +284,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_RegisterGPPSMSeg(struct CMM_OBJECT* hCmmMgr,
+	extern int CMM_RegisterGPPSMSeg(struct CMM_OBJECT* hCmmMgr,
 					       DWORD dwGPPBasePA,
 					       ULONG ulSize,
 					       DWORD dwDSPAddrOffset,
@@ -311,7 +311,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_UnRegisterGPPSMSeg(struct CMM_OBJECT* hCmmMgr,
+	extern int CMM_UnRegisterGPPSMSeg(struct CMM_OBJECT* hCmmMgr,
 						 ULONG ulSegId);
 
 /*
@@ -355,7 +355,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_XlatorCreate(OUT struct CMM_XLATOROBJECT** phXlator,
+	extern int CMM_XlatorCreate(OUT struct CMM_XLATOROBJECT** phXlator,
 					   struct CMM_OBJECT* hCmmMgr,
 					   struct CMM_XLATORATTRS *pXlatorAttrs);
 
@@ -375,7 +375,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_XlatorDelete(struct CMM_XLATOROBJECT* hXlator,
+	extern int CMM_XlatorDelete(struct CMM_XLATOROBJECT* hXlator,
 																bool bForce);
 
 /*
@@ -393,7 +393,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_XlatorFreeBuf(struct CMM_XLATOROBJECT* hXlator,
+	extern int CMM_XlatorFreeBuf(struct CMM_XLATOROBJECT* hXlator,
 																PVOID pBufVa);
 
 /*
@@ -418,7 +418,7 @@ extern "C" {
  *  Ensures:
  *
  */
-	extern DSP_STATUS CMM_XlatorInfo(struct CMM_XLATOROBJECT* hXlator,
+	extern int CMM_XlatorInfo(struct CMM_XLATOROBJECT* hXlator,
 					 IN OUT BYTE ** pAddr,
 					 ULONG ulSize, UINT uSegId,
 					 bool bSetInfo);

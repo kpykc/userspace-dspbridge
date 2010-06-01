@@ -39,11 +39,11 @@
 		registry		system registry
 		comp			component using system resources
 	Return
-		DSP_STATUS		Error code or 0 for success
+		int		Error code or 0 for success
 	Requirement Coverage
 		This method addresses requirement(s):  SR10085
 */
-DSP_STATUS DSPComponent_Register(struct QOSREGISTRY *registry,
+int DSPComponent_Register(struct QOSREGISTRY *registry,
 					struct QOSCOMPONENT *comp)
 {
 	if (comp != NULL)
@@ -62,14 +62,14 @@ DSP_STATUS DSPComponent_Register(struct QOSREGISTRY *registry,
 		registry		system registry
 		comp			component releasing system resources
 	Return
-		DSP_STATUS		Error code or 0 for success
+		int		Error code or 0 for success
 	Requirement Coverage
 		This method addresses requirement(s):  SR10085
 */
-DSP_STATUS DSPComponent_Unregister(struct QOSREGISTRY *registry,
+int DSPComponent_Unregister(struct QOSREGISTRY *registry,
 			struct QOSCOMPONENT *comp)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	if (comp != NULL) {
 		/* Negative status returned if error */
 		if (comp->InUse > 0) {

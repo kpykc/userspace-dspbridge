@@ -51,9 +51,9 @@ extern int hMediaFile;		/* class driver handle */
 /*
  * ======== DSPTRAP_Trap ========
  */
-DWORD DSPTRAP_Trap(Trapped_Args *args, int cmd)
+int DSPTRAP_Trap(Trapped_Args *args, int cmd)
 {
-	DWORD dwResult = -EFAULT;/* returned from call into class driver */
+	int dwResult = -EFAULT;/* returned from call into class driver */
 
 	if (hMediaFile >= 0)
 		dwResult = ioctl(hMediaFile, cmd, args);

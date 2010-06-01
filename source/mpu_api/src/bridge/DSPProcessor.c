@@ -96,7 +96,7 @@ DBAPI DSPProcessor_Attach(UINT uProcessor,
 		    OPTIONAL CONST struct DSP_PROCESSORATTRIN *pAttrIn,
 		    OUT DSP_HPROCESSOR *phProcessor)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Attach\r\n")));
@@ -130,7 +130,7 @@ DBAPI DSPProcessor_Attach(UINT uProcessor,
  */
 DBAPI DSPProcessor_Detach(DSP_HPROCESSOR hProcessor)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Detach\r\n")));
@@ -158,7 +158,7 @@ DBAPI DSPProcessor_EnumNodes(DSP_HPROCESSOR hProcessor,
 		       IN DSP_HNODE *aNodeTab, IN UINT uNodeTabSize,
 		       OUT UINT *puNumNodes, OUT UINT *puAllocated)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -211,7 +211,7 @@ DBAPI DSPProcessor_EnumNodes(DSP_HPROCESSOR hProcessor,
 DBAPI DSPProcessor_FlushMemory(DSP_HPROCESSOR hProcessor, PVOID pMpuAddr,
 			 ULONG ulSize, ULONG ulFlags)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -255,7 +255,7 @@ timeRetVal = getTimeStamp(&tv_end);
 DBAPI DSPProcessor_InvalidateMemory(DSP_HPROCESSOR hProcessor,
 					PVOID pMpuAddr, ULONG ulSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -300,7 +300,7 @@ DBAPI DSPProcessor_GetResourceInfo(DSP_HPROCESSOR hProcessor,
 	     UINT uResourceType, OUT struct DSP_RESOURCEINFO *pResourceInfo,
 	     UINT uResourceInfoSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Ctrl\r\n")));
@@ -350,7 +350,7 @@ DBAPI DSPProcessor_GetResourceInfo(DSP_HPROCESSOR hProcessor,
 DBAPI DSPProcessor_GetState(DSP_HPROCESSOR hProcessor,
 	      OUT struct DSP_PROCESSORSTATE *pProcStatus, UINT uStateInfoSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("PROC: DSPProcessor_Ctrl\r\n")));
@@ -397,7 +397,7 @@ DBAPI DSPProcessor_GetState(DSP_HPROCESSOR hProcessor,
 DBAPI DSPProcessor_Map(DSP_HPROCESSOR hProcessor, PVOID pMpuAddr,
 		ULONG ulSize, PVOID pReqAddr, PVOID *ppMapAddr, ULONG ulMapAttr)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -478,7 +478,7 @@ DBAPI DSPProcessor_Map(DSP_HPROCESSOR hProcessor, PVOID pMpuAddr,
 DBAPI DSPProcessor_RegisterNotify(DSP_HPROCESSOR hProcessor, UINT uEventMask,
 		    UINT uNotifyType, struct DSP_NOTIFICATION *hNotification)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -527,7 +527,7 @@ DBAPI DSPProcessor_RegisterNotify(DSP_HPROCESSOR hProcessor, UINT uEventMask,
 DBAPI DSPProcessor_ReserveMemory(DSP_HPROCESSOR hProcessor, ULONG ulSize,
 		PVOID *ppRsvAddr)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -591,7 +591,7 @@ DBAPI DSPProcessor_ReserveMemory(DSP_HPROCESSOR hProcessor, ULONG ulSize,
  */
 DBAPI DSPProcessor_UnMap(DSP_HPROCESSOR hProcessor, PVOID pMapAddr)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;
@@ -637,7 +637,7 @@ DBAPI DSPProcessor_UnMap(DSP_HPROCESSOR hProcessor, PVOID pMapAddr)
  */
 DBAPI DSPProcessor_UnReserveMemory(DSP_HPROCESSOR hProcessor, PVOID pRsvAddr)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 #ifdef DEBUG_BRIDGE_PERF
 	struct timeval tv_beg;

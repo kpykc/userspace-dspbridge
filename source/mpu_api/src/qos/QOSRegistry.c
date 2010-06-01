@@ -89,10 +89,10 @@ struct QOSDATA *DSPData_Create(ULONG id)
 	return data;
 }
 
-DSP_STATUS DSPData_Delete(struct QOSDATA *data)
+int DSPData_Delete(struct QOSDATA *data)
 {
 	struct QOSCOMPONENT *comp;
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct QOSDATA *temp;
 	DbgMsg(DSPAPI_ZONE_FUNCTION, "DSPData_Delete+\n");
 	/* Note: This routine is recursive. It calls itself to delete lists of
@@ -168,7 +168,7 @@ bool DSPData_IsResource(ULONG Id)
 
 struct QOSREGISTRY *DSPRegistry_Create()
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct QOSREGISTRY *registry;
 	struct QOSDATA *data;
 	struct QOSRESOURCE_MEMORY *mem_resource;
@@ -369,10 +369,10 @@ struct QOSDATA **FindTargetList(struct QOSDATA *listhead, UINT Id)
 		This method addresses requirement(s):  SR10008
 */
 
-DSP_STATUS DSPRegistry_Find(UINT Id, struct QOSREGISTRY *registry,
+int DSPRegistry_Find(UINT Id, struct QOSREGISTRY *registry,
 			struct QOSDATA **ResultList, ULONG *Size)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct QOSDATA *target;
 	struct QOSDATA **list_ptr;
 	bool TargetIsResource = false;
@@ -430,15 +430,15 @@ func_end:
 		listhead	ptr to a list container (component or registry)
 		entry			entry to add in list
 	Return
-		DSP_STATUS		Error code or 0 for success
+		int		Error code or 0 for success
 	Requirement Coverage
 		This method addresses requirement(s):  SR10085
 */
 
-DSP_STATUS DSPRegistry_Add(struct QOSDATA *listhead, struct QOSDATA *entry)
+int DSPRegistry_Add(struct QOSDATA *listhead, struct QOSDATA *entry)
 {
 	struct QOSDATA **target;
-	DSP_STATUS status = -EINVAL;
+	int status = -EINVAL;
 	DbgMsg(DSPAPI_ZONE_FUNCTION, "DSPRegistry_Add+\n");
 	/* First, find the target list */
 	target = FindTargetList(listhead, entry->Id);
@@ -460,16 +460,16 @@ DSP_STATUS DSPRegistry_Add(struct QOSDATA *listhead, struct QOSDATA *entry)
 		listhead	ptr to a list container (component or registry)
 		entry			resource or component to remove
 	Return
-		DSP_STATUS	Error code or 0 for success
+		int	Error code or 0 for success
 	Requirement Coverage
 		This method addresses requirement(s):  SR10085
 */
 
-DSP_STATUS DSPRegistry_Remove(struct QOSDATA *listhead, struct QOSDATA *entry)
+int DSPRegistry_Remove(struct QOSDATA *listhead, struct QOSDATA *entry)
 {
 	struct QOSDATA *target;
 	struct QOSDATA **list_ptr;
-	DSP_STATUS status = -EINVAL;
+	int status = -EINVAL;
 	DbgMsg(DSPAPI_ZONE_FUNCTION, "DSPRegistry_Remove+\n");
 	/* First, find the target list */
 	list_ptr = FindTargetList(listhead, entry->Id);
@@ -524,7 +524,7 @@ ULONG QOS_Registry_FunctionHandler(struct QOSDATA *DataObject,
 	struct QOSDATA *data;
 	struct QOSREGISTRY *registry;
 	bool TargetIsResource;
-	DSP_STATUS status;
+	int status;
 	DbgMsg(DSPAPI_ZONE_FUNCTION, "QOS_Registry_FunctionHandler+\n");
 	registry = (struct QOSREGISTRY *)DataObject;
 	status = -ENOSYS;
@@ -539,7 +539,7 @@ ULONG QOS_Registry_FunctionHandler(struct QOSDATA *DataObject,
 		   UINT *		ptr to storage for number of dynamic
 					heaps available
 		   Return
-		   DSP_STATUS   Error code or 0 for success
+		   int   Error code or 0 for success
 		   Requirement Coverage
 		   This method addresses requirement(s):        SR10085
 		 */

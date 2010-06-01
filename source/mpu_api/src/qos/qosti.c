@@ -61,7 +61,7 @@ void DbgMsg(DWORD dwZone, char *szFormat, ...)
     ret    0 if Message was transferred to DSP successfully.
     ============================================================================
 	*/
-DSP_STATUS QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
+int QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
 							DWORD *dwOut2)
 {
 	INT status = 0;
@@ -107,9 +107,9 @@ DSP_STATUS QosTI_DspMsg(DWORD dwCmd, DWORD dwArg1, DWORD dwArg2, DWORD *dwOut1,
     desc   Create Qos service.
     ============================================================================
 */
-DSP_STATUS QosTI_Create()
+int QosTI_Create()
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 #ifndef STUB_OUT_BRIDGE_API
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
@@ -215,8 +215,8 @@ DSP_STATUS QosTI_Create()
 void QosTI_Delete()
 {
 #ifndef STUB_OUT_BRIDGE_API
-	DSP_STATUS status = 0;
-	DSP_STATUS exitStatus;
+	int status = 0;
+	int exitStatus;
 	DbgMsg(DSPAPI_ZONE_FUNCTION, "QosTI_Delete+\n");
 	/* Terminate the DSP node. */
 	status = DSPNode_Terminate(hNode, &exitStatus);
@@ -275,7 +275,7 @@ void QosTI_Delete()
 	ret   0 if successful.
     ========================================================================
 */
-DSP_STATUS QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize,
+int QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize,
 			UINT *memUsed, UINT *memLargestFreeBlockSize,
 			UINT *memFreeBlocks, UINT *memAllocBlocks)
 {
@@ -320,7 +320,7 @@ DSP_STATUS QosTI_GetDynLoaderMemStat(UINT heapDesc, UINT *memInitSize,
     arg   OUT predictedFreq:
     ret   0 if successful.
     ======================================================================== */
-DSP_STATUS QosTI_GetProcLoadStat(UINT *currentLoad, UINT *predLoad,
+int QosTI_GetProcLoadStat(UINT *currentLoad, UINT *predLoad,
 		    UINT *currDspFreq, UINT *predictedFreq)
 {
 	INT status = 0;

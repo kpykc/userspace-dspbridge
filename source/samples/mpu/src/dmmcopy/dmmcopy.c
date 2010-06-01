@@ -82,15 +82,15 @@ static const struct DSP_UUID DMMCOPY_TI_uuid = {
 };
 
 /* Forward declarations: */
-static DSP_STATUS ProcessArgs(INT argc,char **argv,FILE **inFile,
+static int ProcessArgs(INT argc,char **argv,FILE **inFile,
 																FILE **outFile);
 
 /* Initialization and cleanup routines. */
-static DSP_STATUS InitializeProcessor(struct DMMCOPY_TASK *copyTask);
-static DSP_STATUS InitializeNode(struct DMMCOPY_TASK *copyTask);
-static DSP_STATUS CleanupProcessor(struct DMMCOPY_TASK *copyTask);
-static DSP_STATUS CleanupNode(struct DMMCOPY_TASK *copyTask);
-static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask,FILE *inFile,
+static int InitializeProcessor(struct DMMCOPY_TASK *copyTask);
+static int InitializeNode(struct DMMCOPY_TASK *copyTask);
+static int CleanupProcessor(struct DMMCOPY_TASK *copyTask);
+static int CleanupNode(struct DMMCOPY_TASK *copyTask);
+static int RunTask(struct DMMCOPY_TASK *copyTask,FILE *inFile,
 																FILE *outFile);
 
 /*
@@ -101,7 +101,7 @@ INT main(INT argc, char **argv)
 	FILE *inFile = NULL;	/* Input file handle. */
 	FILE *outFile = NULL;	/* Output file handle. */
 	struct DMMCOPY_TASK dmmcopyTask;
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	DspManager_Open(argc, NULL);
 	/* Process command line arguments, open data files: */
@@ -145,9 +145,9 @@ INT main(INT argc, char **argv)
  *  ======== InitializeProcessor ========
  *  Perform processor related initialization.
  */
-static DSP_STATUS InitializeProcessor(struct DMMCOPY_TASK *copyTask)
+static int InitializeProcessor(struct DMMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = -EPERM;
+	int status = -EPERM;
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
 	UINT index = 0;
@@ -204,13 +204,13 @@ static DSP_STATUS InitializeProcessor(struct DMMCOPY_TASK *copyTask)
  *  ======== InitializeNode ========
  *  Perform node related initialization.
  */
-static DSP_STATUS InitializeNode(struct DMMCOPY_TASK *copyTask)
+static int InitializeNode(struct DMMCOPY_TASK *copyTask)
 {
 	BYTE argsBuf[ARGSIZE + sizeof(ULONG)];
 	struct DSP_CBDATA *pArgs;
 	struct DSP_NODEATTRIN nodeAttrIn;
 	struct DSP_UUID uuid;
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	uuid = DMMCOPY_TI_uuid;
 	nodeAttrIn.uTimeout = DSP_FOREVER;
@@ -254,11 +254,11 @@ static DSP_STATUS InitializeNode(struct DMMCOPY_TASK *copyTask)
  *  ======== RunTask ========
  *  Run dmmcopy task.
  */
-static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
+static int RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
 																FILE *outFile)
 {
 	INT cBytesRead = 0;
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	/* Actual MPU Buffer addresses */
 	ULONG aBufferSend = 0;
@@ -469,10 +469,10 @@ static DSP_STATUS RunTask(struct DMMCOPY_TASK *copyTask, FILE *inFile,
  *  ======== CleanupNode ========
  *  Perform node related cleanup.
  */
-static DSP_STATUS CleanupNode(struct DMMCOPY_TASK *copyTask)
+static int CleanupNode(struct DMMCOPY_TASK *copyTask)
 {
-	DSP_STATUS exitStatus;
-	DSP_STATUS status = 0;
+	int exitStatus;
+	int status = 0;
 
 	if (copyTask->hNode) {
 		/* Terminate DSP node */
@@ -498,9 +498,9 @@ static DSP_STATUS CleanupNode(struct DMMCOPY_TASK *copyTask)
  *  ======== CleanupProcessor ========
  *  Perform processor related cleanup.
  */
-static DSP_STATUS CleanupProcessor(struct DMMCOPY_TASK *copyTask)
+static int CleanupProcessor(struct DMMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	if (copyTask->hProcessor) {
 		/* Detach from processor. */
@@ -521,9 +521,9 @@ static DSP_STATUS CleanupProcessor(struct DMMCOPY_TASK *copyTask)
  *  Process command line arguments for this sample, returning input and
  *  output file handles.
  */
-static DSP_STATUS ProcessArgs(INT argc,char **argv,FILE **inFile,FILE **outFile)
+static int ProcessArgs(INT argc,char **argv,FILE **inFile,FILE **outFile)
 {
-	DSP_STATUS status = -EPERM;
+	int status = -EPERM;
 	if (argc != 3) {
 		fprintf(stdout, "Usage: dmmcopy <input-filename> <output-filename>\n");
 	} else {

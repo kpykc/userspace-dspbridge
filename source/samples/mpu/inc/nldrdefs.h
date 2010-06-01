@@ -146,7 +146,7 @@ extern "C" {
  *      0:        IsValidNode(*phNldrNode).
  *      error:          *phNldrNode == NULL.
  */
-	typedef DSP_STATUS(*NLDR_ALLOCATEFXN) (struct NLDR_OBJECT* hNldr,
+	typedef int(*NLDR_ALLOCATEFXN) (struct NLDR_OBJECT* hNldr,
 					       PVOID pPrivRef,
 					       IN CONST struct DCD_NODEPROPS *pNodeProps,
 					       OUT struct NLDR_NODEOBJECT* * phNldrNode,
@@ -173,7 +173,7 @@ extern "C" {
  *      0:        Valid *phNldr.
  *      error:          *phNldr == NULL.
  */
-	typedef DSP_STATUS(*NLDR_CREATEFXN) (OUT struct NLDR_OBJECT* * phNldr,
+	typedef int(*NLDR_CREATEFXN) (OUT struct NLDR_OBJECT* * phNldr,
 					     struct DEV_OBJECT* hDevObject,
 					     IN CONST struct NLDR_ATTRS * pAttrs);
 
@@ -239,7 +239,7 @@ extern "C" {
  *      pstrFxn != NULL;
  *  Ensures:
  */
-	typedef DSP_STATUS(*NLDR_GETFXNADDRFXN) (struct NLDR_NODEOBJECT* hNldrNode,
+	typedef int(*NLDR_GETFXNADDRFXN) (struct NLDR_NODEOBJECT* hNldrNode,
 						 PSTR pstrFxn, ULONG * pulAddr);
 
 /*
@@ -272,7 +272,7 @@ extern "C" {
  *      Valid hNldrNode.
  *  Ensures:
  */
-	typedef DSP_STATUS(*NLDR_LOADFXN) (struct NLDR_NODEOBJECT* hNldrNode,
+	typedef int(*NLDR_LOADFXN) (struct NLDR_NODEOBJECT* hNldrNode,
 					   NLDR_PHASE phase);
 
 /*
@@ -290,7 +290,7 @@ extern "C" {
  *      Valid hNldrNode.
  *  Ensures:
  */
-	typedef DSP_STATUS(*NLDR_UNLOADFXN) (struct NLDR_NODEOBJECT* hNldrNode,
+	typedef int(*NLDR_UNLOADFXN) (struct NLDR_NODEOBJECT* hNldrNode,
 					     NLDR_PHASE phase);
 
 /*

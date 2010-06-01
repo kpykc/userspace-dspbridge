@@ -102,7 +102,7 @@ INT main(INT argc, CHAR * argv[])
 	UINT uProcId = 0;	/* default proc ID is 0. */
 	bool fError = false;
 	DSP_HPROCESSOR hProc;
-	DSP_STATUS status = 0;
+	int status = 0;
 	INT cArgc = 0;		/* local argc count. */
 	bool fScriptable = false;
 	extern char *optarg;

@@ -104,7 +104,7 @@ extern "C" {
  *  Ensures:
  *      Any subsequent usage of hEvent would be invalid.
  */
-	extern DSP_STATUS SYNC_CloseEvent(IN struct SYNC_OBJECT* hEvent);
+	extern int SYNC_CloseEvent(IN struct SYNC_OBJECT* hEvent);
 
 /* 
  *  ======== SYNC_DeleteCS ========
@@ -118,7 +118,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_DeleteCS(IN struct SYNC_CSOBJECT* hCSObj);
+	extern int SYNC_DeleteCS(IN struct SYNC_CSOBJECT* hCSObj);
 
 /* 
  *  ======== SYNC_EnterCS ========
@@ -132,7 +132,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_EnterCS(IN struct SYNC_CSOBJECT* hCSObj);
+	extern int SYNC_EnterCS(IN struct SYNC_CSOBJECT* hCSObj);
 
 /* 
  *  ======== SYNC_Exit ========
@@ -173,7 +173,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_InitializeCS(OUT struct SYNC_CSOBJECT* * phCSObj);
+	extern int SYNC_InitializeCS(OUT struct SYNC_CSOBJECT* * phCSObj);
 
 /* 
  *  ======== SYNC_InitializeDPCCS ========
@@ -187,7 +187,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_InitializeDPCCS(OUT struct SYNC_CSOBJECT** phCSObj);
+	extern int SYNC_InitializeDPCCS(OUT struct SYNC_CSOBJECT** phCSObj);
 
 /* 
  *  ======== SYNC_LeaveCS ========
@@ -201,7 +201,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_LeaveCS(IN struct SYNC_CSOBJECT* hCSObj);
+	extern int SYNC_LeaveCS(IN struct SYNC_CSOBJECT* hCSObj);
 
 /* 
  *  ======== SYNC_OpenEvent ========
@@ -234,7 +234,7 @@ extern "C" {
  *  Ensures:
  *      If function succeeded, pEvent->hEvent must be a valid event handle.
  */
-	extern DSP_STATUS SYNC_OpenEvent(OUT struct SYNC_OBJECT* * phEvent,
+	extern int SYNC_OpenEvent(OUT struct SYNC_OBJECT* * phEvent,
 					 IN OPTIONAL struct SYNC_ATTRS * pAttrs);
 
 /* 
@@ -252,7 +252,7 @@ extern "C" {
  *      SYNC initialized
  *  Ensures
  */
-	extern DSP_STATUS SYNC_PostMessage(IN HANDLE hWindow, IN UINT uMsg);
+	extern int SYNC_PostMessage(IN HANDLE hWindow, IN UINT uMsg);
 
 /* 
  *  ======== SYNC_ResetEvent ========
@@ -268,7 +268,7 @@ extern "C" {
  *      SYNC initialized.
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_ResetEvent(IN struct SYNC_OBJECT* hEvent);
+	extern int SYNC_ResetEvent(IN struct SYNC_OBJECT* hEvent);
 
 /* 
  *  ======== SYNC_SetEvent ========
@@ -284,7 +284,7 @@ extern "C" {
  *      SYNC initialized.
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_SetEvent(IN struct SYNC_OBJECT* hEvent);
+	extern int SYNC_SetEvent(IN struct SYNC_OBJECT* hEvent);
 
 /* 
  *  ======== SYNC_WaitOnEvent ========
@@ -307,7 +307,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_WaitOnEvent(IN struct SYNC_OBJECT* hEvent,
+	extern int SYNC_WaitOnEvent(IN struct SYNC_OBJECT* hEvent,
 					   IN DWORD dwTimeOut);
 
 /* 
@@ -335,7 +335,7 @@ extern "C" {
  *  Requires:
  *  Ensures:
  */
-	extern DSP_STATUS SYNC_WaitOnMultipleEvents(IN struct SYNC_OBJECT**
+	extern int SYNC_WaitOnMultipleEvents(IN struct SYNC_OBJECT**
 						    hSyncEvents, IN UINT uCount,
 						    IN DWORD dwTimeout,
 						    OUT UINT * puIndex);

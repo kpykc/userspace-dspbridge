@@ -98,7 +98,7 @@
 extern int hMediaFile;		/* class driver handle */
 
 /*  ----------------------------------- Function Prototypes */
-static DSP_STATUS GetStrmInfo(DSP_HSTREAM hStream, struct STRM_INFO *pStrmInfo,
+static int GetStrmInfo(DSP_HSTREAM hStream, struct STRM_INFO *pStrmInfo,
 			      UINT uStreamInfoSize);
 
 /*
@@ -111,7 +111,7 @@ DBAPI DSPStream_AllocateBuffers(DSP_HSTREAM hStream, UINT uSize,
 {
 	UINT i;
 	UINT uAllocated = 0;
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	PVOID pBuf = NULL;
 	struct STRM_INFO strmInfo;
@@ -189,7 +189,7 @@ DBAPI DSPStream_Close(DSP_HSTREAM hStream)
 #ifndef __linux__
 	HANDLE hEvent;
 #endif
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	struct STRM_INFO strmInfo;
 	struct DSP_STREAMINFO userInfo;
@@ -277,7 +277,7 @@ DBAPI DSPStream_FreeBuffers(DSP_HSTREAM hStream, IN BYTE **apBuffer,
 		UINT uNumBufs)
 {
 	UINT i;
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	struct STRM_INFO strmInfo;
 	struct DSP_STREAMINFO userInfo;
@@ -348,7 +348,7 @@ func_end:
 DBAPI DSPStream_GetInfo(DSP_HSTREAM hStream,
 		  OUT struct DSP_STREAMINFO *pStreamInfo, UINT uStreamInfoSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	struct STRM_INFO strmInfo;/* include stream's private virt addr info */
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPStream_GetInfo:\r\n")));
@@ -370,7 +370,7 @@ DBAPI DSPStream_GetInfo(DSP_HSTREAM hStream,
  */
 DBAPI DSPStream_Idle(DSP_HSTREAM hStream, bool bFlush)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPStream_Idle:\r\n")));
@@ -398,7 +398,7 @@ DBAPI DSPStream_Idle(DSP_HSTREAM hStream, bool bFlush)
 DBAPI DSPStream_Issue(DSP_HSTREAM hStream, IN BYTE *pBuffer,
 		ULONG dwDataSize, ULONG dwBufSize, IN DWORD dwArg)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPStream_Issue:\r\n")));
@@ -455,7 +455,7 @@ DBAPI DSPStream_Open(DSP_HNODE hNode, UINT uDirection, UINT uIndex,
 	       IN OPTIONAL struct DSP_STREAMATTRIN *pAttrIn,
 	       OUT DSP_HSTREAM *phStream)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 	struct STRM_ATTR strmAttrs;
 #ifndef __linux__			/* Events are handled in kernel */
@@ -611,7 +611,7 @@ loop_end:
  */
 DBAPI DSPStream_PrepareBuffer(DSP_HSTREAM hStream, UINT uSize, BYTE *pBuffer)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 #ifndef __linux__
 	/*  Pages are never swapped out (i.e. always locked in Linux) */
 	ULONG aPageTab[STRM_MAXLOCKPAGES];
@@ -656,7 +656,7 @@ DBAPI DSPStream_PrepareBuffer(DSP_HSTREAM hStream, UINT uSize, BYTE *pBuffer)
 DBAPI DSPStream_Reclaim(DSP_HSTREAM hStream, OUT BYTE **pBufPtr,
 		OUT ULONG *pDataSize, OUT ULONG *pBufSize, OUT DWORD *pdwArg)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPStream_Reclaim:\r\n")));
@@ -699,7 +699,7 @@ DBAPI
 DSPStream_RegisterNotify(DSP_HSTREAM hStream, UINT uEventMask,
 		 UINT uNotifyType, struct DSP_NOTIFICATION *hNotification)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION,
@@ -751,7 +751,7 @@ DSPStream_RegisterNotify(DSP_HSTREAM hStream, UINT uEventMask,
 DBAPI DSPStream_Select(IN DSP_HSTREAM *aStreamTab,
 		 UINT nStreams, OUT UINT *pMask, UINT uTimeout)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	DEBUGMSG(DSPAPI_ZONE_FUNCTION, (TEXT("NODE: DSPStream_Select:\r\n")));
@@ -787,7 +787,7 @@ DBAPI DSPStream_Select(IN DSP_HSTREAM *aStreamTab,
 DBAPI DSPStream_UnprepareBuffer(DSP_HSTREAM hStream, UINT uSize,
 				BYTE *pBuffer)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	/* Do error checking here to API spec. We don't call down to WCD */
 	if (!hStream)
@@ -817,10 +817,10 @@ DBAPI DSPStream_UnprepareBuffer(DSP_HSTREAM hStream, UINT uSize,
 /*
  *  ======== GetStrmInfo ========
  */
-static DSP_STATUS GetStrmInfo(DSP_HSTREAM hStream, struct STRM_INFO *pStrmInfo,
+static int GetStrmInfo(DSP_HSTREAM hStream, struct STRM_INFO *pStrmInfo,
 							UINT uStreamInfoSize)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	Trapped_Args tempStruct;
 
 	if (hStream) {

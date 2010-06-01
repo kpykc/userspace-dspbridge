@@ -112,7 +112,7 @@ extern "C" {
  *      DBG initialized.
  *  Ensures:
  */
-	extern DSP_STATUS DBG_Printf(IN PSTR pstrFormat, ...);
+	extern int DBG_Printf(IN PSTR pstrFormat, ...);
 #endif				// LINUX
 
 /*
@@ -133,7 +133,7 @@ extern "C" {
  *      Debug message is printed to debugger output window, if trace level
  *      is unmasked.
  */
-	extern DSP_STATUS DBG_Trace(IN BYTE bLevel, IN PSTR pstrFormat, ...);
+	extern int DBG_Trace(IN BYTE bLevel, IN PSTR pstrFormat, ...);
 #else
 
 #define DBG_Exit()

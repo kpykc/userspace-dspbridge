@@ -383,7 +383,7 @@ extern "C" {
  *      (MEM_PageLock() increments the lock count, and MEM_PageUnlock
  *      decrements the count).
  */
-	extern DSP_STATUS MEM_PageUnlock(IN PVOID pBuffer, IN ULONG cSize);
+	extern int MEM_PageUnlock(IN PVOID pBuffer, IN ULONG cSize);
 #endif
 
 /*

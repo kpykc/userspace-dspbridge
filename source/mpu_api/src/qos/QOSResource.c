@@ -70,7 +70,7 @@ QOS_Memory_Scratch_FunctionHandler(struct QOSDATA *DataObject,
 	struct QOSRESOURCE_MEMORY *request =
 				(struct QOSRESOURCE_MEMORY *)DataObject;
 	struct QOSRESOURCE_MEMORY *resource;
-	DSP_STATUS status;
+	int status;
 	switch (FunctionCode) {
 	case QOS_FN_ResourceIsAvailable:
 		if (data->Id == DataObject->Id) {
@@ -102,7 +102,7 @@ ULONG QOS_Memory_DynAlloc_FunctionHandler(struct QOSDATA *DataObject,
 {
 	struct QOSRESOURCE_MEMORY *request =
 			(struct QOSRESOURCE_MEMORY *)DataObject;
-	DSP_STATUS status;
+	int status;
 	switch (FunctionCode) {
 	case QOS_FN_ResourceIsAvailable:
 		return QOS_Memory_IsAvailable(DataObject, Parameter1);

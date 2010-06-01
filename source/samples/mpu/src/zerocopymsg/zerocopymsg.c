@@ -65,26 +65,26 @@ static const struct DSP_UUID nodeuuid = {0x30dbd781, 0xf3fb, 0x11d5, 0xa8, 0xdd,
 
 /* Forward declarations: */
 
-/*static DSP_STATUS ProcessArgs(int argc, char ** argv, FILE ** inFile,
+/*static int ProcessArgs(int argc, char ** argv, FILE ** inFile,
                                FILE ** outFile, INT *pStrmMode);*/
 
 /* Initialization and cleanup routines. */
-static DSP_STATUS InitializeProcessor(struct STRMCOPY_TASK *copyTask);
-static DSP_STATUS InitializeNode(struct STRMCOPY_TASK *copyTask);
-static DSP_STATUS CleanupProcessor(struct STRMCOPY_TASK *copyTask);
-static DSP_STATUS CleanupNode(struct STRMCOPY_TASK *copyTask);
-static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
+static int InitializeProcessor(struct STRMCOPY_TASK *copyTask);
+static int InitializeNode(struct STRMCOPY_TASK *copyTask);
+static int CleanupProcessor(struct STRMCOPY_TASK *copyTask);
+static int CleanupNode(struct STRMCOPY_TASK *copyTask);
+static int RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 																FILE *outFile);
 struct DSP_MSG zcopymsgtodsp, zcopymsgfromdsp;
 const int KDspBufDesc = 0x20000000;
-DSP_STATUS MsgToDsp(struct STRMCOPY_TASK *copyTask);
-DSP_STATUS MsgFromDsp(struct STRMCOPY_TASK *copyTask);
+int MsgToDsp(struct STRMCOPY_TASK *copyTask);
+int MsgFromDsp(struct STRMCOPY_TASK *copyTask);
 
 
-DSP_STATUS MsgToDsp(struct STRMCOPY_TASK *copyTask)
+int MsgToDsp(struct STRMCOPY_TASK *copyTask)
 {
 	int i = 0;
-	DSP_STATUS status = 0;
+	int status = 0;
 	/* BYTE * pSmMsgBuf = copyTask->pOutBufs ; */
 	unsigned int *pSmMsgBuf = (unsigned int *)copyTask->pOutBufs;
 
@@ -103,10 +103,10 @@ DSP_STATUS MsgToDsp(struct STRMCOPY_TASK *copyTask)
 	return status;
 }
 
-DSP_STATUS MsgFromDsp(struct STRMCOPY_TASK *copyTask)
+int MsgFromDsp(struct STRMCOPY_TASK *copyTask)
 {
 	int i = 0;
-	DSP_STATUS status = 0;
+	int status = 0;
 	/* BYTE * dataRxAddr = NULL ;
 	BYTE * dspDataTx  = NULL ;*/
 	unsigned int *dataRxAddr = NULL;
@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 	FILE *inFile = NULL;	/* Input file handle. */
 	FILE *outFile = NULL;	/* Output file handle. */
 	struct STRMCOPY_TASK strmcopyTask;
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	DspManager_Open(argc, NULL);
 	/* Process command line arguments, open data files: */
@@ -199,9 +199,9 @@ int main(int argc, char **argv)
  *  ======== InitializeProcessor ========
  *  Perform processor related initialization.
  */
-static DSP_STATUS InitializeProcessor(struct STRMCOPY_TASK *copyTask)
+static int InitializeProcessor(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = -EPERM;
+	int status = -EPERM;
 	struct DSP_PROCESSORINFO dspInfo;
 	UINT numProcs;
 	UINT index = 0;
@@ -252,14 +252,14 @@ static DSP_STATUS InitializeProcessor(struct STRMCOPY_TASK *copyTask)
  *  ======== InitializeNode ========
  *  Perform node related initialization.
  */
-static DSP_STATUS InitializeNode(struct STRMCOPY_TASK *copyTask)
+static int InitializeNode(struct STRMCOPY_TASK *copyTask)
 {
 	BYTE argsBuf[ARGSIZE + sizeof(ULONG)];
 	struct DSP_CBDATA *pArgs;
 	struct DSP_NODEATTRIN nodeAttrIn;
 	struct DSP_STRMATTR attrs;
 	struct DSP_UUID uuid;
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	uuid = nodeuuid;
 	attrs.uBufsize = DEFAULTBUFSIZE;
@@ -315,10 +315,10 @@ static DSP_STATUS InitializeNode(struct STRMCOPY_TASK *copyTask)
  *  ======== RunTask ========
  *  Run strmcopy task.
  */
-static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
+static int RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
 																FILE *outFile)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 	BYTE *pSmMsgBuf = NULL;
 	/* Allocate zero-copy message buffer */
 	status = DSPNode_AllocMsgBuf(copyTask->hNode, DEFAULTBUFSIZE, NULL,
@@ -358,10 +358,10 @@ static DSP_STATUS RunTask(struct STRMCOPY_TASK *copyTask, FILE *inFile,
  *  ======== CleanupNode ========
  *  Perform node related cleanup.
  */
-static DSP_STATUS CleanupNode(struct STRMCOPY_TASK *copyTask)
+static int CleanupNode(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = 0;
-	DSP_STATUS exitStatus;
+	int status = 0;
+	int exitStatus;
 
 	if (copyTask->hNode) {
 		/* Terminate DSP node.*/
@@ -387,9 +387,9 @@ static DSP_STATUS CleanupNode(struct STRMCOPY_TASK *copyTask)
  *  ======== CleanupProcessor ========
  *  Perform processor related cleanup.
  */
-static DSP_STATUS CleanupProcessor(struct STRMCOPY_TASK *copyTask)
+static int CleanupProcessor(struct STRMCOPY_TASK *copyTask)
 {
-	DSP_STATUS status = 0;
+	int status = 0;
 
 	if (copyTask->hProcessor) {
 		/* Detach from processor. */
@@ -409,10 +409,10 @@ static DSP_STATUS CleanupProcessor(struct STRMCOPY_TASK *copyTask)
  *  output file handles.
  */
 #if 0
-static DSP_STATUS ProcessArgs(int argc, char **argv, FILE **inFile, 
+static int ProcessArgs(int argc, char **argv, FILE **inFile, 
 												FILE **outFile, INT *pStrmMode)
 {
-	DSP_STATUS status = -EPERM;
+	int status = -EPERM;
 	INT nModeVal;
 
 	if (argc != 4) {

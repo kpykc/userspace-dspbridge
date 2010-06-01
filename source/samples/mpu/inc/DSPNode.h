@@ -419,7 +419,7 @@ DSPNode_Allocate(DSP_HPROCESSOR hProcessor,
  *                          being restarted.
  *      -EPERM:          Unable to Terminate the node.
  */
-	extern DBAPI DSPNode_Terminate(DSP_HNODE hNode, DSP_STATUS * pStatus);
+	extern DBAPI DSPNode_Terminate(DSP_HNODE hNode, int * pStatus);
 
 
 
