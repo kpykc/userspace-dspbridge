@@ -83,8 +83,8 @@ BRIDGE_EXPORT_PACKAGES = dsp/ti/dspbridge/dsp/bridge_product
 
 SAMPLE_PACKAGES = samples/dsp
 
-DLL_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dll64P))
-DOF_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dof64P))
+DLL_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dll64P)
+DOF_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dof64P)
 
 .samples: .bridge_samples
 
@@ -144,7 +144,7 @@ ifneq ($(DLL_FILES),)
 	$(CP) -f $(DLL_FILES) $(TARGETDIR)/dspbridge/
 endif
 ifneq ($(DOF_FILES),)
-	$(CP) -f $(DOF_FILES)/ $(TARGETDIR)/dspbridge/
+	$(CP) -f $(DOF_FILES) $(TARGETDIR)/dspbridge/
 endif
 
 #.execute_version_script: version.ksh $(VERSION_FILE)
