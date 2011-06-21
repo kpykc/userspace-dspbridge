@@ -1490,23 +1490,13 @@ static char *copy_tgt_strings(void *dstp, void *srcp, unsigned charcount)
 	register int cnt = charcount;
 
 	do {
-#if TARGET_AU_BITS <= BITS_PER_AU	
 		/* byte-swapping issues may exist for strings on target */
 		*dst++ = *src++;
-#elif TARGET_ENDIANNESS_DIFFERS(TARGET_BIG_ENDIAN)
-		register TgtAU_t tmp;
-		tmp = *src++;
-		*dst++ = SWAP16BY8(tmp);	/* only right for TARGET_AU_BITS == 16 */
-#else
-		*dst++ = *src++;
-#endif
 	}
 	while ((cnt -= (sizeof(TgtAU_t) * BITS_PER_AU / BITS_PER_BYTE)) > 0);
 	/* apply force to make sure that the string table has a null terminator */
 #if (BITS_PER_AU == BITS_PER_BYTE) && (TARGET_AU_BITS == BITS_PER_BYTE)
 	dst[-1] = 0;
-#elif TARGET_BIG_ENDIAN
-	dst[-1] &= ~BYTE_MASK;	/*  big-endian */
 #else
 	dst[-1] &= (1 << (BITS_PER_AU - BITS_PER_BYTE)) - 1;	/*  little endian */
 #endif
