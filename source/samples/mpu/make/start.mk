@@ -35,8 +35,12 @@ endif
 CMDDEFS =
 CMDDEFS_START =
 
-
+# Priority of compiler definition is:
+# CROSS, if not defined, use CROSS_COMPILE, else use arm-none-linux-gnueabi-
+CROSS ?= $(CROSS_COMPILE)
+ifeq ($(CROSS),)
 CROSS=arm-none-linux-gnueabi-
+endif
 PROCFAMILY=OMAP_3430
 
 
