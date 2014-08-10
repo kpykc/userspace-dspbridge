@@ -95,7 +95,7 @@ SH_LIBS        = pthread
 # Search path for library (and linker command) files.
 # Current folder and target folder are included by default.
 
-LIBINCLUDES =
+LIBINCLUDES = /usr/arm-linux-gnueabi/lib
 
 
 # Do not change below "include" line(s)

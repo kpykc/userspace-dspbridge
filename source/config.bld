@@ -103,7 +103,7 @@ if (c55CodeGenVersion != "") {
 }
 
 if (c6xCodeGenVersion != "") {
-    tiTargets.C64P.rootDir = depot + "/cgt6x-" + c6xCodeGenVersion;
+    tiTargets.C64P.rootDir = depot + "/C6000_" + c6xCodeGenVersion;
 }
 
 /* Set SABIOS_DIR via xdc */

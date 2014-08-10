@@ -1,0 +1,7 @@
+source/target/
+*.out
+*.map
+source/mpu_api/src/*/.obj/
+source/*/*/*/*/.obj/
+source/mpu_api/src/qos/libqos.a
+source/mpu_api/src/bridge/libbridge.so

@@ -34,14 +34,15 @@ else
 TARGETDSPDIR = $(PREFIX)/$(DDIR)
 endif
 
-DEPOT ?= /opt/dsp
+DEPOT ?= ~/tidsp
+CROSS_COMPILE=arm-linux-gnueabi-
 
 # we dont support parallel builds yet - force single CPU build
 # TODO: we need to define proper dependencies in *all* make files
 # before we enable this flag
 MAKEFLAGS += -j 1
 
-PREBUILT_DSPBINARY_DIR ?= ../binaries/
+PREBUILT_DSPBINARY_DIR ?= $(DEPOT)/userspace-dspbridge/source/samples/dsp/
 PREBUILT_DSPBINARY_FILES ?= \
 		      ddspbase_tiomap3430.dof64P	\
 		      dmmcopydyn_3430.dll64P		\
@@ -80,20 +81,10 @@ clean: $(SUBDIRS_CLEAN)
 	fi
 	@echo clean: abc $(SUBDIRS_ALL)  cln$(SUBDIRS_CLEAN) inst$(SUBDIRS_INSTALL) sdr$(SUBDIRS)
 
-mpu_build: .api .samples
+mpu_build: $(patsubst %, %-i, $(API_DIR))
 
-dsp_build: all .dsp
+dsp_build: .dsp
 
-predsp:
-	if test ! -d $(TARGETDSPDIR); then	\
-		$(MKDIR) -p $(TARGETDSPDIR);	\
-	fi
-	$(CP) $(foreach file, $(PREBUILT_DSPBINARY_FILES), $(PREBUILT_DSPBINARY_DIR)/$(file)) $(TARGETDSPDIR)
-	echo "MAKEFLAGS = $(MAKEFLAGS)"
-
-.api-install: $(patsubst %, %-i, $(API_DIR))
-
-.api: .api-install
 
 .samples-install: $(patsubst %, %-i, $(MPU_SAMPLE_DIR))
 

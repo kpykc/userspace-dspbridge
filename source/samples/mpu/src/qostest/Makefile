@@ -24,7 +24,7 @@ LDPATH=$(TARGETDIR)/lib
 LDFLAGS = -L $(LDPATH)  -L $(PROJROOT)/src/qos
 CFLAGS=-Wall -g -O2 $(INCLUDE) -finline-functions -D$(PROCFAMILY) $(LDFLAGS)
 
-LIBS = -lbridge -lqos
+LIBS = -lqos -lbridge
 
 all: qostest.out
 
