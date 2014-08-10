@@ -1,0 +1,87 @@
+
+utils.importFile("bridgeutils.tci");
+
+var chipType = environment["config.chipType"];
+if (chipType == undefined) {
+    chipType = prog.build.cfgArgs.chipType;
+}
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+/*  Load the THRLOAD module configuration file  */
+if ((chipType == "24xx") || (chipType == "2430")) {
+    bridgeutils.enableQOS(prog);
+}
+
+bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+
+/**********************/
+
+//bridge.MEM.NOMEMORYHEAPS = false;
+bridge.DSKT2.DARAM0SEG = bridge.MEM.BIOSOBJSEG;
+bridge.DSKT2.DARAM1SEG = bridge.MEM.BIOSOBJSEG;
+
+if (chipType == "2430") {
+bridge.DMAN3.USEQDMA0 = true;
+bridge.DMAN3.USEQDMA3 = true;
+}
+
+// Setting this here since previous default of DATASEG is equal to IRAM
+bridge.DYNM.DLLVIEWSEG = bridge.MEM.DATASEG;
+
+if (chipType == "24xx") {
+bridge.DMAN24XX.DMANIRQ = 1;
+bridge.DMAN24XX.NUMCHANNELS = 2;
+bridge.DMAN24XX_CH0.enabled = true;
+bridge.DMAN24XX_CH1.enabled = true;
+}
+
+// var foo1 = bridge.TSK.create("foofoo");
+// var foo2 = bridge.SEM.create("foofoo");
+
+var myNode1 = bridge.NODE.create("testNode1");
+myNode1.stack = 1024;
+myNode1.uuid = "12121";
+
+bridge.BRIDGE.enableDebug = true;
+print ("asas "+myNode1.name);
+
+var myNode2 = bridge.NODE.create("testNode2");
+myNode2.stack = 200;
+myNode2.uuid = "1111111111";
+
+var myNode3 = bridge.NODE.create("testNode3");
+myNode3.uuid = "1222222222222";
+
+var pingNode = bridge.NODE.create("pingNode");
+pingNode.uuid = "12A3C3C1_D015_11D4_9F69_00C04F3A59AE";
+pingNode.name = "PING_TI";
+pingNode.nodeType = "TASKNODE";
+pingNode.priority = 1;
+pingNode.stackSize = 0x200;
+pingNode.stackSeg = 0;
+pingNode.messageDepth = 2;
+pingNode.numInputStreams = 0;
+pingNode.numOutputStreams = 0;
+pingNode.timeout = 2000;
+pingNode.createFxn = "PING_TI_create";
+pingNode.executeFxn = "PING_TI_execute";
+pingNode.deleteFxn = "PING_TI_delete";
+pingNode.loadType = "Static";
+
+// TBD: This doesn't seem to work.  Investigate
+var myheap = bridge.MEM.create("msgHeap");
+
+myheap.createHeap = 1;
+myheap.base = 0xFF100;
+myheap.len = 10;
+myheap.heapSize = 2;
+
+bridge.NODE.MSGFRAMESEG = myheap;
+if (chipType == "2430") {
+bridge.TIOMAP2430SHM.EXTHEAPSIZE = 1000;
+}
+
+prog.gen("hohoho");
+

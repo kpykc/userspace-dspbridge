@@ -1,0 +1,75 @@
+
+utils.importFile("bridgeutils.tci");
+
+// This test should only be built for 1510
+var chipType = "1510";
+
+/* load the platform */
+bridgeutils.loadPlatform("innovator" + chipType + "_bridge");
+
+//bridge.DSKT2.EXTERNALSEG = prog.get("EXTMEM");
+bridge.TIOMAP1510SHM.USEEXTHEAPLABEL = true;
+bridge.TIOMAP1510SHM.EXTHEAPLABEL = prog.extern("EXTMEM_HEAP");
+
+//bridge.DMAN24XX.OBJMEMSEG = prog.get("EXTMEM");
+//bridge.DMAN24XX.DMANIRQ = 4;
+
+//bridge.DMAN24XX_CH0.enabled = true;
+//bridge.DMAN24XX_CH5.enabled = true;
+//bridge.DMAN24XX_CH0.priority = "low";
+
+bridge.DMAN.CHANNEL0_ENABLE = false;
+bridge.DMAN.CHANNEL1_ENABLE = false;
+bridge.DMAN.CHANNEL2_ENABLE = true;
+bridge.DMAN.CHANNEL3_ENABLE = true;
+bridge.DMAN.CHANNEL4_ENABLE = true;
+bridge.DMAN.CHANNEL5_ENABLE = true;
+
+if (1) { // Set to 0 to test generation with no DMA nodes
+var testNode = bridge.NODE.create("testNode");
+testNode.algStructName = "DMANTEST_TI_IDMANTEST";
+testNode.nodeType = "XDAISNODE";
+testNode.usesDMA = true;
+testNode.iDMAFxns = prog.extern("DMANTEST_TI_IDMA");
+testNode.queueId0 = 5;
+testNode.queueId1 = 4;
+testNode.queueId2 = 3;
+testNode.queueId3 = 2;
+testNode.queueId4 = 5;
+testNode.queueId5 = 4;
+testNode.queueId6 = 3;
+testNode.queueId7 = 2;
+
+var testNode2 = bridge.NODE.create("testNode2");
+testNode2.algStructName = "DMANTEST_TI_IDMANTEST";
+testNode2.nodeType = "XDAISNODE";
+testNode2.usesDMA = true;
+testNode2.iDMAFxns = prog.extern("DMANTEST_TI_IDMA");
+testNode2.queueId0 = 3;
+testNode2.queueId1 = 4;
+testNode2.queueId2 = 5;
+testNode2.queueId3 = 2;
+testNode2.queueId4 = 3;
+testNode2.queueId5 = 4;
+testNode2.queueId6 = 2;
+testNode2.queueId7 = 5;
+
+var testNode3 = bridge.NODE.create("testNode3");
+testNode3.algStructName = "DMANTEST_TI_IDMANTEST";
+testNode3.nodeType = "XDAISNODE";
+testNode3.usesDMA = true;
+testNode3.iDMAFxns = prog.extern("DMANTEST_TI_IDMA");
+testNode3.queueId0 = 2;
+testNode3.queueId1 = 2;
+testNode3.queueId2 = 3;
+testNode3.queueId3 = 4;
+//testNode3.queueId4 = 4;
+//testNode3.queueId5 = 4;
+//testNode3.queueId6 = 6; // Uncomment this line to check error catching.
+//testNode3.queueId7 = 0; // Uncomment this line to check error catching.
+}
+
+var testNode4 = bridge.NODE.create("testNode4");
+testNode4.nodeType = "TASKNODE";
+
+prog.gen("dmantest");

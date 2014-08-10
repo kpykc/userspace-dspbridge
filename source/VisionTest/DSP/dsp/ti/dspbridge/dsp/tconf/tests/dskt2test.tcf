@@ -1,0 +1,74 @@
+
+utils.importFile("bridgeutils.tci");
+
+bridgeutils.loadPlatform("innovator2430_bridge");
+
+
+//bridge.MEM.BIOSOBJSEG = prog.get("L1DSRAM");
+
+/**********************/
+
+var mem = new Array();
+
+var maxSegs = 11;
+
+
+// Create some new memory segments to map IALG memory to
+for (var i = 0; i < maxSegs; i++) {
+    var name = "MEM" + i;
+    var heapName = "MYMEM_" + i;
+
+    print("Creating MEM: " + name);
+
+    mem[i] = bridge.MEM.create(name);
+    mem[i].base = 0x20200000 + i * 0x4000;
+    mem[i].createHeap = true;
+    mem[i].len = 0x4000;
+    mem[i].heapSize = 0x4000;
+
+    // Give some heaps a label
+    if (i > 3) {
+        mem[i].enableHeapLabel = true;
+        mem[i].heapLabel = prog.extern(heapName);
+    }
+}
+
+bridge.DSKT2.DSKT2SEG = prog.get("EXTMEM");
+//bridge.DSKT2.DSKT2SEG = prog.get("CACHE_L1D");  // TEST!!
+
+/* Set IALG MEM requests to different values from default */
+bridge.DSKT2.DARAM0SEG = prog.get("L1DSRAM");
+bridge.DSKT2.DARAM1SEG = mem[0];
+bridge.DSKT2.DARAM2SEG = mem[1];
+
+//
+//  Set SARAM0 seg to same as EXTERNAL seg to check that allocations
+//  in IALG_SARAM0 will be in the external heap 
+//bridge.DSKT2.SARAM0SEG = prog.get("EXTMEM");
+bridge.DSKT2.SARAM0SEG = mem[3];
+bridge.DSKT2.SARAM1SEG = mem[4];
+bridge.DSKT2.SARAM2SEG = mem[5];
+
+bridge.DSKT2.IPROGSEG = mem[6];
+bridge.DSKT2.EPROGSEG = mem[7];
+bridge.DSKT2.EXTERNALSEG = mem[8];
+
+
+//bridge.DSKT2.IPROGSEG = prog.get("L1DSRAM");
+//bridge.DSKT2.EPROGSEG = prog.get("EXTMEM");
+
+//bridge.DSKT2.EXTERNALSEG = prog.get("EXTMEM");
+var EXTMEM = prog.module("MEM").instance("EXTMEM");
+EXTMEM.enableHeapLabel = true;
+EXTMEM.heapLabel = prog.extern("EXTMEM_HEAP");
+bridge.DSKT2.OWNDATASEG = prog.get("EXTMEM");
+//bridge.DSKT2.ALLOWEXTERNALSCRATCH = true;
+
+bridge.DSKT2.CACHEWBINVFXN = prog.extern("BCACHE_wbInv");
+
+bridge.DSKT2_daramScratch.scrGroup0ScratchSize = 256;
+bridge.DSKT2_saramScratch.scrGroup0ScratchSize = 512;
+bridge.DSKT2_daramScratch.scrGroup2ScratchSize = 128;
+bridge.DSKT2_saramScratch.scrGroup2ScratchSize = 64;
+
+prog.gen("dskt2test");

@@ -1,0 +1,23 @@
+/*
+ *  ======== qos.tci ========
+ *  TBD: QOS is currently disabled in the CDB.  Do we enable this module?
+ */
+
+var $$name = "QOS";
+
+var $$label = "Properties for DSP Bridge QOS module";
+
+/* Global properties for QOS object */
+var $$global = [
+        {
+            name : "ENABLEQOS",
+            val  : false,
+            label: "Enable QoS in base image",
+            type : "Boolean",
+        },
+            ];
+
+var $$template =
+    {
+        asmSource : "ti/dspbridge/dsp/tconf/modules/qos_asm.tpl"
+    };

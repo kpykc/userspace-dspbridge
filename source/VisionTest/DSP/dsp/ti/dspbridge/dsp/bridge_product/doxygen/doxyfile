@@ -1,0 +1,4 @@
+# in this file we can place custom fieds for the doxygen generation
+PREDEFINED  = _64P_ DBC_ASSERTS _DBG_
+
+

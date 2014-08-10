@@ -1,0 +1,13 @@
+--- userspace-dspbridge-prev/source/samples/mpu/src/dynreg/start.mk	2010-05-27 21:53:52.251711623 -0400
++++ userspace-dspbridge/source/samples/mpu/src/dynreg/start.mk	2010-05-27 22:52:40.671711601 -0400
+@@ -36,7 +36,10 @@
+ CMDDEFS_START =
+ 
+ 
++CROSS ?= $(CROSS_COMPILE)
++ifeq ($(CROSS),)
+ CROSS=arm-none-linux-gnueabi-
++endif
+ PROCFAMILY=OMAP_3430
+ 
+ 

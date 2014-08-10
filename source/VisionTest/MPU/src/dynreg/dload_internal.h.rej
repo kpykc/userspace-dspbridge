@@ -1,0 +1,11 @@
+--- userspace-dspbridge-prev/source/samples/mpu/src/dynreg/dload_internal.h	2010-05-27 21:53:52.251711623 -0400
++++ userspace-dspbridge/source/samples/mpu/src/dynreg/dload_internal.h	2010-05-27 22:53:17.461711179 -0400
+@@ -188,7 +188,7 @@
+ #ifdef TARGET_ENDIANNESS
+ #define TARGET_BIG_ENDIAN TARGET_ENDIANNESS
+ #else
+-#define TARGET_BIG_ENDIAN dlthis->big_e_target
++#define TARGET_BIG_ENDIAN 1
+ #endif
+ 
+ /*

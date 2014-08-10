@@ -1,0 +1,331 @@
+/*
+ *! ============================================================
+ *! Copyright 2004 by Texas Instruments Incorporated.
+ *! All rights reserved. Property of Texas Instruments Incorporated.
+ *! Restricted rights to use, duplicate or disclose this code are
+ *! granted through contract.
+ *! ============================================================
+ */
+/*
+ *  ======== bridgeutils.tci ========
+ *  Utility functions to setup bridge for multiple operating systems
+ *
+ */
+var bridgeutils = {};
+
+/* Global variable "bridge" will contain all programable objects */
+var bridge = {};
+
+/* Global variable for configuring FC component inside or outside bridge
+var fcComponent = true ;
+
+/*
+ *  ======== bridgeutils.loadPlatform ========
+ *
+ *  @param platform the name of the platform to initialize
+ *
+ *  @return program object.
+ */
+bridgeutils.loadPlatform = function (platform, fcFlag)
+{
+    var m = platform.match(/^innovator(.*)_(bridge$|bridgedll$)/);
+    
+    if (m == null) {
+        throw ("Unknown platform " + platform);
+    }
+    
+    if (m[1] != "2430" && m[1] != "3430")
+    {
+    	if ( fcFlag == true )
+    	{
+    	    fcComponent = true ;
+    	}
+    	else
+    	{
+    	    fcComponent = false ;
+    	}
+    }
+    else if ( fcFlag == false )
+    {
+       fcComponent = false ;
+    }
+    else
+    {
+       fcComponent = true ;
+    }
+        
+    /* locate the platform file */
+    var file = "ti/dspbridge/dsp/tconf/platforms/" + m[1] + ".tci";
+    var dynamicNodeCfg = (m[2] == "bridgedll");
+    var filename = utils.findFile(file);
+    
+    if (filename == null) {
+        throw "Cannot find platform file associated to: " + platform;
+    }
+
+    var platform = utils.loadCapsule(filename);
+    
+    /* setup all BIOS objects for this platform */
+    platform.setupBIOS();
+
+    // Enable DLL for BIOS segments
+    prog.module("GBL").ENABLEDLL = true;        
+
+    // setup Bridge
+    platform.setupBRIDGE(dynamicNodeCfg);
+
+    /* supress BIOS generated files for DLL case */
+    if (dynamicNodeCfg) {
+        dspbridge.genBiosFiles = false;
+    }
+
+    /* run this function again in case new objects have just been created */
+    utils.getProgObjs(prog, bridge);
+
+    return (prog);
+}
+
+/*
+ *  ======== bridgeutils.enableRTDX ========
+ *  Utility function to enable/disable RTDX in a configuration.
+ *
+ *  Note 1: While RTDX is enabled, the DSP CPU domain MUST NOT be idled,
+ *  else the DSP will hang.  This means we must disable CPU idle in
+ *  order to enable RTDX.
+ *
+ *  Note 2: While CPU idle is disabled, power management will not work.
+ *  Therefore, users must keep in mind that enabling RTDX will disable
+ *  Bridge power management.
+ */
+bridgeutils.enableRTDX = function(prog)
+{
+    /* Turn on RTDX */
+    bridge.RTDX.ENABLERTDX = 1;
+
+    bridge.GBL.ENABLEALLTRC = 1;    /* Enable trace event classes */
+    bridge.GBL.ENABLEINST = 1;      /* Enable Real Time Analysis */
+    bridge.HST.HOSTLINKTYPE = "RTDX";
+
+    /* Disable idling if not already disabled */
+    if (bridge.PWRM.IDLEDOMAINS) {
+        bridge.PWRM.ENABLE = true;
+        bridge.PWRM.IDLEDOMAINS = false;
+        bridge.PWRM.ENABLESLEEP = false;
+        bridge.PWRM.SLEEPUNTILRESTART = false;
+        bridge.PWRM.ENABLE = false;
+    }
+}
+
+/*
+ *  ======== bridgeutils.enableQOS ========
+ *  Utility function to enable/disable QOS in a configuration.
+ *
+ */
+bridgeutils.enableQOS = function(prog)
+{
+
+    /* Create a hook object for use in THRLOAD */
+    // var THRLOAD_hook = prog.module("HOOK").create("THRLOAD_hook");
+    // THRLOAD_hook.initFxn = prog.extern("THRLOAD_initHook");
+    // THRLOAD_hook.callSwitchFxn = true;
+    // THRLOAD_hook.switchFxn = prog.extern("THRLOAD_switchHook");
+    // THRLOAD_hook.createFxn = prog.extern("THRLOAD_createHook");
+
+    /*
+     * Added IDL function for the THRLOAD module if requested
+     */
+    // var idlThrLoad = prog.module("IDL").create("idlThrLoad");
+    // idlThrLoad.fxn = prog.extern("THRLOAD_idleFxn");
+    // idlThrLoad.calibration = true;
+
+    /* Bring in THRLOAD symbols and library */
+    bridge.QOS.ENABLEQOS = true;
+}
+
+/*
+ *  ======== bridgeutils.enablePowerManagement ========
+ *  Utility function to enable/disable DSP power management capability.
+ *
+ *  Note: RTDX MUST be disabled to enable DSP power management.
+ *
+ *  WARNING: DO NOT USE PWRM and PWR together.  They can only be used
+ *  independently of each other.
+ */
+bridgeutils.enablePowerManagement = function(prog)
+{
+    /*
+     * To enable power management, register DSP idle function in DSP/BIOS
+     * idle loop.
+     */
+
+     var chipType = prog.module("GBL").BOARDNAME;
+
+     if (bridge.PWRM != null) {
+         /* Set the properties for PWRM when enabled */
+         if ( (bridge.PWRM.ENABLE) == true && (chipType == "c64x+") )  {
+/*
+             print ("BIOS PWRM Power Management is enabled");  
+             // Enable PWRM Load Monitoring
+             prog.module("PWRM").IDLECPU = true;
+             // prog.module("PWRM").LOADENABLE = false;
+             // prog.module("PWRM").NUMSLOTS = 4;
+             // prog.module("PWRM").USECLKPRD = true;
+             // prog.module("PWRM").SCALING = true;
+             // prog.module("PWRM").SLOTHOOKFXN = prog.extern("_BPWR_predictor");
+             // prog.module("PWRM").CLKTICKSPERSLOT = 10;
+*/	        
+       if(bridge.BRIDGE.hibernationTimeout < bridge.BRIDGE.retentionTimeout)   
+        throw ("hibernation timeout value [" + bridge.BRIDGE.hibernationTimeout +
+    	        "] is less than  [" + bridge.BRIDGE.retentionTimeout + "]");
+
+        if (((bridge.BRIDGE.retentionTimeout) % (prog.module("PWRM").TIMERPERIOD))!=0) {        
+            print("Caution : Retention timeout value is not a multiple of TIMERPERIOD");
+            if ( bridge.BRIDGE.retentionTimeout < prog.module("PWRM").TIMERPERIOD)
+            	throw (" retention timeout value [" + bridge.BRIDGE.retentionTimeout +
+    	        	"] is less than TIMERPERIOD [" + prog.module("PWRM").TIMERPERIOD + "]");
+       	 }
+	 if (((bridge.BRIDGE.hibernationTimeout) % (prog.module("PWRM").TIMERPERIOD))!=0) {
+           print("Caution : Hibernation timeout value is not a multiple of TIMERPERIOD");	
+	   if (bridge.BRIDGE.hibernationTimeout < prog.module("PWRM").TIMERPERIOD)
+            	throw (" hibernation timeout value [" + bridge.BRIDGE.hibernationTimeout +
+    	        	"] is less than TIMERPERIOD [" + prog.module("PWRM").TIMERPERIOD + "]");
+    	 }    	
+                    
+             /* Turn off RTDX. */
+             bridge.RTDX.ENABLERTDX = 0;
+             bridge.GBL.ENABLEALLTRC = 0;
+             bridge.GBL.ENABLEINST = 0;
+
+             /* Enabling the Bridge IDLE Function with PWRM module */ 
+             // bridge.IDL_Bridge = bridge.IDL.create("IDL_Bridge");
+             // bridge.IDL_Bridge.fxn = prog.extern("PWR_idleCPUDomain");
+
+             //bridge.IDL_Bridge = bridge.IDL.create("IDL_Bridge");
+             //bridge.IDL_Bridge.fxn = prog.extern( "PWR_idlePreprocess" );
+             bios.PWRM.IDLEFXN = prog.extern( "PWR_idlePreprocess" );
+             bios.TSK.instance("TSK_idle").stackSize = 8192;          
+         }
+     }
+     else {
+         if ((chipType == "omap1510") ||
+             (chipType == "omap2420") ||
+             (chipType == "omap1035") ||
+             (chipType == "c64x+"))  {
+             
+             print ("Power Management is enabled");
+             /* Turn off RTDX. */
+             bridge.RTDX.ENABLERTDX = 0;
+             bridge.GBL.ENABLEALLTRC = 0;
+             bridge.GBL.ENABLEINST = 0;
+
+             bridge.IDL_Bridge = bridge.IDL.create("IDL_Bridge");
+             bridge.IDL_Bridge.fxn = prog.extern("PWR_idleCPUDomain");
+         }
+         else {
+             print ("Warning: Power Management not supported on this platform: "
+                     + chipType);
+         }
+     }
+}
+
+/*
+ *  ======== bridgeutils.enablePWRMLoadMonitor ========
+ *  Utility function to enable/disable QOS in a configuration.
+ *
+ */
+bridgeutils.enablePWRMLoadMonitor = function(prog)
+{
+     var chipType = prog.module("GBL").BOARDNAME;
+     
+     if ( (bridge.PWRM.ENABLE) == true && (chipType == "c64x+") )  {
+/*
+          prog.module("PWRM").LOADENABLE = true;
+          prog.module("PWRM").NUMSLOTS = 5;
+          prog.module("PWRM").USECLKPRD = false;
+            
+          prog.module("PWRM").USETIMER = 1;
+          prog.module("PWRM").TIMERID = "Timer 6";
+          prog.module("PWRM").TIMERBASEADDR = 0x11801000; 
+          prog.module("PWRM").TIMERINPUTCLK = 32;    // KHz
+          prog.module("PWRM").TIMERPERIOD = 10;
+          prog.module("PWRM").TIMERINTR = prog.get("HWI_INT15");
+          prog.module("PWRM").SCALING = false;
+          // prog.module("PWRM").CLKTICKSPERSLOT = 10;
+          prog.module("PWRM").SLOTHOOKFXN = prog.extern("_BPWR_predictor");
+*/
+     }
+     else {
+          print ("Warning: PWRM Load Monitor not supported on this platform: "
+                          + chipType);
+     }
+}
+
+/*
+ *  =========== bridgeutils.addFcConfig ============
+ *  Utility function to add Framework Components.
+ *  
+ */
+bridgeutils.addFcConfig = function ()
+{
+    var chipType = environment["config.chipType"]; 
+    
+    print ("Adding Framework Components for platform: "+ chipType);
+
+    dspbridge.register("ti/sdo/fc/dskt2/dskt2.tci");
+    
+    if ( (chipType == "1510")||(chipType == "v1030") )
+    {
+        dspbridge.register("ti/sdo/fc/dman/dman.tci");
+    }    
+    else if ( (chipType == "24xx") || (chipType == "v1035") ) 
+    {
+    	dspbridge.register("ti/sdo/fc/dman/dman24xx.tci");
+    	bridge.BRIDGE.includeDman = true;
+    	bridge.DMAN = dspbridge.module("DMAN24XX");
+    	bridge.DSKT2 = dspbridge.module("DSKT2");
+    }
+    else
+    {
+        dspbridge.register("ti/sdo/fc/dman3/dman3.tci");
+        
+        bridge.DMAN3 = dspbridge.module("DMAN3");
+
+        bridge.DSKT2 = dspbridge.module("DSKT2");
+
+    	bridge.DMAN3.INTERNALHEAP = prog.get("L1DSRAM");
+
+    	bridge.DMAN3.EXTERNALHEAP = prog.module("MEM").instance("EXTMEM");
+
+    	bridge.DSKT2.CACHEWBINVFXN = prog.extern("BCACHE_wbInv");
+
+    	bridge.BRIDGE.includeDman = true;
+    }
+}
+
+/*
+ *  ======== bridgeutils.getSHM ========
+ *  returns the platform specific TIOMAP SHM object. This function is useful 
+ *  to write generic code since the name of the SHM object differs from one 
+ *  platform to another. E.g. bridgeutils.getSHM().TRACESIZE
+ */
+bridgeutils.getSHM = function ()
+{
+    var mods = dspbridge.modules();
+    var count = 0;
+    for (var i = 0 ; i < mods.length ; i++) {
+        if (mods[i].name.match(/.*SHM/)) {
+            count++;
+            var name = mods[i].name;
+        }
+    }   
+
+    if (count == 0) {
+        throw ("SHM module is not loaded!");
+    }
+    else if (count > 1) {
+        throw ("Multiple SHM modules loaded!");
+    }
+    
+    return dspbridge.module(name);
+}
+

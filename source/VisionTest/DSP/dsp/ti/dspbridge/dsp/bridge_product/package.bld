@@ -1,0 +1,18 @@
+/*
+ *! ============================================================
+ *! Copyright 2004 by Texas Instruments Incorporated.
+ *! All rights reserved. Property of Texas Instruments Incorporated.
+ *! Restricted rights to use, duplicate or disclose this code are
+ *! granted through contract.
+ *! ============================================================
+ */
+
+// Make a list of targets to be used in import.mak.
+var targets = "";
+
+for (var i = 0; i < Build.targets.length; i++) {
+    targets += (i ? "," : "") + Build.targets[i].name;
+}
+
+Pkg.makePrologue = 
+    "TARGETS = " + targets + "\n" + "include import.mak";

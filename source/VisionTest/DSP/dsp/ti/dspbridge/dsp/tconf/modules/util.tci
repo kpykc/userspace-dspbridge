@@ -1,0 +1,15 @@
+/*
+ *  ======== util.tci ========
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var $$name = "UTIL";
+
+var $$label = "Properties for DSP Bridge UTIL module";
+
+var $$template = 
+    {
+        linker    : "ti/dspbridge/dsp/tconf/modules/util_cmd.tpl",
+    };
+   

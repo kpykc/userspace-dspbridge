@@ -1,0 +1,63 @@
+#ifndef OPTIC
+#define OPTIC
+
+typedef struct flowPoint
+{
+	short x;
+	short y;
+	short prev_x;
+	short prev_y;
+	short dx;
+	short dy;
+	short new_dx;
+	short new_dy;
+//	double P[16]; // represents a diagonal 4x4 matrix
+//	double Q[16]; // represents a diagonal 4x4 matrix
+//	double R[16]; // represents a diagonal 4x4 matrix
+//	double K[16]; // represents a diagonal 4x4 matrix
+//	int n_observations;
+} flowPoint;
+
+typedef struct detectedPoint
+{
+	short x;
+	short y;
+} detectedPoint;
+
+int getMaximum(int * Im);
+int getMinimum(int * Im);
+void getGradientPixelWH(unsigned char *frame_buf, int x, int y, int* dx, int* dy);
+void getSimpleGradient(unsigned char* frame_buf, int* DX, int* DY);
+void multiplyImages(int* ImA, int* ImB, int* ImC, int width, int height);
+inline void getImageDifference(int* ImA, int* ImB, int* ImC, int width, int height);
+int calculateError(int* ImC, int width, int height);
+void printIntMatrix(int* Matrix, int width, int height);
+void printIntMatrixPart(int* Matrix, int width, int height, int n_cols, int n_rows, int x_center, int y_center);
+void smoothGaussian(int* Src, int* Dst);
+void getHarris(int* DXX, int* DXY, int* DYY, int* Harris);
+int findLocalMaxima(int* Harris, int max_val, int MAX_POINTS, int* p_x, int* p_y, int suppression_distance_squared, int* n_found_points);
+void excludeArea(unsigned int* Mask, int x, int y, int suppression_distance_squared);
+void thresholdImage(int* Harris, int max_val, int max_factor);
+int findCorners(unsigned char *frame_buf, int MAX_POINTS, int *x, int *y, int suppression_distance_squared, int* n_found_points, int mark_points, int imW, int imH);
+int findActiveCorners(unsigned char *frame_buf, unsigned int GRID_ROWS, int ONLY_STOPPED, int *x, int *y, int* active, int* n_found_points, int mark_points, int imW, int imH);
+void getSubPixel(int* Patch, unsigned char* buf, int center_x, int center_y, int half_window_size, int subpixel_factor);
+int calculateG(int* G, int* DX, int* DY, int half_window_size);
+void getGradientPatch(int* Patch, int* DX, int* DY, int half_window_size);
+int getSumPatch(int* Patch, int size);
+extern void showFlow(unsigned char * frame_buf, short* x, short* y, short* status, int n_found_points, short* new_x, short* new_y, int imgW, int imgH);
+int opticFlowLK(unsigned char * new_image_buf, unsigned char * old_image_buf, short* p_x, short* p_y, int n_found_points, int imW, int imH, short* new_x, short* new_y, short* status, int half_window_size, int max_iterations);
+void MatMul(float* Mat1, float* Mat2, float* Mat3, int MatW, int MatH);
+void MatVVMul(float* MVec, int** Mat, float* Vec, int MatW, int MatH);
+void ScaleAdd(float* Mat3, float* Mat1, float Scale, int* Mat2, int MatW, int MatH);
+int dsvd(float **a, int m, int n, float *w, float **v);
+void svbksb(float **u, float *w, float **v, int m, int n, float *b, float *x);
+void svdSolve(float *x_svd, int **u, int m, int n, int *b);
+void fitLinearFlowField(float* pu, float* pv, float* divergence_error, int *x, int *y, int *dx, int *dy, int count, int n_samples, float* min_error_u, float* min_error_v, int n_iterations, float error_threshold, int *n_inlier_minu, int *n_inlier_minv);
+void extractInformationFromLinearFlowField(float *divergence, float *mean_tti, float *median_tti, float *d_heading, float *d_pitch, float* pu, float* pv, int imgWidth, int imgHeight, float FPS);
+void quick_sort (float *a, int n);
+void CvtYUYV2Gray(unsigned char *grayframe, unsigned char *frame, int imW, int imH);
+void setPointsToFlowPoints(struct flowPoint flow_points[], struct detectedPoint detected_points[], int *flow_point_size, short *count, short MAX_COUNT);
+void findPoints(unsigned char *gray_frame, unsigned char *frame, short imW, short imH, short *count, short max_count, short MAX_COUNT, struct flowPoint flow_points[],int *flow_point_size, struct detectedPoint detected_points[]);
+void trackPoints(unsigned char *frame, unsigned char *prev_frame, short imW, short imH, short *count, short max_count, short MAX_COUNT, struct flowPoint flow_points[],int *flow_point_size, struct detectedPoint detected_points[], short *x, short *y, short *new_x, short *new_y, short *dx, short *dy, short *status);
+void analyseTTI(float *divergence, int *x, int *y, int *dx, int *dy, int *n_inlier_minu, int *n_inlier_minv, int count, int imW, int imH);
+#endif

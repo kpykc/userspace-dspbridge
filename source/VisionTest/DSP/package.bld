@@ -1,0 +1,310 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+//
+//  ======== package.bld ========
+//  Build script for bridge samples package.
+//
+
+// Bridge configuration
+// nd: we don't use that now because of a RTSC issue which should be fixed
+//     soon. basically in some cases RTSC will ignore the "tcopts" and thus the
+//     power management is not enabled into the base image (see *.tcf)
+var powerManagement = true;
+
+var buildPlatforms = {
+	C55_large:	["1510", "24xx", "v1030"],
+	// C64P:		["2430", "3430"],
+	C64P:		["3430"],
+};
+
+var libExt = { 
+    C55_large: [".a55L"],
+    C64P:      [".a64P"],
+};
+
+// Platform specific assembler options
+var platAOPTS = {
+    "1510"  : " -mg",		        // support algebraic assembly
+    "v1030" : " -mg",		        // support algebraic assembly
+    "24xx"  : " -mg -d_2420_",
+    "2430"  : "",
+    "3430"  : " -D_3430_",
+};
+
+// definition of programs to build
+var programs = [
+    {
+        name:    "monitor",
+        sources: [ "main", "dynref" ]
+    },
+    {
+        name:    "ddspbase",
+        sources: [ "main", "pingCreate", "pingExecute", "pingDelete",
+                   "pinglib", "pingdata", "strmcopyCreate",
+                   "strmcopyExecute", "strmcopyDelete", "iscale",
+                   "scale_ti", "scale_ti_vtab", "ssktcrea", "ssktexec",
+                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute"]
+    },
+    {
+        name:    "dynbase",
+        sources: [ "main", "dlmodules", "dynref" ]
+    },
+
+    /* Keep these around for testing, but don't generate unless we need them
+    {
+        name:    "cnxdiag",
+        sources: [ "main", "cnxdiag" ]
+    },
+    {
+        name:    "dynbaseLowmem",
+        sources: [ "main", "dlmodules", "dynref" ]
+    },
+    {
+        name:    "ddspbaseMisalign",
+        sources: [ "main", "pingCreate", "pingExecute", "pingDelete",
+                   "pinglib", "pingdata", "strmcopyCreate",
+                   "strmcopyExecute", "strmcopyDelete", "iscale",
+                   "scale_ti", "scale_ti_vtab", "ssktcrea", "ssktexec",
+                   "ssktdele", "zcmsgCreate", "zcmsgDelete", "zcmsgExecute", "dpdma", "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute"]
+    },
+    */
+];
+
+var programs64 = [
+	/*{
+        name:    "monitor",
+        sources: [ "main", "dynref" ]
+    },*/
+    {
+        name:    "ddspbase",
+        sources: [ "main", "visionCreate", "visionExecute", "visionDelete", "pingCreate", "pingExecute", "pingDelete", "pingdata", "pinglib", "opticflow_sobel_2", "calcFlowXYZ"]
+    }
+];
+
+var platProgs = {
+    C55_large : programs,
+    C64P      : programs64,  /* So we don't have to build all for 64P yet */
+};
+
+// definition of components (libraries) to build
+var components = {
+//For example
+/*    "dmmcopydyn" : {
+        configuration : {
+            nodeName:  "dmmcopydyn",
+            tcfName:   "dmmcopydyn.tcf",
+            chartName: undefined,
+        },
+        libraries : [
+            {
+                name:    "dmmcopydyn",
+                type:    "node",
+                sources: [ "dmmcopyCreate", "dmmcopyDelete", "dmmcopyExecute" ]
+            },
+        ],
+    }, */
+};
+
+var vcpuOpts = " -vcpu:2 -vcpu:3 ";
+
+var DEFOPTS = " -DDBC_ASSERT=0 ";
+var COPTS = " -pden";
+
+// load the doffbuild package
+var Doff = xdc.useModule("ti.dspbridge.dsp.doffbuild.Doff");
+
+// Try to free up windows environment space.
+Pkg.makePrologue += "unexport MAKEFILE_LIST\n";
+
+// We use the bios, dais and bridge_product packages.
+// Place config at beginning to get right 1510 .tcp
+// fixme: remove this
+Pkg.uses = [
+    "ti/dspbridge/dsp/tconf",
+    "ti/dspbridge/dsp/bpwr",
+    "ti/bios/include",
+    "ti/xdais",
+    "ti/dspbridge/dsp/bridge_product/exports/include",
+    "ti/sdo/fc/dskt2",
+    "ti/sdo/fc/dman3",
+    "ti/sdo/fc/acpy3",
+    "ti/dspbridge/dsp/ldrv/newdev"
+    ];
+
+// Use this instead
+var tcfImportPath = [
+    "ti/dspbridge/dsp/tconf",
+    ];
+
+var linkOpts ;
+var DSKT2_LIBS = fcDir + "/ti/sdo/fc/dskt2/dskt2d";
+
+print("DSKT2 DIR ="+ DSKT2_LIBS);
+
+var DMAN3_LIBS = fcDir + "/ti/sdo/fc/dman3/dman3d";
+
+print("DMAN3 DIR ="+ DMAN3_LIBS);
+var ACPY3_LIBS = fcDir + "/ti/sdo/fc/acpy3/acpy3d";
+print("ACPY3 DIR ="+ ACPY3_LIBS);
+
+// loop over all targets
+for (var i = 0; i < Build.targets.length; i++) {
+    var targ = Build.targets[i];
+    var plat = targ.platform;	// Use the target's default platform.
+
+    print("building for target " + targ.name + " ...");
+
+    // add DOFF rules for the target
+    Doff.addTarget( targ );
+
+    // note: could use "bridge_release" profile for dlls or objects
+
+    // output directory for the DLLs
+    var dllOutDir = ""; // or just ""
+
+    for (c in components) {
+        var component = components[c];
+        print( "->.bld: processing component " + c );
+
+        for (k = 0; k < buildPlatforms[targ.name].length; k++) {
+
+            var libsuffix = "_" + buildPlatforms[targ.name][k];
+
+            // add configuration
+            print( "->.bld: adding configuration " );
+            var config = Doff.addConfiguration( {
+                chipType      : buildPlatforms[targ.name][k],
+                nodeName      : component.configuration.nodeName + libsuffix,
+                target        : targ,
+                tcfName       : component.configuration.tcfName,
+                tcfImportPath : tcfImportPath,
+                chartName     : component.configuration.chartName,
+            } );
+
+            // add dlls
+            for (var j = 0; j < component.libraries.length; j++) {
+                var lib = component.libraries[j];
+                var dll;
+
+                if (((buildPlatforms[targ.name][k] == "24xx")  ||
+                     (buildPlatforms[targ.name][k] == "v1030") ||
+                     (buildPlatforms[targ.name][k] == "3430")) &&
+                    (lib.type != "node")) {
+
+                    /*
+                     * Don't regenerate deplibs + phaselibs for 24xx and v1030,
+                     * since they will use the 1510 generated versions, which
+                     * contain the same information, built for the c55
+                     */
+                    continue;
+                }
+
+                print( "->.bld: adding " + lib.type + " lib: " + lib.name +
+                    libsuffix);
+
+                dll = Doff.addDll( {
+                    dllName                : dllOutDir + lib.name + libsuffix,
+                    dllType                : lib.type,
+                    configuration          : config,
+                    skipXdcConfigStep      : true,
+                    additionalLinkCmdFiles : (lib.name == "scaledynlib") &&
+                        ((buildPlatforms[targ.name][k] == "2430") ||
+                         (buildPlatforms[targ.name][k] == "3430")) ?
+                        undefined : lib.optLnkCmd,
+                    buildParams :
+                        {
+                            profile: "bridge_release",
+                            copts : ((buildPlatforms[targ.name][k] != "2430") &&
+                                     (buildPlatforms[targ.name][k] != "3430")) ?
+                                    vcpuOpts : undefined,
+                            aopts : ((buildPlatforms[targ.name][k] != "2430") &&
+                                     (buildPlatforms[targ.name][k] != "3430")) ?
+                                    vcpuOpts : undefined,
+                            defs  : "-D_" + buildPlatforms[targ.name][k] + "_"
+                        },
+                } ); // see func. definition for more build options
+
+                dll.addObjects( lib.sources );
+            }
+        }
+    }
+
+    // Process executables.
+    if (platProgs[targ.name] != null) {
+        var progs = platProgs[targ.name];
+        for (j = 0; j < progs.length; j++) {
+            if (buildPlatforms[targ.name] == null) {
+                continue;
+            }
+
+            for (k = 0; k < buildPlatforms[targ.name].length; k++) {
+                var prog = progs[j];
+                var platAopts = (buildPlatforms[targ.name][k] != null) ?
+                    platAOPTS[buildPlatforms[targ.name][k]] : "";
+
+                if (fcInside == "FALSE") {
+                linkOpts = " -c " + "-l" + DSKT2_LIBS+libExt[targ.name][0] +
+                           " -l" + DMAN3_LIBS+libExt[targ.name][0] + " -l" +
+                           ACPY3_LIBS+libExt[targ.name][0] ;
+                }
+                else {
+                linkOpts = "-c " ;
+                }
+                print("adding " + prog.name +
+                        " (" + buildPlatforms[targ.name][k] + ") flavor...");
+
+                // add executable (that will be converted to DOFF)
+                var exe = Doff.addExecutable(
+                    prog.name + "_tiomap" +
+                    buildPlatforms[targ.name][k], targ, plat, {
+                        aopts: platAopts,
+
+                        //nd: to be uncommented when RTSC bug is fixed
+                        // tcopts: (powerManagement == true) ?
+                        //          "-Dconfig.powerManagement=1" : "" ,
+
+                        // RTSC "tcopts" bug is fixed in BIOS 5.20, broken in
+                        // 5.10 (as noted above).  See .tcf files for
+                        // workaround details
+                        
+                        tcopts:  "-Dconfig.chipType=" +
+                                    buildPlatforms[targ.name][k],
+                        lopts:  linkOpts,                       
+                        
+                        // Would like to set the profile to "bridge_release",
+                        // but the -pdr option causes numerous warnings
+                        // when compiling the *cfg.s55 files.
+
+                        defs  : "-D_" + buildPlatforms[targ.name][k] + "_",
+                        profile: "bridge_release",
+                        cfgScript: prog.name + ".tcf",
+                        cfgArgs: "{chipType: \"" +
+                                    buildPlatforms[targ.name][k] + "\"}"
+                    });
+
+                // Add -pdr for remarks and -pdn to gen numeric remark IDs.
+                // (Note, we don't add it to the .addExecutable call above b/c
+                // the RTSC generated sources are noisy with -pdr.
+                //exe.addObjects( prog.sources, { copts: "", defs: "" } );
+                exe.addObjects( prog.sources, { copts: "" } );
+            }
+        }
+    }
+}
+
+// finish DOFF build addition
+Doff.complete();

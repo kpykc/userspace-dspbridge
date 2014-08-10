@@ -1,0 +1,168 @@
+#
+#   ======== samplemakefile ========
+#   Top level samplemakefile for building the DSP source project.
+#
+#   Build overview:
+#       * Build bridge samples
+#
+#   Build sequence (PC-MKS / Linux / DOS):
+#      1. gmake -f samplemakefile .clean
+#      2. gmake -f samplemakefile .bridge_samples
+#
+
+
+# Define version of trees to import from.  
+include product.mak
+
+# This ensures that sm-make only calls us once.  We handle DEBUG flags
+# internally on our own
+DEBUG = 0
+
+ifndef BUILD_HOST_OS
+    ifeq ($(OS),Windows_NT)
+        BUILD_HOST_OS = Windows
+    else 
+    ifeq ($(shell uname -s),Linux)
+        BUILD_HOST_OS = Linux
+    else
+        $(error Unable to determine Host Operating System BUILD_HOST_OS not set)
+    endif
+    endif
+endif
+
+ifndef DEPOT
+    ifneq ($(BUILD_HOST_OS), Windows)
+	DEPOT = /home/maxime/tidsp
+    else
+        DEPOT = c:/mytools
+    endif
+endif
+
+ifneq ($(BUILD_HOST_OS), Windows)
+    export KSH = /bin/ksh
+endif
+
+ifeq ($(FC_PACKAGE), TRUE)
+    FC_DIR = $(CURDIR)/DSP/dsp/bdsptools/framework_components_$(FC_VER)/packages-bld
+else
+    FC_DIR = $(DEPOT)/framework_components_$(FC_VER)/packages-bld
+endif
+
+BRIDGETOOL_DIR = $(CURDIR)/DSP/dsp/bdsptools
+SABIOS_DIR = $(DEPOT)/bios_$(SABIOS_VER_2)/packages
+SABIOS_ROOT_DIR = $(DEPOT)/BIOS-$(SABIOS_VER)
+DD_XDCDIR = $(DEPOT)/bios_$(SABIOS_VER_2)/xdctools
+DD_XDC = $(DD_XDCDIR)/xdc
+ifndef TARGETDIR
+    TARGETDIR = $(CURDIR)/target
+endif
+# we use XDC args to pass argument to the config.bld so that config.bld is 
+# generic as much as possible
+DD_XDC_ARGS = XDCARGS="DEPOT=$(DEPOT)\
+                       CGT55_VER=$(CGT55_VER)\
+                       CGT6X_VER=$(CGT6X_VER)\
+                       TESTBUILDTYPE=$(TESTBUILDTYPE)\
+                       IPC=$(IPC)\
+                       FC_DIR=$(FC_DIR)\
+                       FC_PACKAGE=$(FC_PACKAGE)\
+		       L_MONITOR=$(L_MONITOR)\
+		       SCALING=$(SCALING)"
+	
+
+# When possible, build things in parallel.  An important note WRT this project
+# is that DSP-side TI codegen tools don't support parallel builds.
+DSP_JOBS =
+
+# build verbose-ly, using the appropriate config.bld, and setting the package
+# path to include the imports directory (where packages are exploded into)
+DD_XDCOPTIONS = XDCOPTIONS=v XDCBUILDCFG=$(CURDIR)/DSP/config.bld \
+    XDCPATH=$(SABIOS_DIR)\;$(CURDIR)/DSP/dsp/ti/dspbridge/dsp/tconf\;$(CURDIR)/DSP/dsp\;$(CURDIR)/DSP\;$(CURDIR)/DSP/dsp/ti/dspbridge/dsp\;$(DEPOT)/framework_components_$(FC_VER)/fctools/packages\;$(BRIDGETOOL_DIR)/packages\;$(FC_DIR)\; \
+    XDCTARGETS="$(XDCTARGETS)"
+
+BRIDGE_EXPORT_PACKAGES = DSP/dsp/ti/dspbridge/dsp/bridge_product
+
+SAMPLE_PACKAGES = $(CURDIR)/DSP
+
+DLL_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dll64P)
+DOF_FILES=$(wildcard $(SAMPLE_PACKAGES)/*.dof64P)
+
+.all: .bridge_samples	.install
+
+.tools: .bridge_tools
+
+.clean: .clean_samples
+
+ifeq ($(BUILD_HOST_OS), Windows)
+    MKDIR = $(DD_XDCDIR)/bin/mkdir
+	RM = $(DD_XDCDIR)/bin/rm
+	TOUCH = $(DD_XDCDIR)/bin/touch
+else
+    MKDIR = mkdir
+	RM = rm
+	TOUCH = touch
+	CP = cp
+endif
+
+.bridge_tools: DSP/dsp/bdsptools/bridge-tools.tar
+	@echo "Extracting bridge-tools.tar"
+	$(RM) -rf DSP/dsp/bdsptools/packages
+	$(MKDIR) -p DSP/dsp/bdsptools/packages
+	$(DD_XDCDIR)/bin/tar -C DSP/dsp/bdsptools/packages -xvf DSP/dsp/bdsptools/bridge-tools.tar
+	$(TOUCH) .bridge_tools
+
+.bridge_exports: .bridge_tools 
+	$(DD_XDC) $(DD_XDC_ARGS) $(DD_XDCOPTIONS) $(DSP_JOBS) -P $(BRIDGE_EXPORT_PACKAGES)
+
+.bridge_samples: .fc_tar .bridge_tools
+	$(DD_XDC) $(DD_XDC_ARGS) $(DD_XDCOPTIONS) $(DSP_JOBS) -P $(SAMPLE_PACKAGES)
+
+# extract FC TAR file
+.fc_tar: DSP/dsp/bdsptools/fc.tar
+	@echo "Extracting FC TAR file"
+	-$(RM) -rf DSP/dsp/bdsptools/framework_components_$(FC_VER)
+	$(DD_XDCDIR)/bin/tar -C DSP/dsp/bdsptools -xvf DSP/dsp/bdsptools/fc.tar
+	$(TOUCH) .fc_tar
+
+# The next two rules are not used by Bridge directly. They can however
+# be used to clean and rebuild FC TAR filec content
+.fc: .fc_tar .bridge_tools
+	$(DD_XDC) $(DD_XDC_ARGS) $(DD_XDCOPTIONS) $(DSP_JOBS) -PR $(FC_DIR)
+
+# The next command is used to clean the samples executables
+.clean_samples:
+	$(DD_XDC) $(DD_XDC_ARGS) $(DD_XDCOPTIONS) clean $(DSP_JOBS) -P \
+		$(SAMPLE_PACKAGES) 
+	$(RM) -f DSP/.xdcenv.mak .bridge_tools .fc_tar
+	$(RM) -rf DSP/dsp/bdsptools/framework_components_1_10_04/
+	$(RM) -rf DSP/dsp/bdsptools/packages/
+
+.install:
+	if test ! -d $(TARGETDIR)/DSP/; \
+	then $(MKDIR) -p $(TARGETDIR)/DSP/; \
+	fi
+ifneq ($(DLL_FILES),)
+	$(CP) -f $(DLL_FILES) $(TARGETDIR)/DSP/
+endif
+ifneq ($(DOF_FILES),)
+	$(CP) -f $(DOF_FILES) $(TARGETDIR)/DSP/
+endif
+
+#.execute_version_script: version.ksh $(VERSION_FILE)
+#	@$(KSH) $< $(VERSION_FILE)
+#	@echo "Exporting version files to ./include"
+#	@cp -f ./verstamp.rc ./include
+#	@mv ./verstamp.h ./include
+
+# for debug purpose only
+.info:
+	@echo DEPOT             = "$(DEPOT)"
+	@echo BRIDGETOOL_DIR    = "$(BRIDGETOOL_DIR)"
+	@echo SABIOS_DIR        = "$(SABIOS_DIR)"
+	@echo BUILD_HOST_OS     = "$(BUILD_HOST_OS)"
+	@echo DD_XDCDIR         = "$(DD_XDCDIR)"
+	@echo DD_XDCOPTIONS     = "$(DD_XDCOPTIONS)"
+	@echo DD_XDC_ARGS       = "$(DD_XDC_ARGS)"
+	@echo XDCTARGETS        = "$(XDCTARGETS)"
+	@echo BRIDGE_PACKAGES   = "$(BRIDGE_PACKAGES)"
+	@echo FC_VER	        = "$(FC_VER)"
+	@echo FC_DIR	        = "$(FC_DIR)"

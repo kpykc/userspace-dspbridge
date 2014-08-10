@@ -1,0 +1,1 @@
+/home/maxime/tidsp/bios_5_33_04/xdctools/tconf -Dconfig.importPath="/home/maxime/tidsp/userspace-dspbridge/source/dsp/ti/dspbridge/dsp/tconf;/home/maxime/tidsp/bios_5_33_04/packages;/home/maxime/tidsp/bios_5_33_04/xdctools/packages" config.tcf

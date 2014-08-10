@@ -1,0 +1,46 @@
+/*
+ *  Copyright 2001-2008 Texas Instruments - http://www.ti.com/
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ *  ======== dmmcopy.tci ========
+ *
+ */
+
+// add instance NODE.dmmcopy_ti
+dmmcopy_ti = bridge.NODE.create("dmmcopy_ti");
+
+dmmcopy_ti.uuid = "28BA464F_9C3E_484E_990F_48305B183848";
+dmmcopy_ti.name = "DMMCOPY_TI";
+dmmcopy_ti.nodeType = "TASKNODE";
+dmmcopy_ti.stackSize = 1024;
+dmmcopy_ti.messageDepth = 3;
+dmmcopy_ti.timeout = 1000;
+dmmcopy_ti.createFxn = "DMMCOPY_TI_create";
+dmmcopy_ti.executeFxn = "DMMCOPY_TI_execute";
+dmmcopy_ti.deleteFxn = "DMMCOPY_TI_delete";
+
+if (dynamicNode) {
+    dmmcopy_ti.loadType = "Dynamic";
+    dmmcopy_ti.splitPhases = splitPhases;
+    if (chipType != "2430" && chipType != "3430") {
+            dmmcopy_ti.createCodeSeg = bridge.DYN_EXTERNAL;
+            dmmcopy_ti.createDataSeg = bridge.DYN_EXTERNAL;
+            dmmcopy_ti.executeCodeSeg = bridge.DYN_EXTERNAL;
+            dmmcopy_ti.executeDataSeg = bridge.DYN_EXTERNAL;
+            dmmcopy_ti.deleteCodeSeg = bridge.DYN_EXTERNAL;
+            dmmcopy_ti.deleteDataSeg = bridge.DYN_EXTERNAL;
+    }
+}

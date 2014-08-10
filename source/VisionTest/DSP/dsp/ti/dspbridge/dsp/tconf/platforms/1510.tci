@@ -1,0 +1,32 @@
+
+/* Load "base" platform file, since most c55 devices have the same 
+   properties
+*/
+var file = "ti/dspbridge/dsp/tconf/platforms/c55.tci";
+var filename = utils.findFile(file);
+
+if (filename == null) {
+    throw "Cannot find platform file: " + file;
+}
+
+var plat = utils.loadCapsule(filename);
+
+function setupBIOS () 
+{
+    /* Load C55 common config */
+    plat.setupBIOS("1510");
+}
+
+function setupBRIDGE (dll) 
+{
+    /* Load C55 common config */   
+    plat.setupBRIDGE("1510", dll);
+
+    /* 1510 specific config */
+
+    if (!dll) {
+        // Use Mailbox 1 for ISR
+        bridge.TIOMAP1510SHM.MBXID = 1;
+    }
+}
+

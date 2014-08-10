@@ -1,0 +1,188 @@
+
+/*
+ *  ======== bridge.tci ========
+ *  DSP Bridge global properties.
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var $$name = "BRIDGE";
+
+var $$label = "Properties for DSP Bridge global configuration";
+
+/* Global properties for BRIDGE object */
+var $$global = [
+        {
+            name : "BRIDGELIB",
+            val  : false,
+            label: "Generate Bridge library",
+            type : "Boolean",
+        },
+        {
+            name : "enableInst",
+            val  : false,
+            label: "Enable Bridge instrumentation",
+            type : "Boolean",
+        },
+        {
+            name : "enableDebug",
+            val  : false,
+            label: "Include debug Bridge library variants",
+            type : "Boolean",
+            test : ["setBridgeDebug"],
+        },
+        {
+            name : "dynamicLoad",
+            val  : true,
+            label: "Bridge dynamic loading",
+            type : "Boolean",
+        },
+        {
+            name : "includeDman",
+            val  : false,
+            label: "Include Bridge DMAN library",
+            type : "Boolean",
+        },
+        {
+            name : "C64P",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAP2430",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAP3430",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAP24XX",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAPV1035",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAP1510",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "TIOMAP1510ZC",
+            val  : false,
+            label: "Configuration parameter (Zero-copy msg used)",
+            type : "Boolean",
+        },
+        {
+            name : "TINODEHEAP",
+            val  : false,
+            label: "Configuration parameter for NODE private heap feature",
+            type : "Boolean",
+        },
+        {
+            name : "fcInsideBridge",
+            val  : false,
+            label: "FC Package inside Bridge",
+            type : "Boolean",
+        },
+        {
+            name : "includeMipcLib",
+            val  : false,
+            label: "Configuration parameter",
+            type : "Boolean",
+        },
+        {
+            name : "retentionTimeout",
+            val  : 0,
+            label: "DSP Inactivity Timeout (msec) for Retention Transition",
+            type : "Integer",
+        },
+	  {
+            name : "hibernationTimeout",
+            val  : 5000,
+            label: "DSP Inactivity Timeout (msec) for Hibernate Transition",
+            type : "Integer",
+        },
+        ];
+
+var $$template = 
+    {
+        linker    : "ti/dspbridge/dsp/tconf/modules/bridge_cmd.tpl",
+        cSource   : "ti/dspbridge/dsp/tconf/modules/bridge_c.tpl",
+    };
+    
+
+/* list of all modules init functions */
+var list = [];
+
+/*
+ *  ======== Module Finalization ========
+ */
+function finalize ()
+{
+    if (this.BRIDGELIB) return;
+
+    var modules = dspbridge.modules();
+    for (var j = 0 ; j < modules.length ; j++) {
+        var mod = modules[j];
+        if (mod.$$initFxn instanceof Extern) {
+            list.push( { 
+                name : mod.name,
+                fxn  : mod.$$initFxn.name.substr(1) 
+                    });
+        }
+    }
+
+    /*
+     * if there is at least 1 init function, then we use a BIOS HOOK object
+     * to call the BRIDGE_initCfg function. 
+     */
+    if (list.length != 0) {
+        var h = prog.module("HOOK").create("BRIDGE_configHook");
+        h.initFxn = prog.extern("BRIDGE_initCfg");
+    }
+
+
+    /*
+     *  This sem is used by BPWR APIs to implement mutual exclusion for
+     *  clock reference coutns
+     */
+    var SEM_BPWRmutex;
+    SEM_BPWRmutex = bios.SEM.create("SEM_BPWRmutex");
+    SEM_BPWRmutex.count = 1;
+
+    // add instance dbpipe via UDEV module.
+    var dbpipe = bios.UDEV.create("dbpipe");
+    dbpipe.comment = "DBP - DSP Bridge pipe driver";
+    dbpipe.deviceId = -1;
+    dbpipe.fxnTable = prog.extern("DBP_FXNS");
+    dbpipe.initFxn = prog.extern("DBP_init");
+}
+
+/*
+ *  ======== Module Tests ========
+ */
+function setBridgeDebug (text, val)
+{
+    if (val) {
+        if (bios.TSK.SWITCHFXN != prog.extern("FXN_F_nop")) {
+            print("Warning: Bridge cannot overwrite previously set TSK " +
+            "switch function: Keeping previous value.");
+        } else {
+            bios.TSK.CALLSWITCHFXN = true;
+            bios.TSK.SWITCHFXN = prog.extern("TSK_checkstacks");
+        }
+    }
+}

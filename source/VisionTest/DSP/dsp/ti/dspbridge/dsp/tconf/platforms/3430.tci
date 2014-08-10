@@ -1,0 +1,108 @@
+/* Load "base" platform file, since most c64P devices have the same 
+   properties
+*/
+var file = "ti/dspbridge/dsp/tconf/platforms/c64P.tci";
+var filename = utils.findFile(file);
+
+if (filename == null) {
+    throw "Cannot find platform file: " + file;
+}
+
+var plat = utils.loadCapsule(filename);
+
+function setupBIOS () 
+{
+    /*
+     * Setup platform-specific memory map, CLK rate, etc.
+     */
+    var mem_ext = [];
+
+    mem_ext[0] = {
+        comment: "This memory segment is used for External program",
+        name: "EXTMEM",
+        base: 0x20010000,
+        len:  0x10000,
+        space: "code/data"
+    };
+
+    mem_ext[1] = {
+        comment: "This memory segment is used for External code only",
+        name: "EXTCODE",
+        base: 0x20000000,
+        len:  0x10000,
+        space: "code"
+    };
+
+    /* Specify the L2 memory setting */
+    var device_regs = {
+        //        l2Mode: "0k"
+    };
+
+    var params = {
+        clockRate: 600,
+        catalogName: "ti.catalog.c6000",
+        deviceName: "3430",
+        regs: device_regs,
+        mem: mem_ext
+    };
+
+    /*
+     * Customize generic platform with parameters specified above.
+     */
+    utils.loadPlatform("ti.platforms.generic", params);    
+
+    // memory config
+    bios.enableMemoryHeaps(prog);
+    bios.enableTskManager(prog);
+    var EXTMEM = prog.module("MEM").instance("EXTMEM");
+    EXTMEM.createHeap = true;
+    EXTMEM.heapSize = 0x400000;
+    EXTMEM.space = "code/data";
+    
+    var EXTCODE = prog.module("MEM").instance("EXTCODE");
+
+    bios.setMemCodeSections(prog, EXTCODE);
+    bios.setMemDataNoHeapSections(prog, EXTMEM);
+    bios.setMemDataHeapSections(prog, EXTMEM);
+
+    // Enable PWRM and PWRM Resource Tracking
+    prog.module("PWRM").ENABLE = true;
+    prog.module("PWRM").RESOURCETRACKING = true;
+    prog.module("PWRM").SHAREDRESOURCEFXN = prog.extern("_BPWR_transport");
+    prog.module("PWRM").USERRESOURCES = 1;
+    
+    prog.module("PWRM").CM_BASEADDR = 0x1181C000;      
+    prog.module("PWRM").PRM_BASEADDR = 0x1181E000;
+    prog.module("PWRM").SCM_BASEADDR = 0x1181F000;
+    prog.module("PWRM").IVAMMU_BASEADDR = 0x11820000;    
+   
+    // Increase the ISR stack to make proper Power domain transition on 3430
+    // by default stacksize was set to 0x400
+    bios.MEM.STACKSIZE =0x2000;
+
+    // Enable PWRM Load Monitoring
+    prog.module("PWRM").IDLECPU = true;
+    prog.module("PWRM").LOADENABLE = true;
+    prog.module("PWRM").NUMSLOTS = 12;
+    prog.module("PWRM").USECLKPRD = false;
+    prog.module("PWRM").USETIMER = 1;
+    prog.module("PWRM").TIMERID = "Timer 6";
+    prog.module("PWRM").TIMERBASEADDR = 0x11801000; 
+    prog.module("PWRM").TIMERINPUTCLK = 33;    // KHz
+    prog.module("PWRM").TIMERPERIOD = 33;
+    prog.module("PWRM").TIMERINTR = prog.get("HWI_INT15");
+    prog.module("PWRM").SCALING = true;
+    prog.module("PWRM").SLOTHOOKFXN = prog.extern("_BPWR_predictor");
+   
+    bios.SWI.instance("PWRM_loadSwi").priority = 5;
+}
+
+function setupBRIDGE (dll) 
+{
+    plat.setupBRIDGE("3430", dll);
+
+    /*if (dll == false) {
+        dspbridge.module("TIOMAP3430SHM").EXTDYNSIZE = 0x10000;
+        dspbridge.module("TIOMAP3430SHM").EXTHEAPSIZE = 0x8000;
+    }*/
+}

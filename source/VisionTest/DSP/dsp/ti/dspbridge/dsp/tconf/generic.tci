@@ -1,0 +1,77 @@
+/*
+ *  ======== generic.tci ========
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+var $$name = "GENERIC";
+
+var $$label = "Properties for DSP Bridge GENERIC module";
+
+/* Global properties for GENERIC object */
+var $$global = [
+        {
+            name : "",
+            val  : ,
+            label: "",
+            type : "",
+            test : "", /* optional */
+        },
+            ];
+
+/* Per instance properties */
+var $$instance = [
+        {
+            name : "",
+            val  : "",
+            label: "",
+            type : "",
+            test : "", /* optional */
+        },
+            ];
+
+/* Template files */
+var $$template =
+    {
+        asmSource : undefined,
+        asmHeader : undefined,
+        cSource   : undefined,
+        cHeader   : "ti/dspbridge/dsp/tconf/myTemplate.tpl",
+        linker    : undefined,
+    };
+
+/* 
+ * Module's init function 
+ * prototype: Bool init(); must return TRUE if OK, FALSE otherwise
+ * set to null if no function needed 
+ */
+var $$initFxn = prog.extern("myInit"); 
+
+/*
+ *  ======== Test Functions ========
+ */
+function myTest (text val) 
+{   
+}
+
+/*
+ *  ======== Module Initialization ========
+ */
+function init ()
+{
+}
+
+/*
+ *  ======== Module Finalization ========
+ */
+function finalize ()
+{
+}
+
+/*
+ *  ======== Module Validation ========
+ */
+function validate ()
+{
+}
+

@@ -1,0 +1,11 @@
+/*** Test TCONF ***/
+
+utils.importFile("bridgeutils.tci");
+
+utils.loadPlatform("ardrone");
+
+if (config.hasReportedError == false) 
+{
+	prog.gen();
+}
+

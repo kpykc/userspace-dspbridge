@@ -1,0 +1,544 @@
+/*
+ *  ======== shm.tci ========
+ */
+
+utils.importFile("ti/dspbridge/dsp/tconf/dspbridge.tci");
+
+// These variables will be treated as constants once they are initialized
+// depending on the platform.
+//
+var _SHMCONTROLSIZE = 0;     /* # of DSP MAUs in SHM control structure */
+var _SHMBASE = 0;            /* Start of shared memory region */
+var _SHMSIZE = 0;            /* Size of SHM MEM (DSP MAUs) */
+var _DYNEXTBASE = 0;         /* Start of DYNEXTMEM */
+var _DYNEXTSIZE = 0;         /* Initial size of DYNEXTMEM */
+var _EXTMEMSIZE = 0;         /* Initial size of EXTMEM */
+var _SHM0SIZE = 0;           /* Initial size of SHMSEG0 heaps */
+var _DYNSRAMSIZE = 0;        /* Size of dynamic loading SRAM segment */
+var _SPAMAPSIZE = 0;         /* # of DSP words used by Bridge SPI module */
+var _MSGSIZE = 0;            /* # of DSP MAUs in message structure */
+var _MSGCONTROLSIZE = 0;     /* # of DSP MAUs in one MSG_Control structure */
+var _TRACESIZE = 0;          /* # of DSP MAUs in trace buffer */
+var _SHMSEG0SPACE;           /* Memory space of SHMSEG0_GPP */
+
+var modName = "xxxx";
+
+var _EXTCODESIZE = 0;
+
+if (dspbridge.module("BRIDGE").C64P) {
+ //   _SHMCONTROLSIZE = 40;        /* 10 Uns * 4 bytes/Uns */
+    _SHMCONTROLSIZE = 768;     /* 10 Uns * 4 bytes/Uns + sizeof(OPPstruct), (Need to enable for OPP) */    
+    _SHMBASE = 0x11000000;       /* start of uncached shared memory region */
+//    _SHMSIZE = 0x8180;           /* 128 byte aligned */
+    _SHMSIZE = 0x8480;         /* 128 byte aligned (Need to enable for OPP) */    
+    //_EXTMEMSIZE = 0xC0000;
+    _EXTMEMSIZE = 0x480000;
+    //_SHM0SIZE = 0x2000;
+	_SHM0SIZE = 0x2000;
+    _DYNEXTBASE = 0x20000000;    /* Start of external cached  memory */
+    _DYNEXTSIZE = 0x10000;
+    _SPAMAPSIZE = 0;             /* No SPI module for 2430 */
+    _MSGSIZE = 16;               /* (4 RMS_WORD) * 4 MAUs/RMS_WORD */
+    _MSGCONTROLSIZE = 16;        /* (4 Uns) * (4 bytes/Uns) */
+    _TRACESIZE = 0x100;
+    _SHMSEG0SPACE = "code/data";
+
+    if (dspbridge.module("BRIDGE").TIOMAP2430) {
+        modName = "2430";
+    }
+    else if (dspbridge.module("BRIDGE").TIOMAP3430) {
+        modName = "3430";
+    }
+    _EXTCODESIZE = 0;
+}
+else {
+    _SHMBASE = 0x080000;
+    _SHMSIZE = 0x3800;/*0x1FFE- New Value, word address:: OLD Value = 0x10000 */
+    _EXTMEMSIZE = 0x60000;
+    _SHM0SIZE = 0x800;/*OLD Value = 0x10000*/
+    _DYNEXTBASE = 0;      /* Not needed for 1510, 24xx */
+    _DYNEXTSIZE = 0;
+    _DYNSRAMSIZE = 0; /*0x18000;*/
+    _MSGSIZE = 8;         /* (4 RMS_WORD) * (2 MAUs / RMS_WORD) */
+    _MSGCONTROLSIZE = 4;  /* (4 Uns) * (1 MAU / Uns) */
+    _SPAMAPSIZE = 8;
+    _SHMSEG0SPACE = "code/data";
+
+    modName = "1510";
+
+    if (dspbridge.module("BRIDGE").TIOMAP1510ZC) {
+         // # of words in DSM + DDMA + DDZC SHM control struct
+        _SHMCONTROLSIZE = 332;
+    }
+    else {
+        _SHMCONTROLSIZE = 12; /* 8 Uns + 2 LgUns */
+    }
+    _EXTCODESIZE = 0;
+}
+
+//print("_SHMCONTROLSIZE = " + _SHMCONTROLSIZE);
+
+var MINSHMSIZE = (_SHMCONTROLSIZE + 512);    /* (SHM_Control) + 256 + 256 */
+var ADDRESSMASK = 0xfff80000;  // Used by proc.tci to setup virtual addresses
+
+/* Memory addresses used in .cmd */
+//var _sramSize = 0x60000;
+//var _msgShmSize;
+
+var $$name = "TIOMAP" + modName + "SHM";
+
+var $$label = "TIOMAP" + modName + "SHM - Shared Memory Manager";
+
+/* Global properties for TIOMAP2430SHM object */
+var $$global = [
+        {
+            name : "SHAREDMEMSIZE",
+            val  : (_SHMSIZE - _SPAMAPSIZE),
+            label: "Shared memory size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetSHAREDMEMSIZE"],
+        },
+        {
+            name : "SETMAXBUFSIZE",
+            val  : false,
+            label: "Directly configure maximum buffer size",
+            type : "Boolean",
+        },
+        {
+            name : "MAXBUFSIZE",
+            val  : 0x0,  // this will get initialized in init()
+            label: "Maximum buffer size (bytes)",
+            type : "Hexadecimal",
+            test : ["dosetMAXBUFSIZE"],
+        },
+        {
+            name : "MAXMESSAGES",
+            val  : 8,
+            label: "Maximum number of messages in shared memory to (from) DSP",
+            type : "Integer",
+            test : ["dosetMAXMESSAGES"],
+        },
+        {
+            name : "TRACESIZE",
+            val  : _TRACESIZE,
+            label: "Trace buffer size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetTRACESIZE"],
+        },
+        {
+            name : "EXTDYNSIZE",
+            val  : _DYNEXTSIZE,
+            label: "Dynamic Loading External Memory size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetEXTDYNSIZE"],
+        },
+        {
+            name : "EXTMEMSIZE",
+            val  : _EXTMEMSIZE,
+            label: "External Memory size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetEXTMEMSIZE"],
+        },
+        {
+            name : "EXTCODESIZE",
+            val  : _EXTCODESIZE,
+            label: "External Code size (DSP MAUs)",
+            type : "Hexadecimal",
+        },
+        {
+            name : "EXTHEAPSIZE",
+            val  : 0x0,
+            label: "External Memory heap size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetEXTHEAPSIZE"],
+        },
+        {
+            name : "dynSramMemBase",
+            val  : 0x68000,
+            label: "Base address (DSP words) of SRAM dynamic loading segment",
+            type : "Hexadecimal",
+            //test : ["dosetEXTMEMSIZE"],
+        },
+        {
+            name : "dynSramMemSize",
+            val  : _DYNSRAMSIZE,
+            label: "Size (DSP words) of SRAM dynamic loading memory segment",
+            type : "Hexadecimal",
+            //test : ["dosetEXTMEMSIZE"],
+        },
+        {
+            name : "USEEXTHEAPLABEL",
+            val  : false,
+            label: "Enter a user defined heap identifier label",
+            type : "Boolean",
+        },
+        {
+            name : "EXTHEAPLABEL",
+            val  : null,
+            label: "Heap identifier label",
+            type : "Object",
+        },
+        {
+            name : "SHAREDHEAPSIZE",
+            val  : _SHM0SIZE,
+            label: "Total shared memory size (DSP MAUs)",
+            type : "Hexadecimal",
+            test : ["dosetSHAREDHEAPSIZE"],
+        },
+        {
+            name : "MBXID",
+            val  : -1,
+            label: "Mailbox ID to use for DSP<->GPP communication, not supported on 2420 and Joule",
+            type : "Integer",
+            test : ["dosetMBXID"],
+        },
+            ];
+
+var $$instance = [ 
+	{            
+	    name : "id",   
+	    val  : 0x0,
+	    label: "Custom Mailbox Command ID",            
+	    type : "Integer",        
+	}, 
+	{            
+	     name : "ack",            
+	     val  : 0,            
+	     label: "Custom Mailbox Command ack property",            
+	     type : "Boolean",        
+	},    
+	{            
+	     name : "fxn",            
+	     val  : null,            
+	     label: "Custom Mailbox Command callback function",            
+	     type : "String",        
+	}, 
+            ];
+var $$template =
+    {
+        cSource   : "ti/dspbridge/dsp/tconf/modules/shm_c.tpl",
+        linker    : "ti/dspbridge/dsp/tconf/modules/shm_cmd.tpl",
+    };
+
+/*
+ *  ======== Internal Functions ========
+ */
+function align64K (val)
+{
+    return ( (val + 0xffff) & ~0xffff );
+}
+
+function align4K (val)
+{
+    return ( (val + 0xfff) & ~0xfff );
+}
+
+/*
+ * confBufSize - Get the size of the part of shared memory containing
+ * SHM_control and the input and output buffers.
+ */
+function confBufSize ()
+{
+    var shmSize = this.SHAREDMEMSIZE -
+        2 * (this.MAXMESSAGES * _MSGSIZE + _MSGCONTROLSIZE);
+
+    //print ("shmSize: " + utils.toHex(shmSize));
+    return (shmSize);
+}
+
+/*
+ * Number of DSP MAUs in shared memory used for messaging.
+ */
+function msgShmSize ()
+{
+    // Multiply by 2, for input messages and output messages.
+    return((this.MAXMESSAGES * _MSGSIZE + _MSGCONTROLSIZE) * 2);
+}
+
+/*
+ *  ======== Test Functions ========
+ */
+function dosetdynExtBase (text, val)
+{
+}
+
+function dosetEXTDYNSIZE (text, val)
+{
+}
+
+function dosetEXTHEAPSIZE (text, val)
+{
+}
+
+function dosetEXTMEMSIZE (text, val)
+{
+}
+
+function dosetMBXID (text, val)
+{
+    var bridge = dspbridge.module("BRIDGE");
+
+    if (bridge.C64P && val == -1) return;
+
+    else if ((val == 1) || (val ==2)) return;
+    
+    throw (text + " invalide mailbox ID for this platform " + val);
+}
+
+function dosetMAXBUFSIZE (text, val)
+{
+    // Make sure MAXBUFSIZE > 0
+    if (val  <= 0 ) {
+        throw (text + " Maximum buffer size must be > 0");
+    }
+}
+
+function dosetMAXMESSAGES (text, val)
+{
+    if (val  <= 0 ) {
+        throw (text + " Number of messages must be > 0");
+    }
+}
+
+function dosetSHAREDHEAPSIZE (text, val)
+{
+    /* Do we need this maximum value set to 0x80000?*/
+    /*if (val  < 0x40 || val > 0x80000) {
+        throw (text + " Size out of range: 0x40...0x80000");
+    }*/
+}
+
+function dosetSHAREDMEMSIZE (text, val)
+{
+    if (val  < 0x100) {
+        throw (text + " Buffer size too small");
+    }
+}
+
+function dosetTRACESIZE (text, val)
+{
+    if ((_TRACESIZE > 0) && (val < 0x10)) {
+        throw (text + " Size is too small");
+    }
+}
+
+function init ()
+{
+    // Size of SHM I/O buffers
+    this.MAXBUFSIZE =
+        (this.SHAREDMEMSIZE - this.msgShmSize() - _SHMCONTROLSIZE) / 2;
+
+    /* Shared Memory Window and User shared memory regions */
+    // Could have common function to create SHMMEM, SHMSEG0, SHMSEG0_GPP,
+    // and SPAMAP.
+    if (_SPAMAPSIZE > 0) {
+        var spamap = prog.module("MEM").create("SPAMAP");
+        spamap.base = _SHMBASE;
+        spamap.len = _SPAMAPSIZE;
+        spamap.createHeap = false;
+        spamap.space = "reserved";
+        spamap.comment = "This memory segment is used by DSP/BIOS Bridge";
+    }
+
+    var shmmem = prog.module("MEM").create("SHMMEM");
+    shmmem.base = _SHMBASE + _SPAMAPSIZE;
+    shmmem.len = this.SHAREDMEMSIZE;
+    shmmem.createHeap = false;
+    shmmem.space = "code/data";
+    shmmem.comment = "This memory segment is used by DSP/BIOS Bridge";
+
+    // User Shared Memory Region(s)
+    var shmseg0 = prog.module("MEM").create("SHMSEG0");
+    if (dspbridge.module("BRIDGE").C64P == true) {
+    	shmseg0.base = align4K(shmmem.base + shmmem.len);
+    }
+    else {
+    //shmseg0.base = align64K(shmmem.base + shmmem.len);
+    shmseg0.base = shmmem.base + shmmem.len;
+    }
+    shmseg0.len = this.SHAREDHEAPSIZE / 2;
+    shmseg0.createHeap = true;
+    shmseg0.heapSize = shmseg0.len;
+    shmseg0.enableHeapLabel = true;
+    shmseg0.heapLabel = prog.extern("SHMSEG0_HEAP");
+    shmseg0.space = "code/data";
+    shmseg0.comment = "User shared memory segment";
+
+    // User Shared Memory Region(s)
+    var shmseg0_gpp = prog.module("MEM").create("SHMSEG0_GPP");
+    shmseg0_gpp.base = shmseg0.base + shmseg0.len;
+    shmseg0_gpp.len = this.SHAREDHEAPSIZE / 2;
+    shmseg0_gpp.createHeap = false;
+    shmseg0_gpp.space = _SHMSEG0SPACE;
+    shmseg0_gpp.comment = "User shared memory segment";
+
+
+    //Trace buffer
+    if (_TRACESIZE > 0) {
+        var bridge_trace = prog.module("MEM").create("BRIDGE_TRACE");
+        bridge_trace.base = shmseg0_gpp.base + shmseg0_gpp.len;
+        bridge_trace.len = this.TRACESIZE;
+        bridge_trace.createHeap = false;
+        bridge_trace.space = "code/data";
+        bridge_trace.comment = "Memory segment for the Bridge trace buffer";
+    }
+
+    /* External Memory Window */
+    var dynextmem = prog.module("MEM").create("DYNEXTMEM");
+    dynextmem.createHeap = false;
+    dynextmem.len = this.EXTDYNSIZE;
+    dynextmem.space = "code/data";
+    dynextmem.dynamicLoading = 1;
+    dynextmem.comment = "Memory segment is used for External program";
+
+    if (dspbridge.module("BRIDGE").C64P == false) {
+  //      dynextmem.base = align64K(shmseg0_gpp.base + shmseg0_gpp.len);
+        dynextmem.base = 0x88000; //shmseg0_gpp.base + shmseg0_gpp.len;
+    }
+    else {
+        dynextmem.base = _DYNEXTBASE;
+    }
+        
+    if (_DYNSRAMSIZE > 0) {
+        var dynsrammem = prog.module("MEM").create("DYNSRAMMEM");
+        dynsrammem.createHeap = false;
+        dynsrammem.base = this.dynSramMemBase;
+        dynsrammem.len = this.dynSramMemSize;
+        dynsrammem.space = "code/data";
+        dynsrammem.dynamicLoading = 1;
+        dynsrammem.comment = "This memory segment is used for SRAM program";
+    }
+
+    if (dspbridge.module("BRIDGE").C64P == false) {
+        // EXTMEM has already been created, but set up base to be on 64K
+        // boundary after dynextmem.
+        var extmem = prog.module("MEM").instance("EXTMEM");
+  //      extmem.base = align64K(dynextmem.base + dynextmem.size);
+        extmem.base = 0x90000; //dynextmem.base + dynextmem.len;
+
+        // set default MBXID to 1 for non Joule platforms
+        this.MBXID = 1;
+    }
+}
+
+function finalize ()
+{
+    var extmem = bridge.MEM.instance("EXTMEM");
+    var extcode = bridge.MEM.instance("EXTCODE");
+    var shmmem = bridge.MEM.instance("SHMMEM");
+    var shmseg0 = bridge.MEM.instance("SHMSEG0");
+    var shmseg0_gpp = bridge.MEM.instance("SHMSEG0_GPP");
+    var dynextmem = bridge.MEM.instance("DYNEXTMEM");
+
+    var sysputccurptrsize = 0x4;  /* Size of sysPutcCurrentPtr */
+
+    if (_TRACESIZE > 0) {
+        var trace = bridge.MEM.instance("BRIDGE_TRACE");
+    }
+    if (_DYNSRAMSIZE > 0) {
+        var dynsrammem = bridge.MEM.instance("DYNSRAMMEM");
+    }
+
+    // Set SHAREDMEMSIZE or MAXBUFSIZE (so we can check values are correct
+    // in test .tcf files.)
+    if (this.SETMAXBUFSIZE) {
+        // Set the size of the shared memory region based on the configured
+        // maximum input/output buffer size
+        this.SHAREDMEMSIZE =
+            this.msgShmSize() + this.MAXBUFSIZE * 2 + _SHMCONTROLSIZE;
+    }
+    else {
+        // Calculate the size of the SHM I/O buffers
+        this.MAXBUFSIZE =
+            (this.SHAREDMEMSIZE - _SHMCONTROLSIZE - this.msgShmSize()) / 2;
+    }
+
+    // Set SHMMEM size to SHAREDMEMSIZE
+    shmmem.base = _SHMBASE + _SPAMAPSIZE;
+    shmmem.len = this.SHAREDMEMSIZE;
+
+    // Set SHMSEG0, SHMSEG0_GPP base and size. SHMSEG0 comes after SHMMEM,
+    // but its base must be 65K aligned.
+    if (dspbridge.module("BRIDGE").C64P == true) {
+    	shmseg0.base = align4K(shmmem.base + shmmem.len);
+    }
+    else {
+  //  shmseg0.base = align64K(shmmem.base + shmmem.len);
+      shmseg0.base = shmmem.base + shmmem.len; 
+    }
+    shmseg0.len = this.SHAREDHEAPSIZE / 2;
+    shmseg0.createHeap = true;
+    shmseg0.heapSize = shmseg0.len;
+
+    shmseg0_gpp.base = shmseg0.base + shmseg0.len;
+    shmseg0_gpp.len = this.SHAREDHEAPSIZE / 2;
+
+    // BRIDGE_TRACE
+    if (_TRACESIZE > 0) {
+        trace.base = shmseg0_gpp.base + shmseg0_gpp.len;
+        if (dspbridge.module("BRIDGE").C64P == true) 
+        {
+             trace.len = ((align64K(trace.base + this.TRACESIZE)) - trace.base);
+             /* Check the system Trace size range */ 
+             if ( bridge.SYS.TRACESIZE > 0xffff ) {
+                  throw ("Trace Size exceeds the range, Maximum is 64K!");
+             }
+             if ( bridge.SYS.TRACESIZE > (trace.len - sysputccurptrsize) ) {
+                  trace.len = (align64K(trace.base + bridge.SYS.TRACESIZE + sysputccurptrsize) - trace.base);
+             }
+             this.TRACESIZE = trace.len;
+         }
+         else
+         {
+             trace.len = this.TRACESIZE ;
+         }
+    }
+
+    // DYNEXTMEM - To do: delete dynextmem if size is 0?
+    dynextmem.len = this.EXTDYNSIZE;
+    dynextmem.createHeap = false;
+    dynextmem.space = "code/data";
+    dynextmem.dynamicLoading = true;
+
+    if (dspbridge.module("BRIDGE").C64P == false) {
+  //     dynextmem.base = align64K(shmseg0_gpp.base + shmseg0_gpp.len);
+        dynextmem.base = 0x88000; // shmseg0_gpp.base + shmseg0_gpp.len;
+    }
+    else {
+        dynextmem.base = _DYNEXTBASE;
+    }
+        
+    // EXTCODE & EXTMEM
+    extmem.len = this.EXTMEMSIZE;
+    if (this.EXTCODESIZE)
+    {
+        extcode.base = dynextmem.base + dynextmem.len;
+        extcode.len = this.EXTCODESIZE;
+        extmem.base = extcode.base + this.EXTCODESIZE;
+        extmem.len -= this.EXTCODESIZE;
+    }
+    else if (dspbridge.module("BRIDGE").C64P == true) 
+    {
+        extmem.base = dynextmem.base + dynextmem.len;
+        bios.setMemCodeSections(prog, extmem);
+        extcode.destroy();
+    }
+    else
+    {
+        extmem.base = 0x90000; //dynextmem.base + dynextmem.len;
+    }
+
+    if (this.EXTHEAPSIZE > 0) {
+        extmem.createHeap = true;
+        extmem.heapSize = this.EXTHEAPSIZE;
+
+        if (this.USEEXTHEAPLABEL) {
+            extmem.enableHeapLabel = true;
+            extmem.heapLabel = this.EXTHEAPLABEL;
+        }
+    }
+    if (_DYNSRAMSIZE > 0) {
+        dynsrammem.base = this.dynSramMemBase;
+        dynsrammem.len = this.dynSramMemSize;
+    }
+}
