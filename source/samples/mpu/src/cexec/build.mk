@@ -122,21 +122,21 @@ vpath %.so $(LIBINCLUDES) $(TGTROOT)/lib $(TGTROOT)/usr/lib
 #   BUILD ARGUMENTS
 #   ----------------------------------------------------------
 
-MAPFILE := -Wl,-cref,-Map,$(TARGET).map
+MAPFILE :=
 INCPATH := $(addprefix -I, $(INCLUDES))
 LIBPATH := $(addprefix -L, $(LIBINCLUDES))
 LIBFILE := $(addprefix -l, $(ST_LIBS) $(SH_LIBS))
 
 ifeq ($(TARGETTYPE),SH_LIB)
 CFLAGS += -fpic
-TARGETARGS := $(SH_LIB_ARGS) -nostartfiles -nodefaultlibs -nostdlib -shared -Wl
+TARGETARGS := $(SH_LIB_ARGS) -nostartfiles -nodefaultlibs -nostdlib -shared
 ifneq ($(SH_SONAME),)
-TARGETARGS += -Wl,-soname,$(SH_SONAME)
+TARGETARGS +=
 endif
 endif
 
 ifeq ($(TARGETTYPE),ST_LIB)
-TARGETARGS := $(ST_LIB_ARGS) -nostartfiles -nodefaultlibs -nostdlib -Wl,-r
+TARGETARGS := $(ST_LIB_ARGS) -nostartfiles -nodefaultlibs -nostdlib
 endif
 
 ifeq ($(TARGETTYPE),EXEC)
